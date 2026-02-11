@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_angular_provider">
+    <sp_angular_provider action="INSERT_OR_UPDATE">
+        <name>elementResizedV2</name>
+        <script><![CDATA[function($rootScope, $timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope, el, attr) {
+            scope.$watch(function() {
+                    return {
+                        width: el.width(),
+                        height: el.height(),
+                    }
+                },
+                function() {
+                    scope.$emit(attr.elementResizedV2 + ':resized', el);
+                },
+                true //deep watch
+            );
+        }
+    }
+}]]></script>
+        <sys_class_name>sp_angular_provider</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-02-05 15:04:28</sys_created_on>
+        <sys_id>ad8267682fe101101b6051072799b665</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>elementResizedV2</sys_name>
+        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Tabbed Form v2">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_angular_provider_ad8267682fe101101b6051072799b665</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-08-21 11:24:56</sys_updated_on>
+        <type>directive</type>
+    </sp_angular_provider>
+</record_update>

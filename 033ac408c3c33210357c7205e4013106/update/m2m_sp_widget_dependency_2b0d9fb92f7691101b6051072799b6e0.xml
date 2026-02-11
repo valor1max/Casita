@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_widget_dependency">
+    <m2m_sp_widget_dependency action="INSERT_OR_UPDATE">
+        <sp_dependency display_value="Tabbed Form Reference Dependency v2">4f67e8b12f46c1101b6051072799b67d</sp_dependency>
+        <sp_widget display_value="SC Catalog Item">3c29786e87133200e0ef0cf888cb0bdf</sp_widget>
+        <sys_class_name>m2m_sp_widget_dependency</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-10-28 11:22:04</sys_created_on>
+        <sys_id>2b0d9fb92f7691101b6051072799b6e0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Tabbed Form Reference Dependency v2.SC Catalog Item</sys_name>
+        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>m2m_sp_widget_dependency_2b0d9fb92f7691101b6051072799b6e0</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-10-28 11:22:04</sys_updated_on>
+    </m2m_sp_widget_dependency>
+</record_update>

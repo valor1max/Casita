@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_dependency_js_include">
+    <m2m_sp_dependency_js_include action="INSERT_OR_UPDATE">
+        <order>100</order>
+        <sp_dependency display_value="Tabbed Form Scroll Dependency v2">9a2063b32f8501101b6051072799b610</sp_dependency>
+        <sp_js_include display_value="Scrollable Tabs Code v2">aa6027b32f8501101b6051072799b6c0</sp_js_include>
+        <sys_class_name>m2m_sp_dependency_js_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-01-21 20:44:10</sys_created_on>
+        <sys_id>ab8027b32f8501101b6051072799b658</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>TabbedFormScrollDep_v2.Scrollable Tabs Code v2</sys_name>
+        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>m2m_sp_dependency_js_include_ab8027b32f8501101b6051072799b658</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-01-21 20:44:10</sys_updated_on>
+    </m2m_sp_dependency_js_include>
+</record_update>

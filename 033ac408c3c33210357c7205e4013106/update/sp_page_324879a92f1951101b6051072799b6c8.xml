@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_page">
+    <sp_page action="INSERT_OR_UPDATE">
+        <category>sp_platform</category>
+        <css>// each column has a flex-item classs&#13;
+.flex-item {&#13;
+  width: 50%;&#13;
+  position: relative;&#13;
+  overflow: auto;&#13;
+  z-index: 100;&#13;
+  background-color: #ffffff;&#13;
+}&#13;
+&#13;
+.flex-item:first-of-type {&#13;
+  overflow: hidden;&#13;
+  border-right: solid 3px;&#13;
+}&#13;
+.breadcrumbs {&#13;
+  margin: 0px !important;&#13;
+}&#13;
+&#13;
+.v5001b062d7101200b0b044580e6103eb &gt; .panel , .flex-item .vfd1f4ec347730200ba13a5554ee490c0 &gt; .panel-shift &gt; .panel {&#13;
+  position: absolute;&#13;
+  top: 0;&#13;
+  bottom: 0;&#13;
+  right: 0;&#13;
+  left: 0;&#13;
+  margin: 0;&#13;
+  overflow: hidden;&#13;
+  border-radius: 0;&#13;
+  display: flex;&#13;
+  flex-direction: column;&#13;
+  height: 100%;&#13;
+&#13;
+  &gt; .panel-body {&#13;
+    overflow: scroll;&#13;
+    -webkit-overflow-scrolling: touch;&#13;
+    flex-grow: 1;&#13;
+  }&#13;
+&#13;
+  &gt; .panel-heading, .panel-footer {&#13;
+    flex-shrink: 0;&#13;
+  }&#13;
+&#13;
+  &gt; .panel-heading {&#13;
+    height: 52px;&#13;
+  }&#13;
+}&#13;
+&#13;
+footer {&#13;
+	position: static;&#13;
+}</css>
+        <draft>false</draft>
+        <dynamic_title_structure/>
+        <human_readable_url_structure/>
+        <id>lf_v2</id>
+        <internal>true</internal>
+        <omit_watcher>false</omit_watcher>
+        <public>false</public>
+        <roles>snc_external,snc_internal</roles>
+        <seo_script/>
+        <short_description>Full screen list and tabbed form</short_description>
+        <sys_class_name>sp_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-08-13 19:49:10</sys_created_on>
+        <sys_id>324879a92f1951101b6051072799b6c8</sys_id>
+        <sys_mod_count>8</sys_mod_count>
+        <sys_name>lf_v2</sys_name>
+        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_page_324879a92f1951101b6051072799b6c8</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-02-22 15:04:17</sys_updated_on>
+        <title>List &amp; Tabbed Form</title>
+        <use_seo_script>false</use_seo_script>
+    </sp_page>
+    <sys_translated_text action="delete_multiple" query="documentkey=324879a92f1951101b6051072799b6c8"/>
+</record_update>

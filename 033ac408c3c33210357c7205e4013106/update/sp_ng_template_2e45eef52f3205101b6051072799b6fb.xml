@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_ng_template">
+    <sp_ng_template action="INSERT_OR_UPDATE">
+        <id>form_container_columns_v2</id>
+        <sp_widget display_value="Tabbed Form Widget v2">04269f3b2f4501101b6051072799b6ba</sp_widget>
+        <sys_class_name>sp_ng_template</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-04-12 11:07:36</sys_created_on>
+        <sys_id>2e45eef52f3205101b6051072799b6fb</sys_id>
+        <sys_mod_count>10</sys_mod_count>
+        <sys_name>form_container_columns_v2</sys_name>
+        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Tabbed Form v2">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_ng_template_2e45eef52f3205101b6051072799b6fb</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-12-16 17:31:08</sys_updated_on>
+        <template><![CDATA[<div ng-class="flexed ? 'row-fluid' : 'row'">
+   <div ng-repeat="column in ctr.columns" class="col-md-{{::12 / ctr.columns.length }}" ng-style="flexed ? {'display': 'flex', 'padding': '0px'} : {}">
+      <div ng-switch="::f.type" ng-repeat="f in ::column.fields" id="{{::getVarID(f)}}" ng-class="::{'form-inline': isInlineForm === true }" ng-style="flexed && f.type != 'container_split' ? {'flex-grow': '1'} : {}">
+         <div ng-switch-when="label" ng-if="formModel._fields[f.name]" ng-show="formModel._fields[f.name].isVisible()">
+            <label ng-bind="f.label"></label>
+            <sp-help-tag field="::formModel._fields[f.name]"></sp-help-tag>
+            <hr class="sp_label_hr"></hr>
+         </div>
+         <div ng-class="::{'col-md-{{::12 / ctr.columns.length }}' : flexed === true && f.type != 'container'}" ng-style="$first && flexed ? {'padding-left': '0px'} : $last && flexed ? {'padding-right': '0px'} : {}">
+           <sp-form-field ng-switch-when="field" ng-if="formModel._fields[f.name] && formModel._fields[f.name]._class_name != 'RequestedForQuestion'" form-model="formModel" field="formModel._fields[f.name]" glide-form="getGlideForm()" ng-show="formModel._fields[f.name].isVisible()" default-value-setter="setDefaultValue(fieldName,fieldInternalValue,fieldDisplayValue)"></sp-form-field>
+         </div> 
+         <div ng-switch-when="container">
+             <ng-include src="'form_container_columns_v2'" onload="ctr=f; flexed=true" ng-if="'true'"></ng-include>
+         </div>
+         <sp-checkbox-group ng-switch-when="checkbox_container" name="f.name" form-model="formModel" containers="f.containers" glide-form="getGlideForm()" class="checkbox-container"></sp-checkbox-group>
+         <sp-widget ng-switch-when="formatter" ng-if="formModel._formatters[f.id].widgetInstance" widget="formModel._formatters[f.id].widgetInstance" page="{g_form: getGlideForm()}"></sp-widget>
+         <hr ng-switch-when="break" ng-show="formModel._fields[f.name].isVisible()"></hr>
+         <sp-sc-request-for ng-switch-when="field" ng-if="formModel._fields[f.name] && formModel._fields[f.name]._class_name  == 'RequestedForQuestion'" form-model="formModel" field="formModel._fields[f.name]" glide-form="getGlideForm()" ng-show="formModel._fields[f.name].isVisible()" id="sp_formfield_requested_for_{{::field.name}}" tabindex="-1"></sp-sc-request-for>
+      </div>
+   </div>
+</div>]]></template>
+    </sp_ng_template>
+</record_update>

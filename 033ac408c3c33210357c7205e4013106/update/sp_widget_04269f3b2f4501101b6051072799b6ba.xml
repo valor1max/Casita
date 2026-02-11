@@ -1,0 +1,836 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>sp_platform</category>
+        <client_script><![CDATA[api.controller = function($rootScope, $scope, $timeout, $location, $log, $window, $uibModal, $uibModalStack, spUtil, nowAttachmentHandler, spAriaUtil, spNavStateManager) {
+    $scope.submitting = false;
+    $scope.mandatory = [];
+    $scope.errorMessages = [];
+    $scope.data.show_sql = false;
+    $scope.saveButtonSuffix = spUtil.getAccelerator('s');
+    $scope.isPageReady = false;
+    $scope.embeddedInModal = false;
+    $scope.adminMenu = {
+        encodedPageUrl: encodeURIComponent($location.url()),
+        getClientScriptCount: function() {
+            var count = 0;
+            if ($scope.data.f.client_script) {
+                count += $scope.data.f.client_script.onChange.length;
+                count += $scope.data.f.client_script.onLoad.length;
+                count += $scope.data.f.client_script.onSubmit.length;
+            }
+            return count;
+        }
+    };
+    var tableId = $scope.data.sys_id != -1 ? $scope.data.sys_id : ($scope.data.f ? $scope.data.f._attachmentGUID : -1);
+    initRecordWatcher($scope.data.table, $scope.data.sys_id);
+    spUtil.recordWatch($scope, "sys_attachment", "table_sys_id=" + tableId, function(response, data) {
+        $scope.attachmentHandler.getAttachmentList();
+        if (response.data) {
+            var options = {};
+            options.operation = response.data.operation;
+            options.filename = response.data.display_value;
+            options.sys_id = tableId;
+            options.table = $scope.data.table;
+            options.state = (response.data.record && response.data.record.state) ? response.data.record.state.value : "";
+            if (options.operation === 'update' && options.state === 'not_available')
+                $rootScope.$broadcast("attachment.updated", options);
+        }
+    });
+
+    $rootScope.$on('$sp.html.editor.progress', function(e, conf) {
+        $scope.submitting = conf.state;
+    });
+
+    $scope.getButtonClass = function(action) {
+        if (action.form_style == "destructive")
+            return "btn-danger";
+
+        if (action.form_style == "primary")
+            return "btn-primary";
+
+        return "btn-default";
+    };
+
+    $scope.getUIActions = function(type) {
+		//console.log('MM the ui action is ' + type)
+        if ($scope.data.disableUIActions)
+            return [];
+        if (type) {
+            return $scope.data.f._ui_actions.filter(function(action) {
+			//	console.log('MM the return is ' + JSON.stringify(action))
+                //We handle the primary action button separately.
+               return !action.primary && action['is_' + type];
+            });
+        } else {
+            return $scope.data.f._ui_actions;
+        }
+    };
+
+    $scope.getPrimaryAction = function() {
+        var primaryActions = $scope.data.f._ui_actions.filter(function(action) {
+			console.log('MM the actions are ' + JSON.stringify(action))
+            return action.primary;
+        });
+        return (primaryActions.length) ? primaryActions[0] : null;
+    };
+
+    $scope.getUIActionContextMenu = function(event) {
+        var menu = [];
+        if (event.ctrlKey)
+            return menu;
+
+        var contextActions = $scope.getUIActions('context');
+        contextActions.forEach(function(action) {
+            menu.push([action.name, function() {
+                $scope.triggerUIAction(action);
+            }]);
+        });
+
+        if (contextActions.length > 0)
+            menu.push(null);
+        menu.push([$scope.data.exportPDFMsg, function() {
+            exportPDF("");
+        }]);
+        menu.push([$scope.data.exportPDFLandMsg, function() {
+            exportPDF('true');
+        }]);
+
+        return menu;
+    };
+
+    function exportPDF(landscape) {
+        $window.open("/" + $scope.data.f.table + ".do?PDF&landscape=" + landscape + "&sys_id=" + $scope.data.sys_id + "&sysparm_view=" + $scope.data.f.view);
+    }
+
+    //trigger the primary UI Action on save (if there is one)
+    var deregister = $scope.$on('$sp.save', function() {
+        var primaryAction = $scope.getPrimaryAction();
+        if (primaryAction)
+            $scope.triggerUIAction(primaryAction);
+    });
+    $scope.$on('$destroy', function() {
+        deregister();
+    });
+
+    $scope.triggerUIAction = function(action) {
+        if ($scope.data.disableUIActions && !action.primary) {
+            return;
+        }
+
+        var activeElement = document.activeElement;
+        if (activeElement) {
+            activeElement.blur();
+        }
+
+        $scope.$evalAsync(function() {
+            if (g_form) {
+                $scope.submitting = true;
+                if (!g_form.submit(action.action_name || action.sys_id))
+                    $scope.submitting = false;
+            }
+        });
+    };
+
+    $scope.$on("spModel.uiActionComplete", function(evt, response, savedFormSysId) {
+        if (evt.hasOwnProperty("formScopeId"))
+            if ((g_form.$private.options['formScopeId'] || $scope.$id) != evt.formScopeId) return;
+        if (response.isInsert && $scope.data.sys_id !== "-1") return;
+        if (response.isInsert) $rootScope.$broadcast("modal.form.updated", {
+            action: 'enter',
+            table_name: $scope.data.table
+        });
+        if (!response.isInsert && ($scope.data.sys_id !== savedFormSysId))
+            return;
+
+        $scope.submitting = false;
+        if (response.isActionAborted)
+            return;
+
+        var sysID = (response.isInsert) ? response.sys_id : $scope.data.sys_id;
+        loadForm($scope.data.table, sysID).then(constructResponseHandler(response));
+    });
+
+    function constructResponseHandler(response) {
+        return function() {
+            $rootScope.$broadcast("sp.form.submitted", {
+                sys_id: (response.isInsert) ? response.sys_id : $scope.data.sys_id
+            });
+            var message;
+            var eventName = "sp.form.record.updated";
+            if (response.isInsert) {
+                message = $scope.data.recordAddedMsg;
+                initRecordWatcher($scope.data.table, $scope.data.sys_id);
+                if (!$scope.embeddedInModal) {
+                    var search = $location.search();
+                    search.sys_id = response.sys_id;
+                    search.spa = 1;
+                    search.isPopup = 0;
+                    $location.search(search).replace();
+                }
+            } else
+                message = $scope.data.updatedMsg;
+
+            $scope.data.hideRelatedLists = hideRelatedLists();
+            $scope.$emit(eventName, $scope.data.f._fields, $scope.data.sys_id);
+            $rootScope.$broadcast(eventName, $scope.data.f._fields, $scope.data.sys_id);
+            $scope.status = message;
+            spUtil.addTrivialMessage(message);
+            spUtil.simulateFakeFormSubmitForAutoComplete('widget-form-tabbed-v2', $scope.data.f._fields);
+            $timeout(clearStatus, 2000);
+        };
+    }
+
+    var ctrl = this;
+    // switch forms
+    var unregister = $scope.$on('$sp.list.click', onListClick);
+    $scope.$on("$destroy", function() {
+        unregister();
+    });
+
+    function _save() {
+  //      var primaryAction = $scope.getPrimaryAction();
+ //       if (primaryAction)
+ //           $scope.triggerUIAction(primaryAction);
+    }
+
+    function onListClick(evt, arg) {
+        loadForm(arg.table, arg.sys_id);
+
+    }
+
+    function loadForm(table, sys_id) {
+        angular.element('.v04269f3b2f4501101b6051072799b6ba').append("<div id='formWait' style='position: absolute; width: 150px; font-size: 18px; left: 50%; top: 50%; color: black;'><i class='fa fa-spinner fa-spin fa-2x fa-fw'></i>&nbsp;Loading...&nbsp;</div>");
+        var f = {};
+        $scope.data.table = f.table = table;
+        $scope.data.sys_id = f.sys_id = sys_id;
+        f.view = $scope.data.view;
+        return $scope.server.update().then(function() {
+            setupAttachmentHandler;
+            angular.element('#formWait').remove();
+        });
+    }
+
+    function openRelatedList(e, queryString) {
+        // todo: Open this in a modal
+        $location.search(queryString);
+        e.preventDefault();
+    }
+
+    $scope.$on('spModel.fields.rendered', function() {
+        if (ctrl.panels)
+            ctrl.panels.removeClass('shift-out').addClass('shift-in');
+    });
+
+    var g_form;
+
+    function initForm(gFormInstance) {
+        $scope.embeddedInModal = true; // Dirty state now handled in modal service
+        if (gFormInstance.getTableName() == $scope.data.f.table) {
+            g_form = gFormInstance;
+            if (!$scope.embeddedInModal) spNavStateManager.register($scope.data.table, _save, g_form);
+            $scope.isPageReady = true;
+            $timeout(function() {
+                $rootScope.$emit('spModel.gForm.rendered', g_form);
+            }, 175);
+        }
+    }
+
+    $scope.$on('spModel.gForm.initialized', function(e, gFormInstance) {
+        initForm(gFormInstance);
+    });
+
+    $scope.$on('spModel.gForm.env.created', function(e, gFormInstance) {
+        initForm(gFormInstance);
+    });
+
+    // update the comments or worknotes based on activity stream
+    $scope.$on("activity_stream_is_changed", function(event, data) {
+        if (g_form && g_form.hasField(data.fieldName)) {
+            g_form.setValue(data.fieldName, data.input);
+            if (data.fieldToClear != "" && g_form.hasField(data.fieldToClear))
+                g_form.setValue(data.fieldToClear, "");
+        }
+    });
+
+    // Show or hide related lists
+    $scope.$watch('data.f._related_lists', function() {
+        $scope.data.hideRelatedLists = hideRelatedLists();
+    }, true);
+
+    $scope.hideDuplicateSaveAction = function(item) {
+        if (!$scope.data.advancedUIEnabled)
+            return true;
+        return ($scope.data.advancedUIEnabled && item.sys_id !== "432ace8b0a0a0b34006b02832660c894" && item.sys_id !== "42e780d40a0a0b34007e0d4a52d33405");
+    };
+
+    function hideRelatedLists() {
+        if (!$scope.data.f._related_lists)
+            return true;
+
+        if ($scope.options.hideRelatedLists == true)
+            return true;
+
+        if ($scope.data.sys_id == '-1')
+            return true;
+
+        // If all related lists are visible=false then hide
+        if ($scope.data.f._related_lists.length > 0) {
+            for (var i in $scope.data.f._related_lists) {
+                var list = $scope.data.f._related_lists[i];
+                if (list.visible) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function clearStatus() {
+        $scope.status = "";
+    }
+
+    function setupAttachmentHandler() {
+        $scope.attachmentHandler = new nowAttachmentHandler(appendDone, appendError);
+
+        $scope.$evalAsync(function() {
+            $scope.attachmentHandler.setParams($scope.data.table, $scope.data.f._attachmentGUID, 1024 * 1024 * $scope.data.maxAttachmentSize);
+        });
+
+        $scope.$on('dialog.upload_too_large.show', function(e) {
+            $log.error($scope.data.largeAttachmentMsg);
+            spUtil.addErrorMessage($scope.data.largeAttachmentMsg);
+        });
+    }
+    setupAttachmentHandler();
+
+    function appendDone() {
+        // don't know here whether upload succeeded, so can't show msg either way
+        $scope.$broadcast("sp.attachments.update", $scope.data.f._attachmentGUID);
+        spUtil.retrieveSessionMessages();
+    }
+
+    function appendError(error) {
+        $scope.errorMessages.push(error);
+        spUtil.addErrorMessage(error.msg + error.fileName);
+    }
+
+    if ($scope.data.f.title) {
+        $scope.$emit('sp.widget-modal.set-aria-label', $scope.data.f.title);
+    }
+    $scope.dismiss = function(reason) {
+        g_form.isUserModified = false;
+        if ($uibModalStack.getTop())
+            $uibModalStack.close($uibModalStack.getTop().key, reason);
+    };
+
+    function initRecordWatcher(table, id) {
+        if (id == -1) return;
+        spUtil.recordWatch($scope, table, "sys_id=" + id, function(response) {
+            spUtil.update($scope).then(function(data) {
+                $scope.data = data;
+            });
+            $rootScope.$broadcast("modal.form.updated", response.data);
+        });
+    }
+
+    $scope.uiAction = function(event, action) {
+        if (action == "delete") {
+            var cnfTemplate = '<div class="modal-header"><h3>Delete Confirmation</h3></div>';
+            cnfTemplate += '<div class="modal-body"><p><h4><b>Are you sure you want to delete this record?</b><h4></p></div>';
+            cnfTemplate += '<div class="modal-footer">';
+            cnfTemplate += '<button type="button" class="btn btn-default" ng-click="$dismiss()" autofocus><i class="fa fa-times"></i>No</button>';
+            cnfTemplate += '<button class="btn btn-danger" ng-click="deleteRec()"><i class="fa fa-check"></i>Yes</button></div>';
+            $scope.confirmInstance = $uibModal.open({
+                template: cnfTemplate,
+                backdrop: 'static',
+                appendTo: angular.element(event.originalEvent.srcElement).closest('.modal-dialog, body'),
+                windowClass: 'modal-form-confirm',
+                scope: $scope,
+                controller: function($scope, $uibModalInstance) {
+                    $scope.confirm = $uibModalInstance;
+                    $scope.deleteRec = function() {
+                        var gr = new GlideRecord($scope.data.table);
+                        gr.addQuery("sys_id", $scope.data.sys_id);
+                        gr.query(function(rec) {
+                            rec.next();
+                            rec.deleteRecord(function(resp) {
+                                spUtil.addTrivialMessage("Record successfully deleted.");
+                                $scope.confirm.close('Record deleted');
+                                if (($rootScope.modalCount || 0) == 0) loadForm($scope.data.table, null);
+                            });
+                        });
+                    };
+                }
+            });
+            $scope.confirmInstance.rendered.then(function() {
+                angular.element('.modal-form-confirm').css({
+                    'display': 'inline-block',
+                    'z-index': 99999,
+                    'top': (angular.element(event.originalEvent.srcElement).offset().top - 300) + 'px'
+                });
+            });
+            $timeout(function() {
+                angular.element('[uib-modal-transclude] > .modal-header .close').css('display', 'none');
+            });
+        }
+    };
+    $scope.getFocus = function(field) {
+        var focusVar = (field.type == "reference") ? "sp_formfield_reference_" : "sp_formfield_";
+        focusVar += (field.name.startsWith("IO:") ? field._children[0] : field.name);
+        var elem = document.getElementById(focusVar);
+        if (field.type == "url" && elem.style.display == "none")
+            elem = document.getElementById(focusVar + "_unlock");
+        else if (field.type == "sc_multi_row")
+            elem = document.getElementById(field.sys_id + "_add_row");
+        else {
+            var inputElem = angular.element(elem).find('input')[0];
+            if (inputElem)
+                elem = inputElem;
+        }
+
+        if (elem) {
+            setTimeout(function() {
+                var idx = angular.element(document.getElementById(focusVar)).parents('.tab-pane').index();
+                angular.element(document.getElementById(focusVar)).parents('.tab-content').siblings('ul').children('li').eq(idx).find('a').click();
+                setTimeout(function() {
+                    elem.focus();
+                });
+            }, 100);
+        }
+    };
+    $scope.$on('data_table.click', function(evt, params) {
+        $location.search(params);
+    });
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.btn-form-menu {&#13;
+	vertical-align: inherit;&#13;
+  padding: inherit;&#13;
+  background: none;&#13;
+}&#13;
+&#13;
+.panel-title {&#13;
+  word-wrap: break-word;&#13;
+}&#13;
+&#13;
+.panel-heading {&#13;
+  .dropdown-menu {&#13;
+    a {&#13;
+      white-space: normal;&#13;
+    }&#13;
+  }&#13;
+}&#13;
+&#13;
+.sc-field-error-label {&#13;
+  margin-right: .5em;&#13;
+  display: inline-block;&#13;
+  background-color: $sc-field-error-color;&#13;
+}&#13;
+&#13;
+.comment {&#13;
+	font-weight: bold;&#13;
+	margin-top: 2px;&#13;
+	margin-bottom: 2px;&#13;
+}&#13;
+.mce-panel, .mce-btn {&#13;
+	background-image: none;&#13;
+	background-color: #f0f3f4;&#13;
+}&#13;
+&#13;
+.action-btn {&#13;
+  margin-right: 5px;&#13;
+}&#13;
+&#13;
+.timeline-container {&#13;
+   max-height: 50vh;&#13;
+   height: 100%;&#13;
+   overflow-y: auto;&#13;
+}&#13;
+&#13;
+.panel .panel {&#13;
+    height: auto !important;&#13;
+}&#13;
+&#13;
+.attachment-button {&#13;
+  .glyphicon-paperclip {&#13;
+    font-size: 18px;&#13;
+  }&#13;
+}&#13;
+&#13;
+.empty-state-wrapper {&#13;
+  width: 100%;&#13;
+  height: 100%;&#13;
+  align-items: center;&#13;
+  display: flex;&#13;
+  flex-direction: column;&#13;
+  padding: 10vh 20px 20px;&#13;
+&#13;
+  .empty-state {&#13;
+    border: 1px solid #e7e9eb;&#13;
+    border-radius: 10px;&#13;
+    max-width: 700px;&#13;
+    padding: 30px 40px 20px;&#13;
+    position: relative;&#13;
+&#13;
+    .empty-state-badge {&#13;
+      top: -36px;&#13;
+      left: 50%;&#13;
+      position: absolute;&#13;
+      height: 72px;&#13;
+      width: 72px;&#13;
+      -webkit-align-items: center;&#13;
+      -ms-flex-align: center;&#13;
+      align-items: center;&#13;
+      border-radius: 100%;&#13;
+      color: #ffffff;&#13;
+      display: -webkit-flex;&#13;
+      display: -ms-flexbox;&#13;
+      display: flex;&#13;
+      font-size: 40px;&#13;
+      -webkit-justify-content: center;&#13;
+      -ms-flex-pack: center;&#13;
+      justify-content: center;&#13;
+      margin-left: -36px;&#13;
+      text-align: center;&#13;
+    }&#13;
+&#13;
+    .empty-state-header {&#13;
+      font-size: 30px;&#13;
+      text-align: center;&#13;
+      color: #343d47;&#13;
+    }&#13;
+&#13;
+    .empty-state-content {&#13;
+      ul {&#13;
+        list-style: disc outside;&#13;
+        margin: 0 0 10px 0;&#13;
+        padding: 0 0 0 30px;&#13;
+      }&#13;
+    }&#13;
+  }&#13;
+}&#13;
+&#13;
+.text-success-alt {&#13;
+	background-color: $state-success-text;&#13;
+}&#13;
+&#13;
+.text-info-alt {&#13;
+	background-color: $state-info-text;&#13;
+}&#13;
+&#13;
+.sp-cross-scope-msg {&#13;
+	margin-bottom: 10px;&#13;
+}&#13;
+&#13;
+.mce-statusbar, .mce-edit-area, .mce-tinymce {&#13;
+    border-color: $input-border;&#13;
+}&#13;
+&#13;
+.tab-pane {&#13;
+  	padding: 10px;&#13;
+	border-left: 1px solid lightgrey;&#13;
+  	border-right: 1px solid lightgrey;&#13;
+  	border-bottom: 1px solid lightgrey;&#13;
+}&#13;
+&#13;
+&#13;
+&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>widget-form-tabbed-v2</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+    setTimeout(function() {
+        $('#adminMenu, #platformLink').tooltip();
+    });
+    setTimeout(function() {
+        $(element).find('.panel-body :input:enabled:visible:not(":button, [readonly]"):first').focus();
+    }, 500);
+    setTimeout(function() {
+        $('label, button').on('show.bs.tooltip', function(e) {
+			if ($(this).data('bs.tooltip')) {
+				$(this).data('bs.tooltip').options.placement = "top";
+				$(this).data('bs.tooltip').options.container = 'body';
+			}
+        });
+    }, 1000);
+}]]></link>
+        <name>Tabbed Form Widget v2</name>
+        <option_schema>[{"name":"disableUIActions","section":"Behavior","label":"Disable UI Actions on Form","type":"boolean"},{"name":"showFormView","section":"Behavior","label":"Display current form view","type":"boolean"},{"name":"omitHeaderOptions","section":"Behavior","label":"Omit header options icon","type":"boolean"}]</option_schema>
+        <public>false</public>
+        <roles>snc_external,snc_internal</roles>
+        <script><![CDATA[// form functionality - URL parameter driven
+(function($sp, input, data, options, gs) {
+  /* "use strict"; -linter issues */
+  // populate the 'data' variable
+	data.attachmentUploadSuccessMsg = gs.getMessage("Attachment upload was successful");
+	data.recordAddedMsg = gs.getMessage("Record Added");
+	data.updatedMsg = gs.getMessage("Record Updated");
+	data.exportPDFMsg = gs.getMessage("Export to PDF");
+	data.exportPDFLandMsg = gs.getMessage("Export to PDF (landscape)");
+	data.addAttachmentMsg = gs.getMessage("Add an attachment");
+	data.maxAttachmentSize = parseInt(gs.getProperty("com.glide.attachment.max_size", 1024));
+	data.supportedAttachmentExtensions = gs.getProperty("glide.attachment.extensions", '');
+	data.advancedUIEnabled = (gs.getProperty("glide.ui.advanced") == "true");
+	if (isNaN(data.maxAttachmentSize))
+		data.maxAttachmentSize = 24;
+	data.largeAttachmentMsg = gs.getMessage("Attached files must be smaller than {0} - please try again", "" + data.maxAttachmentSize + "MB");
+	
+	data.isAdmin = gs.hasRightsTo('sp/configure.all/execute', null);
+	data.emptyStateTemplate = options.empty_state_template;
+	var isPopup = ($sp.getParameter("isPopup") == "true" || $sp.getParameter("isPopup") == "1") ? true : false;
+
+	if (input) {
+		data.table = input.table;
+		data.sys_id = input.sys_id;
+		data.view = input.view;
+		var result = {};
+		if (input._fields) {
+			result = $sp.saveRecord(input.table, input.sys_id, input._fields);
+			data.sys_id = result.sys_id;
+		}
+
+		if (input.sys_id == '-1')
+			data.isNewRecord = true;
+		if (input.isPopup === true)
+			isPopup = true;
+	} else {
+		data.table = options.table || $sp.getParameter("t") || $sp.getParameter("table") || $sp.getParameter("sl_table");
+		data.sys_id = options.sys_id || $sp.getParameter("sys_id") || $sp.getParameter("sl_sys_id");
+		if (!data.sys_id && options.sys_id_required != "true")
+			data.sys_id = "-1";
+		data.view = options.view || $sp.getParameter("view") || $sp.getParameter("v"); // no default
+	}
+
+  	if (isPopup && gs.getProperty("glide.service_portal.reference.use_sys_popup_view", "false") == "true") {
+		options.hideRelatedLists = true;
+		options.disableUIActions = "true";
+	}
+	data.hideRelatedLists = options.hideRelatedLists || false;
+	data.disableUIActions = options.disableUIActions === "true || !!(input && input.disableUIActions)";
+  
+	data.isPopup = isPopup;
+	data.query = input.query || $sp.getParameter("query") || options.query || "";
+	data.f = {};
+	if (!data.table)
+		return;
+	
+	// Form widget is not a supported way to view an attachment
+	if (data.table == "sys_attachment") {
+		data.tableUnsupported = true;
+		return;
+	}
+
+	if (!GlideTableDescriptor.isValid(data.table))
+		return;
+
+	if (!data.sys_id)
+		return;
+
+	var rec = $sp.getRecord(data.table, data.sys_id);
+
+	if (data.sys_id != "-1" && !rec.canRead()) {
+		data.f.loadError = "Not Authorized to read requested record in " + rec.getClassDisplayValue();
+		return; // can't see requested record
+	}
+	if (data.sys_id == "-1" && !rec.canCreate()) {
+		data.f.loadError = "Not Authorized to create records in " + rec.getClassDisplayValue();
+		return; // can't create a new record
+	}
+	
+	data.isValid = rec.isValid() || data.sys_id == "-1";
+	if (!data.isValid)
+		return;
+
+	data.table = rec.getRecordClassName();
+	data.tableLabel = rec.getClassDisplayValue();
+	data.tableHierarchy = GlideDBObjectManager.getTables(data.table).toArray().join();
+	data.canWrite = rec.canWrite();
+	data.canDelete = rec.canDelete();
+	var hasRecordAccess = data.sys_id == "-1" ? rec.canCreate() : data.canWrite;
+	data.canAttach = !options.omitAttachmentButton && hasRecordAccess && gs.hasRole(gs.getProperty('glide.attachment.role')) && !GlideTableDescriptor.get(data.table).getED().getBooleanAttribute("no_attachment");
+	data.f = $sp.getForm(data.table, data.sys_id, data.query, data.view, isPopup);
+	data.RLwidget = $sp.getWidget("tabbed-related-lists-v2", { rl: data.f._related_lists, sys_id: data.sys_id });
+
+	// PRB1335036: show appropriate message when record is in cross app scope
+	data.f.outOfScope = !rec.isInSelectedScope();
+	// Populate scope labels only when needed
+	if (data.f.outOfScope) {
+		data.f.recordScopeLabel = gs.getScopeLabelByRecordId(rec.getUniqueValue());
+		data.f.currentScopeLabel = gs.getCurrentApplicationName();
+	}
+	
+	var policies = data.f.policy || [];
+	policies.forEach(function(policy, index){
+		if (policy['is_ui_data_policy']) {
+			policies[index].onload = true;
+		}
+	});
+	// Activity formatter is hardcoded to set specific options
+	for (var f in data.f._formatters) {
+		var fm = data.f._formatters[f];
+		if (fm.formatter == "activity.xml") {
+			fm.hardcoded = true;
+			fm.widgetInstance = $sp.getWidget('widget-ticket-conversation',
+																{table: data.table,
+																 sys_id: data.sys_id,
+																 includeExtended: true,
+																 hideAttachmentBtn: true,
+																 title: "${Activity}",
+																 use_dynamic_placeholder: true,
+																 btnLabel: "${Post}"});
+		} else if(fm.formatter == "com_glideapp_servicecatalog_veditor" || fm.formatter == "com_glideapp_questionset_default_question_editor") {
+			var qsConfig = $sp.getValue('quick_start_config');
+			if (qsConfig)
+				qsConfig = JSON.parse(qsConfig)[0];
+			fm.widgetInstance = $sp.getWidget(fm.widget, {table: data.table,
+														sys_id: data.sys_id,
+														readonly_variable_editor: qsConfig ? qsConfig.readonly_variable_editor : 'false'});
+		} else
+			fm.widgetInstance = $sp.getWidget(fm.widget, data);
+	}
+})($sp, input, data, options, gs);]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-01-21 19:58:36</sys_created_on>
+        <sys_id>04269f3b2f4501101b6051072799b6ba</sys_id>
+        <sys_mod_count>333</sys_mod_count>
+        <sys_name>Tabbed Form Widget v2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_widget_04269f3b2f4501101b6051072799b6ba</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-09 03:19:51</sys_updated_on>
+        <template><![CDATA[<div ng-if="!data.isValid && !data.emptyStateTemplate" class="panel panel-default">
+  <div class="panel-body wrapper-lg text-center">
+    <span ng-if="data.f.loadError">{{::data.f.loadError}}</span>
+    <span ng-if="!data.tableUnsupported && !data.f.loadError">${Record not found}</span>
+    <span ng-if="data.tableUnsupported">${Form view not supported for requested table}</span>
+  </div>
+</div>
+
+<div ng-if="!data.isValid && data.emptyStateTemplate" class="panel-shift">
+  <div class="empty-state-wrapper panel panel-default" ng-include="data.emptyStateTemplate"></div>
+</div>
+
+<div ng-if="data.isValid" class="panel-shift">
+  <div class="" ng-if="!data.f._view.length && data.hideRelatedLists && data.emptyStateTemplate">
+    <div class="empty-state-wrapper panel panel-default" ng-include="data.emptyStateTemplate"></div>
+  </div>
+
+  <div class="" ng-if="!data.f._view.length && data.hideRelatedLists && !data.emptyStateTemplate">
+    <div class="panel panel-default">
+      <div class="panel-heading"><span class="panel-title">{{data.f.title}}</span> <span ng-if="::options.showFormView == 'true' && data.f.view != ''">[{{data.f.view_title}} view]</span></div>
+      <div class="panel-body wrapper-lg text-center">
+        ${No elements to display}
+      </div>
+    </div>
+  </div>
+
+  <!-- readOnly due to scope -->
+  <div ng-if="isPageReady && data.f.outOfScope" class="read-only-message">
+    <div class="alert alert-info sp-cross-scope" role="alert">
+      <p>${This record is in the <strong>{{data.f.recordScopeLabel}}</strong> application, but <strong>{{data.f.currentScopeLabel}}</strong> is the current application.}</p>
+    </div>
+  </div>
+  <div ng-show="isPageReady" class="panel panel-default" ng-if="data.f._view.length || !data.hideRelatedLists" >
+    <div class="panel-heading" ng-if="data.f.title.length" sp-context-menu="getUIActionContextMenu(event)">
+      	<span class="dropdown m-r-xs" ng-if="(data.isAdmin || getUIActions('context').length > 0) && options.omitHeaderOptions != 'true'">
+            <button aria-label="{{data.f.label}} ${Form menu}" title="{{data.f.label}} ${Form menu}" class="btn btn-form-menu dropdown-toggle glyphicon glyphicon-menu-hamburger" style="line-height: 1.4em" id="adminMenu" data-toggle="dropdown" data-placement="bottom" aria-haspopup="true" aria-expanded="false"></button>
+            <ul class="dropdown-menu" aria-labelledby="adminMenu">
+              <li ng-if="::data.isAdmin"><a ng-href="/{{data.f.table}}.do?sys_id={{data.f.sys_id}}&sysparm_view={{data.f.view}}" target="_blank" tabindex="-1">${Open in platform}</a></li>
+              <li ng-if="::data.isAdmin" class="dropdown-header" tabindex="-1">${Configure}</li>
+              <li ng-if="::data.isAdmin"><a href="/slushbucket.do?sysparm_referring_url={{adminMenu.encodedPageUrl}}&sysparm_list={{data.f._sections[0].id}}&sysparm_form=section&sysparm_view={{data.f.view}}" target="_blank" tabindex="-1">${Form Layout}</a></li>
+              <li ng-if="::data.isAdmin"><a href="/slushbucket.do?sysparm_referring_url={{adminMenu.encodedPageUrl}}&sysparm_list={{data.f.table}}&sysparm_form=related_list&sysparm_view={{data.f.view}}" target="_blank" tabindex="-1">${Related Lists}</a></li>
+              <li ng-if="::data.isAdmin"><a href="?id=lf&table=sys_ui_policy&filter=table%3D{{data.f.table}}%5EORtableIN{{data.tableHierarchy}}%5Eactive%3Dtrue%5Eui_type%3D1%5EORui_type%3D10" ng-click="openRelatedList($event, {id:'lf', table: 'sys_ui_policy', filter: 'table%3D{{data.f.table}}%5EORtableIN{{data.f.table}},sys_metadata%5Eactive%3Dtrue%5Eui_type%3D1%5EORui_type%3D10'})" tabindex="-1">${UI Policies} <span class="badge pull-right" ng-if="f.policy.length">{{f.policy.length}}</span></a></li>
+              <li ng-if="::data.isAdmin"><a href="?id=lf&table=sys_script_client&filter=table%3D{{data.f.table}}%5EORtableIN{{data.tableHierarchy}}%5Eactive%3Dtrue%5Eui_type%3D1%5EORui_type%3D10" ng-click="openRelatedList($event, {id: 'lf', table: 'sys_script_client', filter: 'table%3D{{data.f.table}}%5EORtableIN{{data.f.table}},sys_metadata%5Eactive%3Dtrue%5Eui_type%3D1%5EORui_type%3D10'})" tabindex="-1">${Client Scripts} <span class="badge pull-right" ng-if="adminMenu.getClientScriptCount()">{{adminMenu.getClientScriptCount()}}</span></a></li>
+              <li ng-if="getUIActions('context').length > 0 &&  data.isAdmin" role="separator" class="divider"></li>
+              <li ng-repeat="action in getUIActions('context')"><a href="" ng-click="triggerUIAction(action)" tabindex="-1">{{action.name}}</a></li>
+              <li ng-if="::data.isAdmin || getUIActions('context').length > 0" role="separator" class="divider"></li>
+              <li><a target="_new" href="/{{data.f.table}}.do?PDF&sys_id={{data.sys_id}}&sysparm_view={{data.f.view}}" tabindex="-1">${Export to PDF}</a></li>
+              <li><a target="_new" href="/{{data.f.table}}.do?PDF&landscape=true&sys_id={{data.sys_id}}&sysparm_view={{data.f.view}}" tabindex="-1">${Export to PDF (landscape)}</a></li>
+            </ul>
+        </span>
+      
+      	<!-- optional "Open in platform" link when omitHeaderOptions is true -->
+      	<span class="dropdown m-r-xs" ng-if="::data.isAdmin && options.omitHeaderOptions == 'true' && options.ensurePlatformLink == 'true'">
+            <button aria-label="{{data.f.label}} ${Form menu}" title="{{data.f.label}} ${Form menu}" class="btn btn-form-menu dropdown-toggle glyphicon glyphicon-menu-hamburger" style="line-height: 1.4em" id="platformLink" data-toggle="dropdown" data-placement="botton" aria-haspopup="true" aria-expanded="false"></button>
+            <ul class="dropdown-menu" aria-labelledby="platformLink">
+              <li><a ng-href="/{{data.f.table}}.do?sys_id={{data.f.sys_id}}&sysparm_view={{data.f.view}}" target="_blank" tabindex="-1">${Open in platform}</a></li>
+            </ul>
+        </span>
+
+      <span class="panel-title" role="heading" aria-level="{{embeddedInModal ? '1' : '2'}}">{{data.f.title}}</span> <span ng-if="::options.showFormView == 'true' && data.f.view != ''">[{{data.f.view_title}} view]</span>
+      <div ng-if="::attachmentHandler && data.canAttach" title="{{::data.addAttachmentMsg}}" class="pull-right attachment-button">
+      	 <sp-attachment-button modal="true" supported-extensions="{{::data.supportedAttachmentExtensions}}"></sp-attachment-button>
+      </div>
+	</div>
+    <div class="panel-body">
+      <!-- performance debug -->
+      <div ng-if="data.show_sql">
+        <div class="comment">
+          <span ng-if="data.f._perf.sql_count">${SQL Statements {{data.f._perf.sql_count}}}, </span>
+          <span>${Time {{data.f._perf.time}}}</span>
+        </div>
+        <div ng-repeat="s in data.f._perf.sql" class="{{s.type}}">
+          {{s.statement}}
+        </div>
+      </div>
+      <!-- attachments -->
+      <sp-attachment-manager table="::data.table" sys-id="data.f._attachmentGUID" omit-edit="::!data.canAttach"></sp-attachment-manager>
+      <!-- asterisk info text -->
+      <div ng-if="mandatory.length > 0" style="margin: 2rem 0 1.5rem 0">
+           <span class="fa fa-asterisk mandatory" title="${asterisk}" style="padding-right: .25rem"></span> ${Indicates required}
+      </div>
+      <!-- form -->
+      <form id="widget-form-{{$id}}">
+        <div>
+          <sp-model form_model="data.f" mandatory="mandatory" embedded_in_modal="embeddedInModal"
+ template-url="tabbed_form_template_v2"></sp-model>
+        </div>
+      </form>
+      <!-- UI Action Links -->
+      <div ng-if="getUIActions('link').length > 0">
+        <label role="heading" aria-level="{{embeddedInModal ? '2' : '3'}}" style="margin: 0;">${Related Links}</label>
+        <div ng-repeat="action in getUIActions('link')">
+          <a href ng-click="triggerUIAction(action)" gsft_id="{{::action.sys_id}}">{{::action.name}}</a>
+        </div>
+      </div>
+      <!-- related lists -->
+      <div id="relatedLists" ng-show="!data.hideRelatedLists">
+        <sp-widget widget="data.RLwidget"></sp-widget>
+      </div>
+    </div>
+
+    <div class="panel-footer">
+     <button ng-if="getPrimaryAction()" type="submit" ng-click="triggerUIAction(getPrimaryAction())" ng-disabled="submitting" class="btn btn-primary action-btn pull-right" gsft_id="{{::getPrimaryAction().sys_id ? getPrimaryAction().sys_id : ''}}">${Save} <span ng-if="saveButtonSuffix">(${{{saveButtonSuffix}}})</span></button>
+      <div ng-if="data.isPopup == true && data.sys_id == -1 && data.RLwidget.data.related_lists.length > 0" class="btn pull-right"><input id="keep_open" type="checkbox" ng-checked="true">Keep Open</input></div>
+      <button ng-click="triggerUIAction(action)" ng-disabled="submitting" ng-repeat="action in getUIActions('button') | filter: hideDuplicateSaveAction" class="btn action-btn pull-right" ng-class="::getButtonClass(action)" gsft_id="{{::action.sys_id}}">{{action.name}}</button>
+      <span>{{status}}</span>
+      <button ng-if="data.canDelete && data.sys_id != -1" type="button" class="btn btn-danger action-btn pull-right" style="margin-right: 100px;" ng-click="uiAction($event, 'delete')">Delete</button>
+      <button class="btn btn-default pull-left" data-dismiss="dialog" ng-click="dismiss('Cancel pressed')" ng-show="c.data.isPopup == true">${Cancel}</button>
+      <div style="clear: both;"></div>
+      <button class="btn btn-default pull-left" data-dismiss="dialog" ng-click="dismiss('Cancel pressed')" ng-show="c.data.isPopup == true">${Cancel}</button>
+      <button class="btn btn-default pull-left" data-dismiss="dialog" ng-click="dismiss('Cancel pressed')" ng-show="c.data.isPopup == true">${Cancel}</button>
+      <button class="btn btn-default pull-left" data-dismiss="dialog" ng-click="dismiss('Cancel pressed')" ng-show="c.data.isPopup == true">${Cancel}</button>
+      <div ng-if="mandatory.length" class="alert alert-info" style="margin-top: .5em" aria-live="polite" aria-atomic="true">
+        <span ng-if="mandatory.length > 0">${Required information} </span>
+         <div ng-repeat="f in mandatory" class="label">
+            <span class="sr-only" id="req_info_bottom_{{::f.name}}">${Required information}</span>
+            <button for="req_info_bottom_{{::f.name}}" class="btn btn-info" ng-click="getFocus(f)" title="{{::f.label}}">{{::f.label}}</button>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

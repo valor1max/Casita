@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_ng_template">
+    <sp_ng_template action="INSERT_OR_UPDATE">
+        <id>tabset-template-v2</id>
+        <sp_widget display_value="Tabbed Layout v2">12eb90502f7c39101b6051072799b6bf</sp_widget>
+        <sys_class_name>sp_ng_template</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-08-17 12:44:27</sys_created_on>
+        <sys_id>f379a4902fbc39101b6051072799b691</sys_id>
+        <sys_mod_count>16</sys_mod_count>
+        <sys_name>tabset-template-v2</sys_name>
+        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Tabbed Form v2">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_ng_template_f379a4902fbc39101b6051072799b691</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-08-24 20:39:05</sys_updated_on>
+        <template><![CDATA[<div>
+  <div style="display: grid; grid-template-columns: {{(tabset.align == 'top') ? 'auto' : (tabset.align == 'left') ? 'min-content auto' : 'auto min-content'}}; 
+              grid-template-rows: {{(tabset.align == 'top') ? 'auto auto' : 'auto'}};" ng-init="navType = 'nav-' + tabset.type; navAlign = 'nav-' + tabset.align">
+    <div style="grid-column: {{(tabset.align == 'right') ? '2' : '1'}}; grid-row: 1; overflow-y: auto;">
+      <span class="tabs-label">{{tabset.label}}</span>
+      <ul class="nav {{navType}} {{navAlign}} {{(vertical == true) ? 'nav-stacked' : ''}} {{(justified == true) ? 'nav-justified' : ''}}" ng-transclude></ul>
+    </div>
+    <div style="grid-column: {{(tabset.align == 'left') ? '2' : '1'}}; grid-row: {{(tabset.align == 'top') ? '2' : '1'}};" class="tab-content">
+      <div class="tab-pane" ng-repeat="tab in tabset.tabs" ng-class="{active: tabset.active === tab.index}" uib-tab-content-transclude-v2="tab"></div>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_ng_template>
+</record_update>

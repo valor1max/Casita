@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_rel_widget_clone">
+    <sp_rel_widget_clone action="INSERT_OR_UPDATE">
+        <child display_value="Tabbed Filter Breadcrumbs v2">2735f0812f0121101b6051072799b6ef</child>
+        <cloned>2023-02-14 11:34:42</cloned>
+        <last_validated>2023-02-14 11:34:42</last_validated>
+        <parent display_value="Filter Breadcrumbs">339a5c41d7201200b0b044580e61030d</parent>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;sp_widget&gt;&lt;category&gt;standard&lt;/category&gt;&lt;client_script&gt;&lt;![CDATA[function ($scope, $timeout, $element){
+	var eventNames = {
+		setBreadcrumbs: 'widget-filter-breadcrumbs.setBreadcrumbs'
+	};
+
+	$scope.adjustFilter = function(breadcrumb, remove){
+		var newQuery = remove ? breadcrumb.ifRemoved : breadcrumb.value;
+		$scope.$emit('widget-filter-breadcrumbs.queryModified', newQuery);
+	}
+
+	$scope.$on(eventNames.setBreadcrumbs, function(e, data, newQuery){
+		$scope.data = data;
+		$scope.$broadcast("snfilter:initialize_query", massageEncodedQuery(newQuery));
+	});
+
+	$scope.clickFilter = function() {
+		$scope.showFilter = !$scope.showFilter;
+		$scope.filterMsg = $scope.showFilter ? $scope.data.hideMsg: $scope.data.showMsg;
+	}
+
+	$scope.showFilter = false;
+	$scope.filterMsg = $scope.data.showMsg;
+	$scope.$on("snbreadcrumbs:toggle_filter", function(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		$scope.showFilter = false;
+		$scope.filterMsg = $scope.data.showMsg;
+		$element.find('#filterToggle').focus();
+		
+	});
+
+	$scope.$on("snfilter:update_query", function(e, query) {
+		e.stopPropagation();
+		e.preventDefault();
+		$scope.$emit('widget-filter-breadcrumbs.queryModified', massageEncodedQuery(query));
+		$scope.showFilter = false;
+		$scope.filterMsg = $scope.data.showMsg;
+	});
+
+	$scope.$on("snfilter:run_filter", function(e) {
+		$element.find('#filterToggle').focus();
+	});
+
+	function massageEncodedQuery(query) {
+		return (query) ? query.replace(/CONTAINS/g, "LIKE").replace(/DOES NOT CONTAIN/g, "NOT LIKE") : query;
+	}
+}]]&gt;&lt;/client_script&gt;&lt;controller_as/&gt;&lt;css&gt;.breadcrumbs {
+  margin-left: 9px;
+  margin-bottom: 3px;
+}
+
+.icon-filter {
+  font-size: 20px;
+  text-decoration: inherit; /* no underline */
+}
+
+.ng-filter-widget {
+  position: static;
+
+  .modal {
+    .manage-filters-button {
+      top: 15px;
+    }
+
+    .input-group-radio {
+      input {
+        margin-left: 0;
+      }
+    }
+
+    .input-group-transparent {
+      position: relative;
+
+      .input-group-addon-transparent {
+        position: absolute;
+        font-size: 18px;
+        top: 2px;
+        left: 8px;
+      }
+
+      input {
+        border-radius: 9999px;
+        padding-left: 28px;
+      }
+    }
+
+    ul {
+      padding: 0 5px 10px;
+
+      li {
+        button {
+          background-color: inherit;
+        }
+
+        a {
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          display: block;
+          padding: 7px 20px;
+          text-decoration: none;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+&lt;/css&gt;&lt;data_table&gt;sp_instance&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list/&gt;&lt;has_preview&gt;false&lt;/has_preview&gt;&lt;id&gt;widget-filter-breadcrumbs&lt;/id&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link/&gt;&lt;name&gt;Filter Breadcrumbs&lt;/name&gt;&lt;option_schema&gt;[{"hint":"Table to be used to generate breadcrumbs","name":"table","section":"Data","label":"Table","type":"string"},{"name":"query","section":"Data","label":"Query","type":"string"},{"hint":"If enabled, a filter button prompt will be added to the breadcrumb list","name":"enable_filter","default_value":"false","section":"Behavior","label":"Enable Filter","type":"boolean"}]&lt;/option_schema&gt;&lt;public&gt;true&lt;/public&gt;&lt;roles/&gt;&lt;script&gt;&lt;![CDATA[(function() {
+	var table = options.table || input.table;
+	var query = options.query || input.query || "";
+	data.breadcrumbs = $sp.getFilterBreadcrumbs(table, query, null);
+	data.enable_filter = input.enable_filter || options.enable_filter == true || options.enable_filter == "true";
+	data.showMsg = gs.getMessage('Show filter');
+	data.hideMsg = gs.getMessage('Hide filter');
+
+	if (data.enable_filter)
+		data.filterWidget = $sp.getWidget('sn-desktop-filter', {
+			table: table,
+			initialQuery : query
+		});
+
+})();]]&gt;&lt;/script&gt;&lt;servicenow&gt;true&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2015-12-23 14:57:01&lt;/sys_created_on&gt;&lt;sys_id&gt;339a5c41d7201200b0b044580e61030d&lt;/sys_id&gt;&lt;sys_mod_count&gt;129&lt;/sys_mod_count&gt;&lt;sys_name&gt;Filter Breadcrumbs&lt;/sys_name&gt;&lt;sys_package display_value="Service Portal - Core" source="com.glide.service-portal"&gt;ab0dd7161b3400103548da49cc4bcb53&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_339a5c41d7201200b0b044580e61030d&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2021-08-25 15:14:36&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;div class="breadcrumbs"&gt;
+  &lt;button type="button"
+          role="button"
+          id="filterToggle"
+          ng-show="data.enable_filter"
+          ng-click="clickFilter()"
+          title="{{filterMsg}}"
+          class="icon-filter btn btn-link"
+          tabindex="0"
+          data-original-title="{{filterMsg}}"
+          aria-expanded="{{showFilter}}"&gt;&lt;span class="sr-only"&gt;{{filterMsg}}&lt;/span&gt;&lt;/button&gt;
+  &lt;span ng-repeat="crumb in data.breadcrumbs track by crumb.value"&gt;
+    &lt;a href="javascript:void(0)" ng-if="!$first" class="sp-breadcrumb-link sp-breadcrumb-remove-condition" ng-click="adjustFilter(crumb, true)" aria-label="${Remove next condition} {{crumb.label}}" title="${Remove next condition}" data-toggle="tooltip" data-placement="bottom"&gt;&amp;gt;&lt;/a&gt;
+    &lt;a href="javascript:void(0)" class="sp-breadcrumb-link" ng-click="adjustFilter(crumb, false)"&gt;{{crumb.label}}&lt;/a&gt;
+  &lt;/span&gt;
+&lt;/div&gt;
+
+&lt;div ng-if="data.enable_filter"&gt;
+  &lt;span ng-show="showFilter"&gt;
+    &lt;sp-widget widget="data.filterWidget"&gt;&lt;/sp-widget&gt;
+  &lt;/span&gt;
+&lt;/div&gt;]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;</payload>
+        <sys_class_name>sp_rel_widget_clone</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-02-14 11:34:42</sys_created_on>
+        <sys_id>e735f0812f0121101b6051072799b6f3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>2735f0812f0121101b6051072799b6ef</sys_name>
+        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_rel_widget_clone_e735f0812f0121101b6051072799b6f3</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-02-14 11:34:42</sys_updated_on>
+    </sp_rel_widget_clone>
+</record_update>

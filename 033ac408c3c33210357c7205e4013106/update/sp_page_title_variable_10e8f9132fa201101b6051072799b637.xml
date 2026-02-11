@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_page_title_variable">
+    <sp_page_title_variable action="INSERT_OR_UPDATE">
+        <column_name>name</column_name>
+        <filter_condition/>
+        <id_parameter>table</id_parameter>
+        <order/>
+        <source_field>label</source_field>
+        <source_table>sys_db_object</source_table>
+        <sp_page display_value="list_v2">a4f1d0302fa501101b6051072799b6eb</sp_page>
+        <sys_class_name>sp_page_title_variable</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-04-04 13:28:57</sys_created_on>
+        <sys_id>10e8f9132fa201101b6051072799b637</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>%table</sys_name>
+        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_page_title_variable_10e8f9132fa201101b6051072799b637</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-04-04 13:28:57</sys_updated_on>
+        <variable>%table</variable>
+    </sp_page_title_variable>
+</record_update>

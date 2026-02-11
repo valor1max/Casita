@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_rel_widget_clone">
+    <sp_rel_widget_clone action="INSERT_OR_UPDATE">
+        <child display_value="Data Table from URL Definition v2">7e41d43c2f6501101b6051072799b6ce</child>
+        <cloned>2022-02-05 18:28:15</cloned>
+        <last_validated>2022-02-05 18:28:15</last_validated>
+        <parent display_value="Data Table from URL Definition">8ae61f55cb21020000f8d856634c9c93</parent>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;sp_widget&gt;&lt;category&gt;standard&lt;/category&gt;&lt;client_script&gt;&lt;![CDATA[function($scope, $rootScope, $location, spUtil, $timeout, spAriaFocusManager) {
+	var canNavigate = true;
+	if ($scope.data.dataTableWidget)
+		angular.extend($scope.data.dataTableWidget.options, $scope.options);
+
+	$scope.$on('data_table.click', callDataClick);
+
+	$scope.$on('select2.ready', function(e, $el){
+		if ($scope.data.invalid_table){
+			e.stopPropagation();
+			$el.select2('open');
+		}
+	})
+
+	$scope.selectedTable = {
+		displayValue: $scope.data.table,
+		value: $scope.data.table
+	}
+
+	function resetParams(){
+		delete $scope.data.p;
+		delete $scope.data.o;
+		delete $scope.data.d;
+		delete $scope.data.q;
+		delete $scope.data.table;
+	}
+
+	$scope.onChange = function() {
+		resetParams();
+		$scope.data.table = $scope.selectedTable.value;
+		$scope.data.fields = "";  // reset
+		$scope.data.invalid_table = false;
+		getData(true);
+	}
+	
+	function callDataClick(e, parms) {											
+			var oid = $location.search().id;
+			var p = $scope.data.page_id || 'form';
+			var s = {id: p, table: parms.table, sys_id: parms.sys_id, view: $scope.data.view};
+			if (oid == p) {
+				s.spa = 1;
+				var t = $location.search();
+				s = angular.extend(t, s);
+				$rootScope.$broadcast('$sp.list.click', s);
+			}
+
+			var newURL = $location.search(s);
+			spAriaFocusManager.navigateToLink(newURL.url());										
+	}
+
+	function getData(updateUrl) {
+		var f = $scope.data;
+		spUtil.update($scope).then(function(data) {
+				$scope.data.dataTableWidget = null;
+				$timeout(function(){
+					$scope.data.dataTableWidget = data.dataTableWidget;
+					angular.extend($scope.data.dataTableWidget.options, $scope.options);
+					if (updateUrl)
+						setPermalink(f.table);
+				});
+		});
+	}
+
+	function setPermalink(table) {
+		$scope.ignoreLocationChange = true;
+		var searchParms = $location.search();
+		var search = {
+			spa: 1,
+			table: table,
+			id: searchParms.id
+		};
+		$location.search(search);
+	}
+}]]&gt;&lt;/client_script&gt;&lt;controller_as/&gt;&lt;css&gt;.widget-data-table .clearfix {
+  display: none;
+}
+
+.panel-primary .panel-heading {
+  button:not(.btn-default) {
+    &amp;amp;:focus {
+      outline-color: #FFFFFF;
+      border-color: #FFFFFF;
+      box-shadow: 0px 0px 5px #FFFFFF;
+    }
+  }
+}
+&lt;/css&gt;&lt;data_table&gt;sp_instance_table&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list&gt;title,glyph,color,sp_page&lt;/field_list&gt;&lt;has_preview&gt;false&lt;/has_preview&gt;&lt;id&gt;data-table-from-url&lt;/id&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link/&gt;&lt;name&gt;Data Table from URL Definition&lt;/name&gt;&lt;option_schema&gt;[{"hint":"Show Instance option title instead of the table's plural label","name":"use_instance_title","default_value":"false","section":"Presentation","label":"Use Instance Title","type":"boolean"},{"hint":"If enabled, show the filter in the breadcrumb section of the table","name":"enable_filter","default_value":"false","section":"Presentation","label":"Enable Filter","type":"boolean"}]&lt;/option_schema&gt;&lt;public&gt;false&lt;/public&gt;&lt;roles&gt;snc_external,snc_internal&lt;/roles&gt;&lt;script&gt;&lt;![CDATA[(function() {
+	deleteOptions(['table','field_list','filter','order_by', 'order_direction','order','maximum_entries']);
+	if (input) {
+		data.table = input.table;
+		data.view = input.view;
+	} else {
+		data.table = $sp.getParameter('table') || $sp.getParameter('t');
+		data.view = $sp.getParameter('view');
+	}
+
+	if (!data.table) {
+		data.invalid_table = true;
+		data.table_label = "";
+		return;
+	}
+
+	var gr = new GlideRecordSecure(data.table);
+	if (!gr.isValid()) {
+		data.invalid_table = true;
+		data.table_label = data.table;
+		return;
+	}
+
+	// page is where the record URLs go, URL parameter wins
+	data.page_id = $sp.getParameter("target_page_id");
+	if (!data.page_id) {
+		var sp_page = $sp.getValue('sp_page');
+		if (sp_page) {
+			var pageGR = new GlideRecord('sp_page');
+			pageGR.get(sp_page);
+			data.page_id = pageGR.id.getDisplayValue();
+		}
+	}
+
+	// widget parameters
+	data.table_label = gr.getLabel();
+	data.fields = $sp.getListColumns(data.table, data.view);
+	copyParameters(data, ['p', 'o', 'd', 'filter']);
+	copyParameters(data, ['relationship_id', 'apply_to', 'apply_to_sys_id']);
+	data.filterACLs = true;
+	data.show_new = true;
+	data.show_keywords  = true;
+	data.show_breadcrumbs = true;
+	data.fromUrl = true;
+	data.useInstanceTitle = (options.use_instance_title == "true");
+	data.headerTitle = data.useInstanceTitle ? options.title : gr.getPlural();
+	data.enable_filter = input.enable_filter || options.enable_filter == true || options.enable_filter == "true";
+	data.dataTableWidget = $sp.getWidget('widget-data-table', data);
+	
+
+	function copyParameters(to, names) {
+		names.forEach(function(name) {
+			data[name] = $sp.getParameter(name);
+		})
+	}
+
+	// in case this widget is tied to the wrong instance type
+	function deleteOptions(names) {
+		names.forEach(function(name) {
+			delete options[name];
+		})
+	}
+})()]]&gt;&lt;/script&gt;&lt;servicenow&gt;true&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2015-07-28 19:54:45&lt;/sys_created_on&gt;&lt;sys_id&gt;8ae61f55cb21020000f8d856634c9c93&lt;/sys_id&gt;&lt;sys_mod_count&gt;416&lt;/sys_mod_count&gt;&lt;sys_name&gt;Data Table from URL Definition&lt;/sys_name&gt;&lt;sys_package display_value="Service Portal - Core" source="com.glide.service-portal"&gt;ab0dd7161b3400103548da49cc4bcb53&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_8ae61f55cb21020000f8d856634c9c93&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2020-07-23 10:01:04&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;div&gt;
+  &lt;div ng-if="data.invalid_table"&gt;
+    &lt;div class="alert alert-info"&gt;
+      &lt;span ng-if="data.table_label"&gt;${Table not defined} '{{data.table_label}}'&lt;/span&gt;
+      &lt;span ng-if="!data.table_label"&gt;${Select table on field below or specify on URL} ?id=list&amp;amp;table=table_name&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;sn-record-picker field="selectedTable" table="'sys_db_object'"
+                      display-field="'label'"
+                      value-field="'name'"
+                      display-fields="'name'"
+                      search-fields="'label,name'" page-size="100" on-change="onChange()" &gt;&lt;/sn-record-picker&gt;
+  &lt;/div&gt;
+  &lt;div ng-if="data.dataTableWidget &amp;&amp; !data.invalid_table"&gt;
+  	&lt;sp-widget widget="data.dataTableWidget"&gt;&lt;/sp-widget&gt;
+  &lt;/div&gt;
+&lt;/div&gt;]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;</payload>
+        <sys_class_name>sp_rel_widget_clone</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-02-05 18:28:15</sys_created_on>
+        <sys_id>764198fc2f6501101b6051072799b6c9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>7e41d43c2f6501101b6051072799b6ce</sys_name>
+        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_rel_widget_clone_764198fc2f6501101b6051072799b6c9</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-02-05 18:28:15</sys_updated_on>
+    </sp_rel_widget_clone>
+</record_update>

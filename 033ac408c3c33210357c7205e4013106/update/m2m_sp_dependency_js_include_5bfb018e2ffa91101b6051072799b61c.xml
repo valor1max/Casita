@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_dependency_js_include">
+    <m2m_sp_dependency_js_include action="INSERT_OR_UPDATE">
+        <order>100</order>
+        <sp_dependency display_value="Tabbed Order Guide Template v2">a4910fb22f4011101b6051072799b68e</sp_dependency>
+        <sp_js_include display_value="Tabbed Order Guide Template v2">50fb8dce2fba91101b6051072799b6a5</sp_js_include>
+        <sys_class_name>m2m_sp_dependency_js_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-10-28 19:26:45</sys_created_on>
+        <sys_id>5bfb018e2ffa91101b6051072799b61c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Tabbed Order Guide Template v2.Tabbed Order Guide Template v2</sys_name>
+        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>m2m_sp_dependency_js_include_5bfb018e2ffa91101b6051072799b61c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-10-28 19:26:45</sys_updated_on>
+    </m2m_sp_dependency_js_include>
+</record_update>

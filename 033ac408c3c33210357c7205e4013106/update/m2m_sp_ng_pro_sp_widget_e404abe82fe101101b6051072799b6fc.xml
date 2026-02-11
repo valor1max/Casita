@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_ng_pro_sp_widget">
+    <m2m_sp_ng_pro_sp_widget action="INSERT_OR_UPDATE">
+        <sp_angular_provider display_value="elementResizedV2">ad8267682fe101101b6051072799b665</sp_angular_provider>
+        <sp_widget display_value="Form Column Edit v2">79132ba82fe101101b6051072799b6bc</sp_widget>
+        <sys_class_name>m2m_sp_ng_pro_sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-02-05 15:10:23</sys_created_on>
+        <sys_id>e404abe82fe101101b6051072799b6fc</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>elementResizedV2.Form Column Edit v2</sys_name>
+        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>m2m_sp_ng_pro_sp_widget_e404abe82fe101101b6051072799b6fc</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-02-05 15:10:23</sys_updated_on>
+    </m2m_sp_ng_pro_sp_widget>
+</record_update>
