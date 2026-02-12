@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_css">
+    <sp_css action="INSERT_OR_UPDATE">
+        <css>      /* Faceted Search */&#13;
+      .v12fbe2d287330300a785940307cb0b1b {&#13;
+        .row.header {&#13;
+          &gt;.col-md-4 {&#13;
+            display:none;&#13;
+          }&#13;
+        }&#13;
+        .sp-list-menu {&#13;
+          &gt; .panel {&#13;
+            box-shadow: $sp-panel-box-shadow;&#13;
+            border: none;&#13;
+            background: $background-primary;&#13;
+            &gt;.panel-heading {&#13;
+              background: none;&#13;
+              border-bottom: none;&#13;
+              padding-bottom: $sp-space--md;&#13;
+              @media (max-width: 991px){&#13;
+                padding: $sp-space--lg;&#13;
+              }&#13;
+              .panel-title {&#13;
+                font-weight: 600;&#13;
+              }&#13;
+            }&#13;
+            &gt;.panel-content {&#13;
+              padding: 0 0 $sp-space--xl;&#13;
+              @media (max-width: 991px){&#13;
+                padding-bottom: $sp-space--lg;&#13;
+              }&#13;
+            }&#13;
+            .sp-list-menu-items {&#13;
+              .sp-list-menu-item {&#13;
+                padding: $sp-space--xs $sp-space--xl;&#13;
+                @media (max-width: 991px){&#13;
+                  padding: $sp-space--xs $sp-space--lg;&#13;
+                }&#13;
+                .active {&#13;
+                  font-weight: 600;&#13;
+                }&#13;
+              }&#13;
+            }&#13;
+          }&#13;
+        }&#13;
+        .sp-facet-lists {&#13;
+          box-shadow: $sp-panel-box-shadow;&#13;
+          background: $background-primary;&#13;
+          border-radius: $border-radius-large;&#13;
+          .panel-heading {&#13;
+            padding-bottom: $sp-space--md;&#13;
+            @media (max-width: 991px){&#13;
+              padding-left: $sp-space--lg;&#13;
+              padding-right: $sp-space--lg;&#13;
+            }&#13;
+            &amp;.heading {&#13;
+              margin-left: 0;&#13;
+            }&#13;
+          }&#13;
+          .sp-facet-list {&#13;
+            .panel {&#13;
+              border: none;&#13;
+              box-shadow: none;&#13;
+              border-radius: 0;&#13;
+              .panel-heading {&#13;
+                padding-top: $sp-space--md;&#13;
+                border-radius: 0;&#13;
+                align-items: center;&#13;
+                background: none;&#13;
+                @media (max-width: 991px){ &#13;
+                  padding-left: $sp-space--lg;&#13;
+                  padding-right: $sp-space--lg;&#13;
+                }&#13;
+                .label-title {&#13;
+                  font-weight: 600;&#13;
+                }&#13;
+                .btn-link.clear-all {&#13;
+                  color: $link-color;&#13;
+                  &amp;.disabled {&#13;
+                    border-color: $border;&#13;
+                  }&#13;
+                }&#13;
+              }&#13;
+            }&#13;
+            .sp-list-menu &gt; .panel &gt; .panel-content {&#13;
+              padding-bottom: $sp-space--md;&#13;
+            }&#13;
+            .sp-list-menu {&#13;
+              .panel-heading {&#13;
+                padding-top: $sp-space--sm; &#13;
+                padding-bottom: $sp-space--sm;&#13;
+                font-size: $font-size-small;&#13;
+                .panel-title {&#13;
+                  margin-left: 0;&#13;
+                }&#13;
+                .label-title {&#13;
+                  font-weight: 400;&#13;
+                  font-size: $font-size-small;&#13;
+                }&#13;
+              }&#13;
+              .multiselect-apply {&#13;
+                font-size: $font-size-small;&#13;
+                right: $sp-space--xl;&#13;
+                @media (max-width: 991px){&#13;
+                  right: $sp-space--lg;&#13;
+                }&#13;
+                &amp;.disabled {&#13;
+                  border-color: $border;&#13;
+                }&#13;
+              }&#13;
+              .sp-list-menu-item {&#13;
+                font-size: $font-size-small;&#13;
+                padding-left:#{$sp-space--xl + $sp-space--md};&#13;
+              }&#13;
+            }&#13;
+          }&#13;
+        }&#13;
+        .panel[aria-label="search results"]{&#13;
+          box-shadow: $sp-panel-box-shadow;&#13;
+          border: none;&#13;
+          background: $background-primary;&#13;
+          .panel-heading {&#13;
+            background: none;&#13;
+            border-bottom: none;&#13;
+            @media (max-width: 991px){&#13;
+              padding: $sp-space--lg;&#13;
+            }&#13;
+            &amp;.facet-pill-container {&#13;
+              .panel-title.pills {&#13;
+                font-size: $font-size-base;&#13;
+                .pills-label {&#13;
+                  margin-top:$sp-space--sm;&#13;
+                }&#13;
+              }&#13;
+              .sp-facet-pill.label {&#13;
+                border: 1px solid $border-primary;&#13;
+                background: none;&#13;
+              }&#13;
+            }&#13;
+          }&#13;
+          .panel-default &gt; div &gt; div[role="list"] {&#13;
+            border: 1px solid $border-tertiary;&#13;
+            border-bottom: none;&#13;
+            margin: 0 $sp-space--xl;&#13;
+            @media (max-width: 991px){ &#13;
+              margin: 0 $sp-space--lg;&#13;
+            }&#13;
+            .panel-body {&#13;
+              padding: $sp-space--lg;&#13;
+              a.m-b-sm {&#13;
+                margin:0!important;&#13;
+                padding-top: 0;&#13;
+                font-size: $font-size-base;&#13;
+              }&#13;
+              p, .text-muted {&#13;
+                font-size: $font-size-small;&#13;
+              }&#13;
+              .mark.highlight {&#13;
+                background-color: rgba($brand-primary-lightest, .5);&#13;
+                color: $text-color;&#13;
+                padding: 1px;&#13;
+              }&#13;
+              .sc i.ta-icon, .sc i.ta-img {&#13;
+                margin-right: $sp-space--sm;&#13;
+              }&#13;
+            }&#13;
+          }&#13;
+        }&#13;
+      }&#13;
+      /* Request Help Channels */&#13;
+      .v1bf77da453120010b87bddeeff7b125e {&#13;
+        .container-fluid {&#13;
+          background: $background-primary;&#13;
+          box-shadow: $sp-panel-box-shadow;&#13;
+          border-radius: $border-radius-large;&#13;
+          margin-bottom: $sp-space--xl;&#13;
+          .row-centered {&#13;
+            margin-bottom: $sp-space--xl;&#13;
+            &gt; .col-md-3 {&#13;
+              padding: 0 $sp-space--sm;&#13;
+            }&#13;
+          }&#13;
+        }&#13;
+        .icons {&#13;
+          font-size: $font-size-small;&#13;
+        }&#13;
+      }&#13;
+    </css>
+        <name>casita-theme-polaris-search</name>
+        <sys_class_name>sp_css</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-12 15:21:42</sys_created_on>
+        <sys_id>d3746fc9c383b610357c7205e40131cf</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>casita-theme-polaris-search</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_css_d3746fc9c383b610357c7205e40131cf</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 15:21:48</sys_updated_on>
+        <turn_off_scss_compilation>false</turn_off_scss_compilation>
+    </sp_css>
+</record_update>

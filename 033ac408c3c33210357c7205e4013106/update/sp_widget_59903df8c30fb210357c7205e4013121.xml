@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $timeout) {
+    /* widget controller */
+    var c = this;
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.tile-container {
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.tile-card-title {
+  width: 100%;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>casita_next_bill_due_card</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Casita Next Bill Due Card</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	data.bill_due = false;
+	var gt = new GlideRecord('u_monthly_bills');
+	gt.addEncodedQuery('u_parent_project.u_active_project=true^u_date_paidISEMPTY');
+	gt.orderBy('u_due_date')
+	gt.query();
+	if(gt.next()){
+		data.bill_due = true;
+		data.bill_type = gt.u_type_of_bill.getDisplayValue();
+		data.bill_date = gt.u_due_date.getDisplayValue();
+		data.bill_amount = gt.u_amount_due.getDisplayValue();
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-11 12:16:50</sys_created_on>
+        <sys_id>59903df8c30fb210357c7205e4013121</sys_id>
+        <sys_mod_count>29</sys_mod_count>
+        <sys_name>Casita Next Bill Due Card</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_widget_59903df8c30fb210357c7205e4013121</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-11 14:27:17</sys_updated_on>
+        <template><![CDATA[<body>
+  <table style="width: 100%; height: 100%">
+    <tr style="white-space: nowrap; display: flex; justify-content: center; color: white; background-color:#0056FF; width: 100%; margin-bottom: 0; padding-top: 10px; padding-bottom: 10px">
+      <th style="width: 100%; justify-content: center; display: flex; font-size: x-large;">Next Bill Due</th>
+    </tr>
+    <tr style="white-space: nowrap; display: flex; background-color:white; width: 100%; height: 2px"></tr>
+    <tr style="white-space: nowrap; display: flex; justify-content: center; color: black; background-color:white;">
+      <td ng-if="data.bill_due" style="width:100%; justify-content: center; display: flex; border: 2px black; padding-top: 25%; font-size: xx-large;">{{data.bill_type}} - Due on {{data.bill_date}}</td>
+      <td ng-if="!data.bill_due" style="width:100%; justify-content: center; display: flex; border: 2px black; padding-top: 25%; padding-bottom: 25%; font-size: xxx-large; font-style: oblique;">All Bills Currently Paid</td>
+    </tr>
+    <tr style="white-space: nowrap; display: flex; justify-content: center; color: black; background-color:white;">
+      <td ng-if="data.bill_due" style="width:100%; justify-content: center; display: flex; font-size: xx-large;">Due in -<glyph sn-char="calendar" class="pad-right" style="padding-left:20px;"></glyph><sn-day-ago date="data.bill_date"></sn-day-ago></td>
+    </tr>
+    <tr ng-if="data.bill_due" style="white-space: nowrap; display: flex; justify-content: center; color: black; background-color:white;">
+      <td ng-if="data.bill_due" style="width:100%; justify-content: center; display: flex; padding-bottom: 25%; font-size: xxx-large;">{{data.bill_amount}}</td>
+    </tr>
+  </table>
+</body>]]></template>
+    </sp_widget>
+</record_update>

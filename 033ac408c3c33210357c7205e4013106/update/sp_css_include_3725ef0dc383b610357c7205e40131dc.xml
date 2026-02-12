@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_css_include">
+    <sp_css_include action="INSERT_OR_UPDATE">
+        <lazy_load>false</lazy_load>
+        <name>casita-theme-walkup</name>
+        <rtl_css_file_url/>
+        <source>local</source>
+        <sp_css display_value="casita-theme-walkup">bc45638dc383b610357c7205e401316e</sp_css>
+        <sys_class_name>sp_css_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-12 15:24:45</sys_created_on>
+        <sys_id>3725ef0dc383b610357c7205e40131dc</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>casita-theme-walkup</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_css_include_3725ef0dc383b610357c7205e40131dc</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 15:25:13</sys_updated_on>
+        <url/>
+    </sp_css_include>
+</record_update>

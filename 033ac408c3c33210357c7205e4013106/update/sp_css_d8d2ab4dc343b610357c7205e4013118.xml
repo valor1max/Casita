@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_css">
+    <sp_css action="INSERT_OR_UPDATE">
+        <css>.v26b2b8cfff02201014c6a36cf43bf1a0 {&#13;
+  .widget-content-experience {&#13;
+    .widget-container {&#13;
+      .list {&#13;
+        ul {&#13;
+          background-color: rgba($brand-primary-darker, 0.9) !important;&#13;
+          li {&#13;
+            border-bottom: .1rem solid black !important;&#13;
+            &amp;.active {&#13;
+              box-shadow: 0px 9px 4px rgba($gray-darker, 0.25) !important;&#13;
+              background-color: transparent !important;&#13;
+    		  background: linear-gradient($brand-primary, $brand-primary-darker) !important;&#13;
+              .btn {&#13;
+                span {&#13;
+                  font-weight: 600 !important;&#13;
+                }&#13;
+              }&#13;
+            }&#13;
+            .btn {&#13;
+              span {&#13;
+                color: $text-white !important;&#13;
+                font-weight: 100 !important;&#13;
+              }&#13;
+            }&#13;
+          }&#13;
+        }&#13;
+        .scroll-btns {&#13;
+          background-color: $brand-primary !important;&#13;
+          .btn {&#13;
+          	color: $text-white !important;&#13;
+          }&#13;
+          .btn:first-child {&#13;
+            border-right: .1rem solid rgba($brand-primary-darker, 0.9) !important;&#13;
+          }&#13;
+        }&#13;
+      }&#13;
+      .widget-content {&#13;
+        .btn.btn-lg {&#13;
+          font-size: $font-size-base;&#13;
+        }&#13;
+      }&#13;
+    }&#13;
+  }&#13;
+}&#13;
+</css>
+        <name>casita-theme-content-experience-widget</name>
+        <sys_class_name>sp_css</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-12 15:14:24</sys_created_on>
+        <sys_id>d8d2ab4dc343b610357c7205e4013118</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>casita-theme-content-experience-widget</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_css_d8d2ab4dc343b610357c7205e4013118</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 15:14:30</sys_updated_on>
+        <turn_off_scss_compilation>false</turn_off_scss_compilation>
+    </sp_css>
+</record_update>

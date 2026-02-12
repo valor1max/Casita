@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_css">
+    <sp_css action="INSERT_OR_UPDATE">
+        <css>      .page-7faf7ffe3b3303001d132c2b54efc4c1 section.page {&#13;
+        background:inherit!important;&#13;
+      }&#13;
+&#13;
+      .vf84cfc133b7303001d132c2b54efc476 {&#13;
+        .checkin {&#13;
+          border-radius: $border-radius-large;&#13;
+          background: $background-primary;&#13;
+          box-shadow: $sp-panel-box-shadow;&#13;
+          padding: $sp-space--xl;&#13;
+          @media (max-width: 767px){&#13;
+            padding: $sp-space--lg;&#13;
+            margin-top: $margin-top-base!important;&#13;
+            .welcome-msg {&#13;
+              margin-top: $margin-top-base;&#13;
+            }&#13;
+          }&#13;
+          .main-frame {&#13;
+            .queue-location-header {&#13;
+              @media (max-width: 767px){&#13;
+                padding: $sp-space--lg;&#13;
+                height: auto;&#13;
+                .queue-name h3 {&#13;
+                  margin-top: $margin-top-base;&#13;
+                  a.location-change {&#13;
+                    display: block;&#13;
+                    height: auto;&#13;
+                    max-width: none;&#13;
+                    padding-left: $padding-left-base;&#13;
+                    margin-bottom: -$sp-space--sm;&#13;
+                  }&#13;
+                }&#13;
+              }&#13;
+            }&#13;
+            .top-section .queue-section .up-next .user-item .time {&#13;
+              font-size: $font-size-small;&#13;
+            }&#13;
+            @media (max-width: 767px){&#13;
+              .left-section {&#13;
+                width: $width-full;&#13;
+                .nav-tabs &gt; li &gt; a {&#13;
+                  padding-left: $sp-space--sm;&#13;
+                  padding-right: $sp-space--sm;&#13;
+                  font-size: $font-size-small;&#13;
+                }&#13;
+                .section-panel {&#13;
+                  margin: $margin-min;&#13;
+                  padding: $sp-space--lg;&#13;
+                  .form-panel {&#13;
+                    margin-top: $margin-top-base;&#13;
+                    .form-container {&#13;
+                      padding: $padding-base;&#13;
+                    }&#13;
+                  }&#13;
+                }&#13;
+              }&#13;
+              .location-section &gt; .location-content {&#13;
+                margin: $margin-min;&#13;
+                padding: $sp-space--lg;&#13;
+              }&#13;
+            }&#13;
+          }&#13;
+          .panel.search-results {&#13;
+            .panel-heading {&#13;
+              height: auto;&#13;
+              padding: $sp-space--lg;&#13;
+              .search-title {&#13;
+                margin-bottom: $margin-bottom-base;&#13;
+              }&#13;
+            }&#13;
+          }&#13;
+        }&#13;
+      }&#13;
+&#13;
+      /* Appointment Booking - Availability */&#13;
+      #appointmentBookingAvailabilityModal {&#13;
+        .modal-footer {&#13;
+          @media (max-width: 767px){&#13;
+            .timezone-group {&#13;
+              font-size: $font-size-small;&#13;
+            }&#13;
+            .btn {&#13;
+              padding: $padding-base-vertical $sp-space--md;&#13;
+            }&#13;
+          }&#13;
+        }&#13;
+      }&#13;
+    </css>
+        <name>casita-theme-walkup</name>
+        <sys_class_name>sp_css</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-12 15:25:05</sys_created_on>
+        <sys_id>bc45638dc383b610357c7205e401316e</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>casita-theme-walkup</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_css_bc45638dc383b610357c7205e401316e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 15:25:09</sys_updated_on>
+        <turn_off_scss_compilation>false</turn_off_scss_compilation>
+    </sp_css>
+</record_update>

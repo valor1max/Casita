@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_related sys_domain="global" table="u_casita_project" version="2" view="">
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter/>
+            <list_id display_value="Casita Project - Default view" name="u_casita_project" related_list="NULL" sys_domain="global" view="Default view">af3f6c88c34b3210357c7205e4013130</list_id>
+            <order_by/>
+            <position>0</position>
+            <related_list>u_sub_casita_project.parent</related_list>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:35:55</sys_created_on>
+            <sys_id>ef3f6c88c34b3210357c7205e4013131</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:35:55</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter/>
+            <list_id display_value="Casita Project - Default view" name="u_casita_project" related_list="NULL" sys_domain="global" view="Default view">af3f6c88c34b3210357c7205e4013130</list_id>
+            <order_by/>
+            <position>1</position>
+            <related_list>u_casita_task.u_project</related_list>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:35:55</sys_created_on>
+            <sys_id>673f6c88c34b3210357c7205e4013132</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:35:55</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter/>
+            <list_id display_value="Casita Project - Default view" name="u_casita_project" related_list="NULL" sys_domain="global" view="Default view">af3f6c88c34b3210357c7205e4013130</list_id>
+            <order_by/>
+            <position>2</position>
+            <related_list>u_paycheck.u_project</related_list>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:35:55</sys_created_on>
+            <sys_id>eb3f6c88c34b3210357c7205e4013132</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:35:55</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter/>
+            <list_id display_value="Casita Project - Default view" name="u_casita_project" related_list="NULL" sys_domain="global" view="Default view">af3f6c88c34b3210357c7205e4013130</list_id>
+            <order_by/>
+            <position>3</position>
+            <related_list>u_monthly_bills.u_parent_project</related_list>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:35:55</sys_created_on>
+            <sys_id>633f6c88c34b3210357c7205e4013133</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:35:55</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list_entry action="INSERT_OR_UPDATE">
+            <filter/>
+            <list_id display_value="Casita Project - Default view" name="u_casita_project" related_list="NULL" sys_domain="global" view="Default view">af3f6c88c34b3210357c7205e4013130</list_id>
+            <order_by/>
+            <position>4</position>
+            <related_list>REL:33deac48c34b3210357c7205e4013140</related_list>
+            <sys_class_name>sys_ui_related_list_entry</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:35:55</sys_created_on>
+            <sys_id>e73f6c88c34b3210357c7205e4013133</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:35:55</sys_updated_on>
+        </sys_ui_related_list_entry>
+        <sys_ui_related_list action="INSERT_OR_UPDATE">
+            <calculated_name>Casita Project - Default view</calculated_name>
+            <filter/>
+            <name>u_casita_project</name>
+            <order_by/>
+            <position/>
+            <related_list/>
+            <sys_class_name>sys_ui_related_list</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:35:55</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>af3f6c88c34b3210357c7205e4013130</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Casita Project - Default view</sys_name>
+            <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+            <sys_update_name>sys_ui_related_u_casita_project_null</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:35:55</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_related_list>
+    </sys_ui_related>
+</record_update>

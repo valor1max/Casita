@@ -420,9 +420,9 @@
         <sys_id>1a4607f62f4011101b6051072799b6ea</sys_id>
         <sys_mod_count>88</sys_mod_count>
         <sys_name>TabbedFormAppProcessesV2</sys_name>
-        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
         <sys_policy/>
-        <sys_scope display_value="Tabbed Form v2">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
         <sys_update_name>sys_ui_script_1a4607f62f4011101b6051072799b6ea</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2023-09-11 10:47:06</sys_updated_on>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_form_sections form_id="c2975ad0c3c77210357c7205e401317b" sys_domain="global" table="u_casita_monthly_project" version="3">
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-10 01:50:19</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>0a975ad0c3c77210357c7205e4013181</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="u_casita_monthly_project" name="u_casita_monthly_project" sys_domain="global" view="Default view">c2975ad0c3c77210357c7205e401317b</sys_ui_form>
+            <sys_ui_section caption="NULL" display_value="" name="u_casita_monthly_project" sys_domain="global" view="Default view">ab045a58c3877210357c7205e4013134</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-10 01:50:19</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-10 01:50:19</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>42975ad0c3c77210357c7205e4013183</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="u_casita_monthly_project" name="u_casita_monthly_project" sys_domain="global" view="Default view">c2975ad0c3c77210357c7205e401317b</sys_ui_form>
+            <sys_ui_section caption="Project Details" display_value="Project Details" name="u_casita_monthly_project" sys_domain="global" view="Default view">82975ad0c3c77210357c7205e4013178</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-10 01:50:19</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-10 01:50:19</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>86975ad0c3c77210357c7205e4013196</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="u_casita_monthly_project" name="u_casita_monthly_project" sys_domain="global" view="Default view">c2975ad0c3c77210357c7205e401317b</sys_ui_form>
+            <sys_ui_section caption="Project Finances" display_value="Project Finances" name="u_casita_monthly_project" sys_domain="global" view="Default view">0e975ad0c3c77210357c7205e4013179</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-10 01:50:19</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>3</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-10 02:01:29</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>312a5a98c3c77210357c7205e4013175</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="u_casita_monthly_project" name="u_casita_monthly_project" sys_domain="global" view="Default view">c2975ad0c3c77210357c7205e401317b</sys_ui_form>
+            <sys_ui_section caption="Project Notes" display_value="Project Notes" name="u_casita_monthly_project" sys_domain="global" view="Default view">712a5a98c3c77210357c7205e4013170</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-10 02:01:29</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form action="INSERT_OR_UPDATE">
+            <name>u_casita_monthly_project</name>
+            <roles/>
+            <sys_class_name>sys_ui_form</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-10 01:50:19</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>c2975ad0c3c77210357c7205e401317b</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>u_casita_monthly_project</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+            <sys_update_name>sys_ui_form_sections_c2975ad0c3c77210357c7205e401317b</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-10 01:50:19</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_form>
+    </sys_ui_form_sections>
+</record_update>

@@ -10,7 +10,7 @@
         <sys_id>4f67e8b12f46c1101b6051072799b67d</sys_id>
         <sys_mod_count>1</sys_mod_count>
         <sys_name>Tabbed Form Reference Dependency v2</sys_name>
-        <sys_package display_value="Tabbed Form v2" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
         <sys_policy/>
         <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
         <sys_update_name>sp_dependency_4f67e8b12f46c1101b6051072799b67d</sys_update_name>

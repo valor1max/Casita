@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_email_layout">
+    <sys_email_layout action="INSERT_OR_UPDATE">
+        <advanced>false</advanced>
+        <advanced_layout/>
+        <description/>
+        <layout><![CDATA[<div></div>
+<table cellpadding="0" cellspacing="0" border="1" class="MsoNormalTable" style="width: 605pt; border-collapse: collapse; height: 357.385px; border-spacing: 0px; border: 0px groove rgb(255, 201, 99);">
+<tbody>
+<tr style="height: 64.729px; text-align: left;">
+<td valign="top" style="width: 605pt; background: rgb(72, 155, 166); height: 64.729px; text-align: center; vertical-align: middle; border-color: rgb(255, 201, 99);"><span style="font-family: arial, helvetica, sans-serif; color: white; font-size: 12pt;"><img src="Casita%20Management%20Console%20Logo.png" width="150" height="150" alt="" data-library="false"></span></td>
+</tr>
+<tr style="height: 136.562px;">
+<td valign="top" style="padding: 0.75pt 5.4pt 0in; height: 136.562px; border-color: rgb(255, 201, 99);">
+<p style="margin: 0in; font-size: 11pt; font-family: arial, sans-serif;"><span style="font-family: arial, helvetica, sans-serif; font-size: 12pt;">Hello,</span></p>
+<p style="margin: 0in; font-size: 11pt; font-family: arial, sans-serif;"><span style="font-family: arial, helvetica, sans-serif; font-size: 12pt;"></span></p>
+<p style="margin: 0in; font-size: 11pt; font-family: arial, sans-serif;"><span style="font-family: arial, helvetica, sans-serif; font-size: 12pt;">${notification:body}</span></p>
+<p style="margin: 0in; font-size: 11pt; font-family: arial, sans-serif;"><span style="font-family: arial, helvetica, sans-serif; font-size: 12pt;">&nbsp;</span></p>
+<p style="margin: 0in; font-size: 11pt; font-family: arial, sans-serif;"><span style="font-family: arial, helvetica, sans-serif; font-size: 12pt;">Thank you,</span></p>
+<p style="margin: 0in; font-size: 11pt; font-family: arial, sans-serif;"><span style="font-family: arial, helvetica, sans-serif; font-size: 12pt;">Casita Management Console Team</span></p>
+</td>
+</tr>
+<tr style="height: 156.094px;">
+<td valign="top" style="background: rgb(72, 155, 166); height: 156.094px; padding-top: 5px; text-align: center; border-color: rgb(255, 201, 99);">
+<p style="margin: 0in; font-size: 11pt; font-family: arial, sans-serif;"><span style="font-family: arial, helvetica, sans-serif; color: white; font-size: 12pt;"><img src="Casita%20Management%20Console%20Icon.png" width="150" height="150" alt="" data-library="false"></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<div></div>]]></layout>
+        <name>Casita Email Layout</name>
+        <sys_class_name>sys_email_layout</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-12 14:26:36</sys_created_on>
+        <sys_id>d12297cdc3cf7610357c7205e4013164</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Casita Email Layout</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sys_email_layout_d12297cdc3cf7610357c7205e4013164</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 14:26:36</sys_updated_on>
+    </sys_email_layout>
+</record_update>

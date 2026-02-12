@@ -36,12 +36,12 @@
 		setKeywords: 'data_table.setKeywords'
 	};
 
-	$scope.go = function(evt, table, item) {
+	$scope.go = function($event, table, item) {
 		if ($window.getSelection().toString().length > 0)
 			return;
 
 		spNavStateManager.onRecordChange(table).then(function() {
-			var parms = {};
+		var parms = {};
 			parms.id = $scope.page.id == "lf_v2" && $scope.isTop ? "lf_v2" : 'form_tabbed_v2';
 			parms.table = parms.id == "lf_v2" ? $scope.data.table : table;
 			parms.sys_id = item.sys_id;
@@ -52,7 +52,9 @@
 				c.data.list[x].selected = false;
 			}
 			item.selected = true;
+			console.log('MM ran 2')
 			$scope.$emit(eventNames.click, parms);
+			$location.search(parms)
 		}, function() {
 			// do nothing in case of closing the modal by clicking on x
 		});	
@@ -1242,14 +1244,14 @@ table td a:not([uib-tab-heading-transclude]) {&#13;
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2022-01-25 19:11:23</sys_created_on>
         <sys_id>a7a1f3052f9101101b6051072799b687</sys_id>
-        <sys_mod_count>1344</sys_mod_count>
+        <sys_mod_count>1352</sys_mod_count>
         <sys_name>Data Table Tabbed v2</sys_name>
         <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
         <sys_policy/>
         <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
         <sys_update_name>sp_widget_a7a1f3052f9101101b6051072799b687</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2025-11-17 12:49:26</sys_updated_on>
+        <sys_updated_on>2026-02-12 00:31:48</sys_updated_on>
         <template><![CDATA[  <div id="{{'scope-' + $id}}" class="panel panel-{{options.color}} b" ng-class="{'data-table-high-contrast': accessibilityModeEnabled}" style="margin-bottom: 0px;">
     <div class="panel-heading form-inline" ng-hide="options.hide_header">
       <span class="dropdown m-r-xs">
@@ -1333,8 +1335,8 @@ table td a:not([uib-tab-heading-transclude]) {&#13;
                 ng-repeat="field in ::data.fields_array"
                 data-field="{{::field}}"
                 data-th="{{::data.column_labels[field]}}">
-                <a href="javascript:void(0)" ng-if="$first" aria-label="${Open record}: {{item[field].display_value}}">{{item[field].display_value}}</a>
-                <span ng-if="!$first && data.column_widths_user[data.fields_array.indexOf(field)] != '0px'"">
+                <a href="javascript:void(0)" ng-if="$first" aria-label="${Open record}: {{::item[field].display_value}}">{{item[field].display_value}}</a>
+                <span ng-if="!$first && data.column_widths_user[data.fields_array.indexOf(field)] != '0px'">
                 	<a ng-if="item[field].value && item[field].type == 'reference'" href="javascript:void(0)" ng-click="goRef($event, item[field].table, item[field].record)" title="${Click to open: }{{item[field].display_value}}">{{item[field].display_value | limitTo : item[field].limit}}{{item[field].display_value.length > item[field].limit ? '...' : ''}}</a>
                 	<span ng-if="!(item[field].type == 'reference' || item[field].type == 'user_image')">{{item[field].display_value}}</span>
                     <span ng-if="item[field].type === 'user_image'">
