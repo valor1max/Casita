@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_ui_module">
+    <sys_ui_module action="DELETE">
+        <active>true</active>
+        <application display_value="Casita Project">29eb880cc3c33210357c7205e401316a</application>
+        <filter/>
+        <name>Sub Casita Projects</name>
+        <order/>
+        <path/>
+        <path_relative_to_root>false</path_relative_to_root>
+        <roles>u_sub_casita_project_user</roles>
+        <sys_class_name>sys_ui_module</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-08 22:27:36</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>fa9fdc8cc3873210357c7205e40131d6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Sub Casita Projects</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sys_ui_module_fa9fdc8cc3873210357c7205e40131d6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-08 22:27:36</sys_updated_on>
+        <table>u_sub_casita_project</table>
+        <uncancelable>false</uncancelable>
+        <view_name/>
+    </sys_ui_module>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Casita">033ac408c3c33210357c7205e4013106</application>
+        <file_path/>
+        <instance_id>1f3061f91bd2ce10c8432f8dee4bcb8a</instance_id>
+        <instance_name>dev271864</instance_name>
+        <name>sys_ui_module_fa9fdc8cc3873210357c7205e40131d6</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_ui_module"><sys_ui_module action="INSERT_OR_UPDATE"><active>true</active><application display_value="Casita Project">29eb880cc3c33210357c7205e401316a</application><filter/><name>Sub Casita Projects</name><order/><path/><path_relative_to_root>false</path_relative_to_root><roles>u_sub_casita_project_user</roles><sys_class_name>sys_ui_module</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-02-08 22:27:36</sys_created_on><sys_domain>global</sys_domain><sys_domain_path>/</sys_domain_path><sys_id>fa9fdc8cc3873210357c7205e40131d6</sys_id><sys_mod_count>0</sys_mod_count><sys_name>Sub Casita Projects</sys_name><sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package><sys_policy/><sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope><sys_update_name>sys_ui_module_fa9fdc8cc3873210357c7205e40131d6</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-02-08 22:27:36</sys_updated_on><table>u_sub_casita_project</table><uncancelable>false</uncancelable><view_name/></sys_ui_module></record_update>]]></payload>
+        <payload_hash>-486417592</payload_hash>
+        <record_name>Sub Casita Projects</record_name>
+        <reverted_from/>
+        <source>f250a17ee882121087debb3e47d14f79</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-08 22:27:36</sys_created_on>
+        <sys_id>7e9fdc8cc3873210357c7205e40131e6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19c3f5e16fd0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-08 22:27:36</sys_updated_on>
+        <type>Module</type>
+        <update_guid>3e9fdc8c188732107f8239090ec9d6e5</update_guid>
+        <update_guid_history>3e9fdc8c188732107f8239090ec9d6e5:-486417592</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-08 22:28:16</sys_created_on>
+        <sys_db_object display_value="" name="sys_ui_module">sys_ui_module</sys_db_object>
+        <sys_id>54fdd56a69734b21bd755d40f23f5651</sys_id>
+        <sys_metadata>fa9fdc8cc3873210357c7205e40131d6</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Sub Casita Projects</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_scope_delete display_value="">6f83a182e33f4e0099e2eb920cfa2690</sys_scope_delete>
+        <sys_update_name>sys_ui_module_fa9fdc8cc3873210357c7205e40131d6</sys_update_name>
+        <sys_update_version display_value="sys_ui_module_fa9fdc8cc3873210357c7205e40131d6">7e9fdc8cc3873210357c7205e40131e6</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-08 22:28:16</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

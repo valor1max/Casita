@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_ng_pro_sp_widget">
+    <m2m_sp_ng_pro_sp_widget action="DELETE">
+        <sp_angular_provider display_value="casitaMultilineEllipsisTooltip">de0e1bc9c343b610357c7205e4013189</sp_angular_provider>
+        <sp_widget display_value="Casita Next Bill Due Card">59903df8c30fb210357c7205e4013121</sp_widget>
+        <sys_class_name>m2m_sp_ng_pro_sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-11 12:16:50</sys_created_on>
+        <sys_id>69903df8c30fb210357c7205e401312a</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>casitaMultilineEllipsisTooltip.Casita Next Bill Due Card</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>m2m_sp_ng_pro_sp_widget_69903df8c30fb210357c7205e401312a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 14:53:48</sys_updated_on>
+    </m2m_sp_ng_pro_sp_widget>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Casita">033ac408c3c33210357c7205e4013106</application>
+        <file_path/>
+        <instance_id>1f3061f91bd2ce10c8432f8dee4bcb8a</instance_id>
+        <instance_name>dev271864</instance_name>
+        <name>m2m_sp_ng_pro_sp_widget_69903df8c30fb210357c7205e401312a</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_ng_pro_sp_widget"><m2m_sp_ng_pro_sp_widget action="INSERT_OR_UPDATE"><sp_angular_provider display_value="casitaMultilineEllipsisTooltip">de0e1bc9c343b610357c7205e4013189</sp_angular_provider><sp_widget display_value="Casita Next Bill Due Card">59903df8c30fb210357c7205e4013121</sp_widget><sys_class_name>m2m_sp_ng_pro_sp_widget</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-02-11 12:16:50</sys_created_on><sys_id>69903df8c30fb210357c7205e401312a</sys_id><sys_mod_count>1</sys_mod_count><sys_name>casitaMultilineEllipsisTooltip.Casita Next Bill Due Card</sys_name><sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package><sys_policy/><sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope><sys_update_name>m2m_sp_ng_pro_sp_widget_69903df8c30fb210357c7205e401312a</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-02-12 14:53:48</sys_updated_on></m2m_sp_ng_pro_sp_widget></record_update>]]></payload>
+        <payload_hash>-637029748</payload_hash>
+        <record_name>casitaMultilineEllipsisTooltip.Casita Next Bill Due Card</record_name>
+        <reverted_from/>
+        <source>f250a17ee882121087debb3e47d14f79</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-12 14:53:48</sys_created_on>
+        <sys_id>e61e1fc9c343b610357c7205e4013191</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19c52580ed10000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 14:53:48</sys_updated_on>
+        <type>Angular Providers</type>
+        <update_guid>a61e1fc9f143b6104a1e45a16439d290</update_guid>
+        <update_guid_history>a61e1fc9f143b6104a1e45a16439d290:-637029748,ad903df8180fb2106e9e815732820c2d:-919929332</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="casitaMultilineEllipsisTooltip.Casita Next Bill Due Card">71f56301c3c3b610357c7205e401318a</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-12 15:28:10</sys_created_on>
+        <sys_db_object display_value="" name="m2m_sp_ng_pro_sp_widget">m2m_sp_ng_pro_sp_widget</sys_db_object>
+        <sys_id>049c1b231a8e409a804adfd99a5d5a31</sys_id>
+        <sys_metadata>69903df8c30fb210357c7205e401312a</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>casitaMultilineEllipsisTooltip.Casita Next Bill Due Card</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_scope_delete display_value="">6f83a182e33f4e0099e2eb920cfa2690</sys_scope_delete>
+        <sys_update_name>m2m_sp_ng_pro_sp_widget_69903df8c30fb210357c7205e401312a</sys_update_name>
+        <sys_update_version display_value="m2m_sp_ng_pro_sp_widget_69903df8c30fb210357c7205e401312a">e61e1fc9c343b610357c7205e4013191</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 15:28:10</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

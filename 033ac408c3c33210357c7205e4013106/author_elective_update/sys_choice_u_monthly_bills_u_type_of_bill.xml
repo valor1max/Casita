@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_choice action="INSERT_OR_UPDATE" field="u_type_of_bill" table="u_monthly_bills" version="3">
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>u_type_of_bill</element>
+            <name>u_monthly_bills</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>u_type_of_bill</sys_name>
+            <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+            <sys_update_name>sys_choice_u_monthly_bills_u_type_of_bill</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+        </sys_choice_set>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Capital One</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>0</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Capital One</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Amex</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>1</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Amex</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Phone</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>2</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Phone</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Internet</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>3</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Internet</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Electricity</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>4</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Electricity</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Mortgage</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>5</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Mortgage</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Lowe's</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>6</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Lowes</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Car</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>7</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Car</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Max Sapphire</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>8</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Max Sapphire</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Katrina Sapphire</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>9</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Katrina Sapphire</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Water</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>10</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Water</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Trash</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>11</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Trash</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>u_type_of_bill</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Other</label>
+            <language>en</language>
+            <name>u_monthly_bills</name>
+            <sequence>12</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-08 23:08:17</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-08 23:08:17</sys_updated_on>
+            <value>Other</value>
+        </sys_choice>
+    </sys_choice>
+</record_update>

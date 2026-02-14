@@ -15,10 +15,16 @@ CasitaUtils.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
     grabAvailableFunds: function() {
         var funds = '';
         var parent = this.getParameter('sysparm_parent');
-        var gt = new GlideRecord('u_casita_project');
+		var subparent = this.getParameter('sysparm_sub_parent');
+		if(parent){
+        var gt = new GlideRecord('u_casita_monthly_project');
         gt.get(parent);
         funds = gt.u_available_funds;
-
+		} else{
+			var gp = new GlideRecord('u_sub_casita_monthly_project');
+			gp.get(subparent);
+			funds = gp.u_parent_project.u_available_funds;
+		}
         return funds;
     },
 
@@ -28,14 +34,14 @@ CasitaUtils.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-02-09 00:23:38</sys_created_on>
         <sys_id>731a70c4c3cb3210357c7205e401314c</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>5</sys_mod_count>
         <sys_name>CasitaUtils</sys_name>
         <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
         <sys_policy/>
         <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
         <sys_update_name>sys_script_include_731a70c4c3cb3210357c7205e401314c</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-02-09 00:33:47</sys_updated_on>
+        <sys_updated_on>2026-02-13 00:11:07</sys_updated_on>
     </sys_script_include>
     <sys_es_latest_script action="INSERT_OR_UPDATE">
         <id>731a70c4c3cb3210357c7205e401314c</id>

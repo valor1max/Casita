@@ -11,12 +11,20 @@
         <name>Grab Available Funds</name>
         <order/>
         <script><![CDATA[function onLoad() {
-    if (g_form.isNewRecord()) {
+
+    if (g_form.getValue('u_parent_project')) {
         var ga = new GlideAjax('global.CasitaUtils');
         ga.addParam('sysparm_name', 'grabAvailableFunds');
-		ga.addParam('sysparm_parent', g_form.getValue('u_parent_project'));
+        ga.addParam('sysparm_parent', g_form.getValue('u_parent_project'));
+		ga.addParam('sysparm_sub_parent', '');
         ga.getXMLAnswer(setFunds);
-    }
+    } else{
+		var ga = new GlideAjax('global.CasitaUtils');
+        ga.addParam('sysparm_name', 'grabAvailableFunds');
+		ga.addParam('sysparm_parent', '');
+        ga.addParam('sysparm_sub_parent', g_form.getValue('u_parent_sub_project'));
+        ga.getXMLAnswer(setFunds);
+	}
 }
 
 function setFunds(answer) {
@@ -28,7 +36,7 @@ function setFunds(answer) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>840a3c84c3cb3210357c7205e401314d</sys_id>
-        <sys_mod_count>2</sys_mod_count>
+        <sys_mod_count>4</sys_mod_count>
         <sys_name>Grab Available Funds</sys_name>
         <sys_overrides/>
         <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
@@ -36,7 +44,7 @@ function setFunds(answer) {
         <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
         <sys_update_name>sys_script_client_840a3c84c3cb3210357c7205e401314d</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-02-09 00:32:40</sys_updated_on>
+        <sys_updated_on>2026-02-13 00:08:27</sys_updated_on>
         <table>u_monthly_bills</table>
         <type>onLoad</type>
         <ui_type>10</ui_type>

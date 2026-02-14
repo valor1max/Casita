@@ -52,7 +52,6 @@
         <sys_class_name>sys_dictionary</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-02-08 21:01:31</sys_created_on>
-        <sys_id>79ebc80cc3c33210357c7205e4013156</sys_id>
         <sys_name>u_casita_project</sys_name>
         <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
         <sys_policy/>
@@ -72,4 +71,18 @@
         <write_roles/>
         <xml_view>false</xml_view>
     </sys_dictionary>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="Casita">033ac408c3c33210357c7205e4013106</claim_owner_scope>
+        <claim_timestamp>19c5c98e76d0000001</claim_timestamp>
+        <metadata_update_name>sys_dictionary_u_casita_project_null</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>Casita</previous_claim_name>
+        <previous_claim_scope>033ac408c3c33210357c7205e4013106</previous_claim_scope>
+        <sys_created_by>mmorganti</sys_created_by>
+        <sys_created_on>2026-02-14 14:40:50</sys_created_on>
+        <sys_id>cc5ee5f5c30b3210357c7205e40131d8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>mmorganti</sys_updated_by>
+        <sys_updated_on>2026-02-14 14:40:50</sys_updated_on>
+    </sys_claim>
 </record_update>

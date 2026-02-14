@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_policy_action">
+    <sys_ui_policy_action action="DELETE">
+        <cleared>false</cleared>
+        <disabled>ignore</disabled>
+        <field>u_available_funds</field>
+        <field_message/>
+        <field_message_type>none</field_message_type>
+        <mandatory>ignore</mandatory>
+        <sys_class_name>sys_ui_policy_action</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-09 00:20:14</sys_created_on>
+        <sys_id>5259bc04c3cb3210357c7205e40131b6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>u_available_funds</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sys_ui_policy_action_5259bc04c3cb3210357c7205e40131b6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-09 00:20:14</sys_updated_on>
+        <table>u_monthly_bills</table>
+        <ui_policy display_value="Method of Payment">02097004c3cb3210357c7205e4013197</ui_policy>
+        <value/>
+        <value_action>ignore</value_action>
+        <visible>false</visible>
+    </sys_ui_policy_action>
+    <sys_translated_text action="DELETE" query="documentkey=5259bc04c3cb3210357c7205e40131b6"/>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Casita">033ac408c3c33210357c7205e4013106</application>
+        <file_path/>
+        <instance_id>1f3061f91bd2ce10c8432f8dee4bcb8a</instance_id>
+        <instance_name>dev271864</instance_name>
+        <name>sys_ui_policy_action_5259bc04c3cb3210357c7205e40131b6</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_policy_action"><sys_ui_policy_action action="INSERT_OR_UPDATE"><cleared>false</cleared><disabled>ignore</disabled><field>u_available_funds</field><field_message/><field_message_type>none</field_message_type><mandatory>ignore</mandatory><sys_class_name>sys_ui_policy_action</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-02-09 00:20:14</sys_created_on><sys_id>5259bc04c3cb3210357c7205e40131b6</sys_id><sys_mod_count>0</sys_mod_count><sys_name>u_available_funds</sys_name><sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package><sys_policy/><sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope><sys_update_name>sys_ui_policy_action_5259bc04c3cb3210357c7205e40131b6</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-02-09 00:20:14</sys_updated_on><table>u_monthly_bills</table><ui_policy display_value="Method of Payment">02097004c3cb3210357c7205e4013197</ui_policy><value/><value_action>ignore</value_action><visible>false</visible></sys_ui_policy_action><sys_translated_text action="delete_multiple" query="documentkey=5259bc04c3cb3210357c7205e40131b6"/></record_update>]]></payload>
+        <payload_hash>391771458</payload_hash>
+        <record_name>u_available_funds</record_name>
+        <reverted_from/>
+        <source>f250a17ee882121087debb3e47d14f79</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-09 00:20:14</sys_created_on>
+        <sys_id>f8693044c3cb3210357c7205e4013126</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19c3fc534660000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-09 00:20:14</sys_updated_on>
+        <type>UI Policy Action</type>
+        <update_guid>b86930448dcb3210f991db3a60de1825</update_guid>
+        <update_guid_history>b86930448dcb3210f991db3a60de1825:391771458</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-09 00:21:46</sys_created_on>
+        <sys_db_object display_value="" name="sys_ui_policy_action">sys_ui_policy_action</sys_db_object>
+        <sys_id>2289938968c94de8894d06264cf2e840</sys_id>
+        <sys_metadata>5259bc04c3cb3210357c7205e40131b6</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>u_available_funds</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_parent display_value="Method of Payment">02097004c3cb3210357c7205e4013197</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_scope_delete display_value="">6f83a182e33f4e0099e2eb920cfa2690</sys_scope_delete>
+        <sys_update_name>sys_ui_policy_action_5259bc04c3cb3210357c7205e40131b6</sys_update_name>
+        <sys_update_version display_value="sys_ui_policy_action_5259bc04c3cb3210357c7205e40131b6">f8693044c3cb3210357c7205e4013126</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-09 00:21:46</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

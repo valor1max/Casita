@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element audit="true" db_object_id="007d3990c3c37210357c7205e401318e" label="Sub-Casita Monthly Project" max_length="40" name="u_sub_casita_monthly_project" type="collection">
+        <element choice="3" default="draft" label="State of Project" max_length="40" name="u_state" read_only="true" type="string">
+            <choice>
+                <element inactive_on_update="false" label="Completed" value="completed"/>
+                <element inactive_on_update="false" label="Cancelled" value="cancelled"/>
+                <element inactive_on_update="false" label="Draft" value="draft"/>
+                <element inactive_on_update="false" label="In Progress" value="in_progress"/>
+            </choice>
+        </element>
+        <element label="Active Project" max_length="40" name="u_active_project" read_only="true" type="boolean"/>
+        <element label="Cost of Project" max_length="20" name="u_cost_of_project" type="currency"/>
+        <element label="Available Funds" max_length="20" name="u_available_funds" type="currency"/>
+        <element label="Remaining Project Cost" max_length="20" name="u_remaining_project_cost" read_only="true" type="currency"/>
+        <element label="Date Ended" max_length="40" name="u_date_ended" read_only="true" type="glide_date"/>
+        <element label="Project Description" mandatory="true" max_length="100000" name="u_project_description" type="string"/>
+        <element label="Project Notes" max_length="255" name="u_project_notes" type="journal_input"/>
+        <element label="Parent Project" max_length="32" name="u_parent_project" read_only="true" reference="u_casita_monthly_project" type="reference"/>
+        <element label="Project Summary" mandatory="true" max_length="40" name="u_project_summary" type="string"/>
+        <element label="Project Notes Log" max_length="255" name="u_project_notes_log" type="journal_list"/>
+        <element label="Date Started" max_length="40" name="u_date_started" read_only="true" type="glide_date"/>
+        <element display="true" label="Project Title" max_length="40" name="u_project" type="string"/>
+        <index name="index">
+            <element name="u_parent_project"/>
+        </index>
+    </element>
+</database>
