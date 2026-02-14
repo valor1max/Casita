@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_theme_css_include">
+    <m2m_sp_theme_css_include action="DELETE">
+        <order/>
+        <sp_css_include display_value="ec-theme-va">53c9835477621110cca8ddad7c5a993b</sp_css_include>
+        <sp_theme/>
+        <sys_class_name>m2m_sp_theme_css_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-09 00:55:19</sys_created_on>
+        <sys_id>aa614d48c30f3210357c7205e40131c1</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>ec-theme-va.</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>m2m_sp_theme_css_include_aa614d48c30f3210357c7205e40131c1</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 15:27:47</sys_updated_on>
+    </m2m_sp_theme_css_include>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Casita">033ac408c3c33210357c7205e4013106</application>
+        <file_path/>
+        <instance_id>1f3061f91bd2ce10c8432f8dee4bcb8a</instance_id>
+        <instance_name>dev271864</instance_name>
+        <name>m2m_sp_theme_css_include_aa614d48c30f3210357c7205e40131c1</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_theme_css_include"><m2m_sp_theme_css_include action="INSERT_OR_UPDATE"><order/><sp_css_include display_value="ec-theme-va">53c9835477621110cca8ddad7c5a993b</sp_css_include><sp_theme/><sys_class_name>m2m_sp_theme_css_include</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-02-09 00:55:19</sys_created_on><sys_id>aa614d48c30f3210357c7205e40131c1</sys_id><sys_mod_count>1</sys_mod_count><sys_name>ec-theme-va.</sys_name><sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package><sys_policy/><sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope><sys_update_name>m2m_sp_theme_css_include_aa614d48c30f3210357c7205e40131c1</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-02-12 15:27:47</sys_updated_on></m2m_sp_theme_css_include></record_update>]]></payload>
+        <payload_hash>-1815861581</payload_hash>
+        <record_name>ec-theme-va.</record_name>
+        <reverted_from/>
+        <source>f250a17ee882121087debb3e47d14f79</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-12 15:27:47</sys_created_on>
+        <sys_id>a8e56fcdc383b610357c7205e40131f8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19c52772cea0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 15:27:47</sys_updated_on>
+        <type>Stylesheets</type>
+        <update_guid>68e56fcdf983b61028a92105aa80a8f7</update_guid>
+        <update_guid_history>68e56fcdf983b61028a92105aa80a8f7:-1815861581,22614d48bf0f3210e09534e0f7856ac4:-154944784</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="ec-theme-va.">8ef56301c3c3b610357c7205e40131b7</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-12 15:28:10</sys_created_on>
+        <sys_db_object display_value="" name="m2m_sp_theme_css_include">m2m_sp_theme_css_include</sys_db_object>
+        <sys_id>19bf072811504b58ac2d428661189b10</sys_id>
+        <sys_metadata>aa614d48c30f3210357c7205e40131c1</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>ec-theme-va.</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_scope_delete display_value="">6f83a182e33f4e0099e2eb920cfa2690</sys_scope_delete>
+        <sys_update_name>m2m_sp_theme_css_include_aa614d48c30f3210357c7205e40131c1</sys_update_name>
+        <sys_update_version display_value="m2m_sp_theme_css_include_aa614d48c30f3210357c7205e40131c1">a8e56fcdc383b610357c7205e40131f8</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 15:28:10</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

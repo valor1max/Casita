@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_embedded_help_role">
+    <sys_embedded_help_role action="INSERT_OR_UPDATE">
+        <order>1000</order>
+        <role display_value="u_casita_task_user" name="u_casita_task_user">10eb6040c34b3210357c7205e4013155</role>
+        <sys_class_name>sys_embedded_help_role</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-08 23:21:13</sys_created_on>
+        <sys_id>d8eb6040c34b3210357c7205e4013157</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>10eb6040c34b3210357c7205e4013155</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sys_embedded_help_role_d8eb6040c34b3210357c7205e4013157</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-08 23:21:13</sys_updated_on>
+    </sys_embedded_help_role>
+</record_update>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description/>
+        <global>false</global>
+        <ignore_in_now_experience>false</ignore_in_now_experience>
+        <name>tabbedFormatters_v2</name>
+        <script><![CDATA[angular.module('myTabbedFormFilters_v2', [])
+    .filter('titledFormSectionFilter', function() {
+        return function(input) {
+            var output = [];
+            if (!input) return output;
+            for (var i = 0; i < input.length; i++) {
+                if (input[i].captionDisplay && input[i].captionDisplay.length > 0) {
+                    output.push(input[i]);
+                }
+            }
+            return output;
+        };
+    })
+	.filter('currentFormSectionFilter', function() {
+        return function(input, startingCaptionDisplay) {
+            var output = [];
+            var include = false;
+            for (var i = 0; i < input.length; i++) {
+                if (input[i].captionDisplay == startingCaptionDisplay) {
+                    include = true;
+                    output.push(input[i]);
+                } else if ((include) && (input[i].captionDisplay == '')) {
+                    output.push(input[i]);
+                } else {
+                    include = false;
+                }
+            }
+            return output;
+        };
+    })
+        .filter('containerIdFilter', function() {
+            return function(input, id, idx) {
+                var output = [];
+                for (var i = 1; i < input.length; i++) {
+                    if ((input[i].name || "").length == 0) 
+						input[i].name = input[i].columns[0].fields.length > 0 ? input[i].columns[0].fields[0].name : "[unnamed]";
+					if (!input[i].name.includes(" ") && input[i].name.includes("_"))  // Likely a catalog item internal name
+						input[i].name = input[i].name.replaceAll("_", " ").replace(/(^\w{1})|(\s+\w{1})/g, function(letter) { return letter.toUpperCase(); });
+                    if (id == null && input[i].id.length > 0) {
+                        output.push(input[i]); 
+                    }
+                    if (id == null && input[i].id.length > 0 && i == idx) {
+                        output.push(input[i]);
+                    }
+                    if (id == null && input[i].id.length == 0 && !input[i]._parent && idx == null) {
+                        input[i].id = "$index_" + i;
+                        output.push(input[i]);
+                    }
+                    if (id != null && (input[i].id == id || input[i]._parent == id)) {
+                        output.push(input[i]);
+                    }
+                }
+                return output;
+            };
+        })
+	.filter('parentContainerFilter', function() {
+        return function(input, parentContainer) {
+            var output = [];
+            var include = false;
+            for (var i = 0; i < input.length; i++) {
+                if (input[i]._parent && input[i]._parent == parentContainer.id) {
+                    include = true;
+                    output.push(input[i]);
+                } else {
+                    include = false;
+                }
+            }
+            return output;
+        };
+    })
+	.filter('mandatoryColumnFilter', function() {
+		var isMandatory = function(input, mandatory) {	
+			var result = false;
+			if (input.hasOwnProperty("columns")) {
+				for (var j = 0; j < input.columns.length; j++) {
+					result = result || isMandatory(input.columns[j], mandatory);
+				}
+			} else if (input.hasOwnProperty("fields")) {
+				for (var k = 0; k < input.fields.length; k++) {
+					result = result || isMandatory(input.fields[k], mandatory);
+				}
+			} else if (input.hasOwnProperty("name")) {
+				if (mandatory.some(function(man) {
+					return man.name === input.name;
+				})) {
+					result = result || true;
+				}
+			} 
+			return result;
+		};
+        return function(input, mandatory) {
+            var output = [];
+            var include = false;
+            for (var i = 0; i < input.length; i++) {
+                if (isMandatory(input[i], mandatory)) {
+                    include = true;
+                    output.push(input[i]);
+                } else {
+                    include = false;
+                }
+            }
+            return output;
+        };
+    });
+]]></script>
+        <script_name/>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-01-21 19:51:49</sys_created_on>
+        <sys_id>fd64173b2f4501101b6051072799b6d9</sys_id>
+        <sys_mod_count>40</sys_mod_count>
+        <sys_name>tabbedFormatters_v2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sys_ui_script_fd64173b2f4501101b6051072799b6d9</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-09-11 20:46:44</sys_updated_on>
+        <ui_type>10</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

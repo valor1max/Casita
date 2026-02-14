@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>standard</category>
+        <client_script><![CDATA[api.controller=function($scope, $rootScope, $location, spUtil, $timeout, spAriaFocusManager, i18n) {
+	var canNavigate = true;
+	if ($scope.data.dataTableWidget)
+		angular.extend($scope.data.dataTableWidget.options, $scope.options);
+
+	$scope.$on('data_table.click', callDataClick);
+
+	$scope.$on('select2.ready', function(e, $el){
+		if ($scope.data.invalid_table){
+			e.stopPropagation();
+			$el.select2('open');
+		}
+	});
+
+	$scope.selectedTable = {
+		displayValue: $scope.data.table,
+		value: $scope.data.table
+	};
+
+	function resetParams(){
+		delete $scope.data.p;
+		delete $scope.data.o;
+		delete $scope.data.d;
+		delete $scope.data.q;
+		delete $scope.data.table;
+	}
+
+	$scope.onChange = function() {
+		resetParams();
+		$scope.data.table = $scope.selectedTable.value;
+		$scope.data.fields = "";  // reset
+		$scope.data.invalid_table = false;
+		getData(true);
+	};
+	
+	function callDataClick(e, parms) {											
+		var oid = $location.search().id;
+		var p = parms.id || $scope.data.page_id || 'form_tabbed_v2';
+		var s = {id: p, table: parms.table, sys_id: parms.sys_id, view: $scope.data.view};
+		if (oid == p) {
+			s.spa = 1;
+			var t = $location.search();
+			s = angular.extend(t, s);
+			$rootScope.$broadcast('$sp.list.click', s);
+			return;
+		}
+
+		var newURL = $location.search(s);
+		spAriaFocusManager.navigateToLink(newURL.url());										
+	}
+
+	function getData(updateUrl) {
+		var f = $scope.data;
+		spUtil.update($scope).then(function(data) {
+				$scope.data.dataTableWidget = null;
+				$timeout(function(){
+					$scope.data.dataTableWidget = data.dataTableWidget;
+					angular.extend($scope.data.dataTableWidget.options, $scope.options);
+					if (updateUrl)
+						setPermalink(f.table);
+				});
+		});
+	}
+
+	function setPermalink(table) {
+		$scope.ignoreLocationChange = true;
+		var searchParms = $location.search();
+		var search = {
+			spa: 1,
+			table: table,
+			id: searchParms.id
+		};
+		$location.search(search);
+	}
+
+	$scope.$on('data_table.loaded', function(evt, params) {
+		var rlScope = evt.targetScope.$parent.$parent;
+		if (!rlScope.hasOwnProperty("rl") || !rlScope.rl.hasOwnProperty("count")) return;   // Not a tabbed (aka related) list
+		if (evt.currentScope.$id != rlScope.$parent.$parent.$parent.$parent.$parent.$parent.$id) return;  // Not immediate parent tabset
+		var rl_index = rlScope.$index;
+		evt.currentScope.data.tabs.items[rl_index].loaded = true;
+        $timeout($('#scope-' + evt.currentScope.$id + ' .ui-tabs-scrollable').scope().api.doRecalculate());
+	});
+	
+	// Prevent browser warnings 
+	i18n.loadMessage("or condition", "Add OR condition");
+	i18n.loadMessage("and condition", "Add AND condition");
+	i18n.loadMessage("Remove empty condition", "Remove empty condition");
+	i18n.loadMessage("Remove condition: {0} {1} {2}", "Remove next condition: {0} {1} {2}");
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.widget-data-table .clearfix {&#13;
+  display: none;&#13;
+}&#13;
+&#13;
+.panel-primary .panel-heading {&#13;
+  button:not(.btn-default) {&#13;
+    &amp;:focus {&#13;
+      outline-color: #FFFFFF;&#13;
+      border-color: #FFFFFF;&#13;
+      box-shadow: 0px 0px 5px #FFFFFF;&#13;
+    }&#13;
+  }&#13;
+}&#13;
+&#13;
+&#13;
+</css>
+        <data_table>sp_instance_table</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list>title,glyph,color,sp_page</field_list>
+        <has_preview>false</has_preview>
+        <id>data-table-from-url-v2</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+}]]></link>
+        <name>Data Table from URL Definition v2</name>
+        <option_schema>[{"hint":"Show Instance option title instead of the table's plural label","name":"use_instance_title","default_value":"false","section":"Presentation","label":"Use Instance Title","type":"boolean"},{"hint":"If enabled, show the filter in the breadcrumb section of the table","name":"enable_filter","default_value":"false","section":"Presentation","label":"Enable Filter","type":"boolean"}]</option_schema>
+        <public>false</public>
+        <roles>snc_external,snc_internal</roles>
+        <script><![CDATA[(function() {
+	deleteOptions(['table','field_list','filter','order_by', 'order_direction','order','maximum_entries']);
+	if (input) {
+		data.table = input.table;
+		data.view = input.view;
+	} else {
+		data.table = $sp.getParameter('table') || $sp.getParameter('t');
+		data.view = $sp.getParameter('view') || $sp.getParameter('v');
+	}
+
+	if (!data.table) {
+		data.invalid_table = true;
+		data.table_label = "";
+		return;
+	}
+
+	var gr = new GlideRecordSecure(data.table);
+	if (!gr.isValid()) {
+		data.invalid_table = true;
+		data.table_label = data.table;
+		return;
+	}
+
+	// page is where the record URLs go, URL parameter wins
+	data.page_id = $sp.getParameter("target_page_id");
+	if (!data.page_id) {
+		var sp_page = $sp.getValue('sp_page');
+		if (sp_page) {
+			var pageGR = new GlideRecord('sp_page');
+			pageGR.get(sp_page);
+			data.page_id = pageGR.id.getDisplayValue();
+		}
+	}
+
+	// widget parameters
+	data.table_label = gr.getLabel();
+	data.fields = $sp.getListColumns(data.table, data.view);
+	copyParameters(data, ['p', 'o', 'd', 'filter']);
+	copyParameters(data, ['relationship_id', 'apply_to', 'apply_to_sys_id']);
+	data.filterACLs = true;
+	data.show_new = true;
+	data.show_keywords  = true;
+	data.show_breadcrumbs = true;
+	data.fromUrl = true;
+	data.useInstanceTitle = (options.use_instance_title == "true");
+	data.headerTitle = data.useInstanceTitle ? options.title : gr.getPlural();
+	data.enable_filter = input.enable_filter || options.enable_filter == true || options.enable_filter == "true";
+	var dtWidget = $sp.getWidget('widget-data-table-tabbed-v2', data);
+	
+	data.tabs = { field_name: null };
+	var items = [];
+	data.tabs.field_name = $sp.getParameter("tabs");
+	data.tabs.urlFilter = $sp.getParameter("filter") || "";
+	if (!data.tabs.field_name) {
+		data.tabs.items = {label: "", value: null, dataTableWidget: dtWidget};
+	}
+	else {
+		var choices = new GlideRecord("sys_choice");
+		choices.addQuery("name", data.table);
+		choices.addQuery("element", data.tabs.field_name);
+		choices.addQuery("inactive", false);
+		choices.orderBy("sequence");
+		choices.query();
+		while (choices.next()) {
+			data.uid = "Tab_" + choices.getUniqueValue();
+			dtWidget = $sp.getWidget('widget-data-table-tabbed-v2', data);
+			dtWidget.options.filter = (data.tabs.urlFilter + "^") + data.tabs.field_name + '=' + choices.getValue("value");
+			dtWidget.options.useInstanceTitle = true;
+			dtWidget.options.headerTitle = choices.getValue("label") + " " + data.headerTitle;
+			items.push({label: choices.getValue("label"), value: choices.getValue("value"), dataTableWidget: dtWidget});
+		}
+	}
+	if (data.tabs.field_name && items.length == 0) {
+		var ref_field = JSON.parse(JSON.stringify(data.tabs.field_name)).split(".")[0];
+		var agg = new GlideAggregate(data.table);   
+        agg.addEncodedQuery(data.tabs.urlFilter);
+        agg.addAggregate('count', ref_field);
+        agg.addAggregate('count', data.tabs.field_name);
+        agg.groupBy(ref_field);
+        agg.groupBy(data.tabs.field_name);
+        agg.orderByAggregate('count', ref_field);
+		agg.query();
+		var i = 0; var otherFilter = "";
+        while (agg.next() && agg.getRowCount() > 1 && i++ < 36) {
+			var filter_field = agg[ref_field].getReferenceTable() ? ref_field : data.tabs.field_name; 
+			data.uid = "Tab_" + i;
+			dtWidget = $sp.getWidget('widget-data-table-tabbed-v2', data);
+			dtWidget.options.useInstanceTitle = true;
+			if (i < 36) {
+				otherFilter += "^" + filter_field + (agg[filter_field].nil() ? 'ISNOTEMPTY' : '!=' + agg.getValue(data.tabs.field_name));
+				dtWidget.options.filter = (data.tabs.urlFilter + "^") + filter_field + (agg[filter_field].nil() ? 'ISEMPTY' : '=' + agg.getValue(filter_field));
+				var lbl = agg.getDisplayValue(data.tabs.field_name) || agg.getDisplayValue(ref_field);
+				lbl = lbl == null || lbl.length == 0 ? " (empty)" : lbl.trim();
+				dtWidget.options.headerTitle = lbl + " " + data.headerTitle;
+				items.push({label: lbl, value: agg.getValue(data.tabs.field_name), dataTableWidget: dtWidget});
+			}
+			else {
+				dtWidget.options.filter = (data.tabs.urlFilter + "^") + otherFilter;
+				dtWidget.options.headerTitle = "Other " + data.headerTitle;
+				items.push({label: "{ All Other }", value: null, dataTableWidget: dtWidget});
+			}
+        }
+	}
+	if (items.length == 0) { data.tabs.field_name = null; items.push({label: "", value: null, dataTableWidget: dtWidget}); }
+	data.tabs.items = items.sort(function(a, b) { return a.label > b.label ? 1 : -1; });
+
+	function copyParameters(to, names) {
+		names.forEach(function(name) {
+			data[name] = $sp.getParameter(name);
+		});
+	}
+
+	// in case this widget is tied to the wrong instance type
+	function deleteOptions(names) {
+		names.forEach(function(name) {
+			delete options[name];
+		});
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-02-05 18:28:15</sys_created_on>
+        <sys_id>7e41d43c2f6501101b6051072799b6ce</sys_id>
+        <sys_mod_count>110</sys_mod_count>
+        <sys_name>Data Table from URL Definition v2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_widget_7e41d43c2f6501101b6051072799b6ce</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-09-07 22:46:14</sys_updated_on>
+        <template><![CDATA[<div id="{{'scope-' + $id}}">
+  <div ng-if="data.invalid_table">
+    <div class="alert alert-info">
+      <span ng-if="data.table_label">${Table not defined} '{{data.table_label}}'</span>
+      <span ng-if="!data.table_label">${Select table on field below or specify on URL} ?id=list_v2&amp;table=table_name</span>
+    </div>
+    <sn-record-picker field="selectedTable" table="'sys_db_object'"
+                      display-field="'label'"
+                      value-field="'name'"
+                      display-fields="'name'"
+                      search-fields="'label,name'" page-size="100" on-change="onChange()" ></sn-record-picker>
+  </div>
+  <div ng-if="!data.invalid_table && data.tabs.field_name">
+    <scrollable-tabset-v2 auto-recalculate="true" tooltip-left-placement="bottom-left" tooltip-right-placement="bottom-right">
+      <uib-tabset active="active" justified="false">
+        <uib-tab ng-repeat="rl in data.tabs.items track by $index" ng-if="true" ng-hide="rl.label.length == 0">
+          <uib-tab-heading>
+            <span>{{::rl.label}}</span> 			
+            <span class="label label-as-badge label-primary">{{rl.count}}</span>
+          </uib-tab-heading>
+          <sp-widget widget="rl.dataTableWidget"></sp-widget>
+        </uib-tab>
+      </uib-tabset>
+    </scrollable-tabset-v2>
+  </div>
+  <div ng-if="!data.invalid_table && !data.tabs.field_name">
+    <sp-widget widget="data.tabs.items[0].dataTableWidget"></sp-widget>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

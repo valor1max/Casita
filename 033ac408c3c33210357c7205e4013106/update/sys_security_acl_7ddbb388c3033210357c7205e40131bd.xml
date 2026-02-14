@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl">
+    <sys_security_acl action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <admin_overrides>true</admin_overrides>
+        <advanced>false</advanced>
+        <applies_to/>
+        <condition/>
+        <controlled_by_refs/>
+        <decision_type>allow</decision_type>
+        <description>Default access control on u_casita_monthly_project</description>
+        <local_or_existing>Existing</local_or_existing>
+        <name>u_casita_monthly_project</name>
+        <operation display_value="write">write</operation>
+        <script/>
+        <security_attribute/>
+        <sys_class_name>sys_security_acl</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-09 14:29:48</sys_created_on>
+        <sys_id>7ddbb388c3033210357c7205e40131bd</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>u_casita_monthly_project</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sys_security_acl_7ddbb388c3033210357c7205e40131bd</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-09 14:29:48</sys_updated_on>
+        <type display_value="record">record</type>
+    </sys_security_acl>
+</record_update>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="1319ac48c30b3210357c7205e40131e3" label="Debt" max_length="40" name="u_debt" type="collection">
+        <element label="Interest Rate %" mandatory="true" max_length="38" name="u_interest_rate" type="decimal"/>
+        <element label="Available Credit" max_length="20" name="u_available_credit" read_only="true" type="currency"/>
+        <element label="Total Credit" max_length="20" name="u_total_credit" type="currency"/>
+        <element choice="1" label="Type of Debt" mandatory="true" max_length="40" name="u_type_of_debt" type="string">
+            <choice>
+                <element inactive_on_update="false" label="Amex" sequence="0" value="Amex"/>
+                <element inactive_on_update="false" label="Katrina Sapphire" sequence="3" value="Katrina Sapphire"/>
+                <element inactive_on_update="false" label="Capital One" sequence="1" value="Capital One"/>
+                <element inactive_on_update="false" label="Other" sequence="9" value="other"/>
+                <element inactive_on_update="false" label="Car" sequence="4" value="Car"/>
+                <element inactive_on_update="false" label="Max Sapphire" sequence="2" value="Max Sapphire"/>
+            </choice>
+        </element>
+        <element label="Debt Amount" mandatory="true" max_length="20" name="u_debt_amount" type="currency"/>
+    </element>
+</database>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="077b88c8c3c33210357c7205e4013182" extends="task" label="Casita Project" max_length="40" name="u_casita_project" type="collection">
+        <element label="Remaining Monthly Bill Amount" max_length="20" name="u_remaining_monthly_bill_amount" read_only="true" type="currency"/>
+        <element label="Total Debt" max_length="20" name="u_total_debt" read_only="true" type="currency"/>
+        <element label="Monthly Bill Amount" max_length="20" name="u_monthly_bill_amount" read_only="true" type="currency"/>
+        <element label="Available Funds" mandatory="true" max_length="20" name="u_available_funds" type="currency"/>
+        <element label="Is Submitted" max_length="40" name="u_is_submitted" type="string"/>
+        <element label="Project" max_length="40" name="u_project" read_only="true" type="string"/>
+    </element>
+</database>

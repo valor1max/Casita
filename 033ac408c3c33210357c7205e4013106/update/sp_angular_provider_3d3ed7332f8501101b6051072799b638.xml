@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_angular_provider">
+    <sp_angular_provider action="INSERT_OR_UPDATE">
+        <name>spReferenceFieldTabbed_v2</name>
+        <script><![CDATA[/*! RESOURCE: /scripts/app.$sp/directive.spReferenceField.js */
+angular.module('sn.$sp').directive('spReferenceField', function($rootScope, spUtil, $location, $uibModal, $http, spAriaUtil, i18n) {
+    'use strict';
+    return {
+        restrict: 'E',
+        replace: true,
+        template: '<span class="ref-picker-container">' +
+                    '<div class="add-on" ng-if="field.value != \'\'">' +
+                       '<button type="button" class="btn btn-default bg-white lookup" ng-click="openReference(field, formModel.view)"' + 
+                       ' ng-disabled="field.isReadonly() &amp;&amp; !field.readonlyClickthrough"' + 
+                       ' data-original-title="Open this record {{field.displayValue}}" data-toggle="tooltip"' +
+                       ' data-placement="top" aria-label="Open this record {{field.displayValue}}">' +
+                         '<span class="fa fa-info-circle"></span>' +
+                       '</button>' +
+                     '</div>' +
+                     '<div class="reference">' +
+                        '<sp-reference-element field="field" sn-select-width="100%" ref-table="formModel.table" ref-id="formModel.sys_id"' +
+                        ' glide-form="getGlideForm()" sn-options="{placeholder: field.placeholder}" record-values="getEncodedRecordValues()"' +
+                        ' sn-disabled="field.isReadonly()" label-id="sp_reference_element_sr_{{::field.name}}"></sp-reference-element>' +
+                     '</div>' +
+                  '</span>',
+        controller: function($scope) {
+            var unregister;
+            $scope.openReference = function(field, view) {
+                var data = {
+					id: "form_tabbed_v2",
+					widget: "widget-form-tabbed-v2",
+                    table: field.refTable,
+                    sys_id: field.value,
+                    view: view || new URL($location.absUrl()).searchParams.get("view"),
+					isPopup: true
+                };
+                if (angular.isDefined(field.reference_key))
+                    data[field.reference_key] = field.value;
+                else
+                    data.sys_id = field.value;
+                if (unregister)
+                    unregister();
+                unregister = $rootScope.$on('$sp.openReference', function(evt, data) {
+                    unregister();
+                    unregister = null;
+                    if (!evt.defaultPrevented && evt.targetScope === $scope) {
+						$location.url('?' + new URLSearchParams(data).toString());
+					}
+                });
+                $scope.$emit('$sp.openReference', data);
+            };
+            $scope.$on("$destroy", function() {
+                if (unregister)
+                    unregister();
+            });
+        },
+        link: function(scope, element) {
+            setTimeout(function() {
+                element.find('input').removeAttr('id');
+            }, 500);
+            i18n.getMessage("Closing modal page", function(msg) {
+                scope.exitMsg = msg;
+            });
+        }
+    };
+}).decorator("spReferenceFieldDirective", function($delegate) {
+    return ([$delegate[1]]);
+});]]></script>
+        <sys_class_name>sp_angular_provider</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-01-21 20:35:10</sys_created_on>
+        <sys_id>3d3ed7332f8501101b6051072799b638</sys_id>
+        <sys_mod_count>52</sys_mod_count>
+        <sys_name>spReferenceFieldTabbed_v2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_angular_provider_3d3ed7332f8501101b6051072799b638</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-03-05 16:58:01</sys_updated_on>
+        <type>directive</type>
+    </sp_angular_provider>
+</record_update>

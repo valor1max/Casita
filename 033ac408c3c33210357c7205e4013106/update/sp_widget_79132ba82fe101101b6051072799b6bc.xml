@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $http, spUtil, $uibModal, $timeout) {
+    /* widget controller */
+    var c = this;
+    var drop;
+    var g_form;
+
+    c.$onInit = function() {
+        $scope.$on('spModel.gForm.initialized', function(e, gFormInstance) {
+            g_form = gFormInstance;
+            Object.keys($scope.data.model).forEach(function(fld) {
+                g_form.setVisible(fld, fld == $scope.data.fieldName ? true : false);
+            });
+			$scope.data.editable = g_form.getEditableFields().find(function(itm) {return itm == $scope.data.fieldName; }) ? true : false;
+			spUtil.recordWatch($scope, $scope.data.tableName, "sys_id=" + $scope.data.sys_id, function(response) {
+				$scope.$emit("modal.form.updated", response.data);
+			});
+        });
+    };
+
+    $scope.select2Observer = function() {
+        drop = new MutationObserver($scope.dropMutation);
+        drop.observe(document.body, {
+            childList: true,
+            subtree: false,
+            attributes: false
+        });
+    };
+
+    $scope.dropMutation = function(mutations) {
+        var s2Nodes = [];
+        mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.tagName && node.classList.contains('select2-drop')) {
+                    s2Nodes.push(node);
+                }
+            });
+        });
+        $scope.attrMutation(s2Nodes);
+    };
+
+    $scope.attrMutation = function(s2Nodes) {
+        s2Nodes.forEach(function(entry) {
+            (new MutationObserver(
+                function(dropMutation) {
+                    dropMutation.forEach(function(attr) {
+                        if (attr.target.classList.contains('select2-results') && attr.target.style.display != 'none') {
+                            $(entry).css({
+                                'width': 'auto',
+                                'min-width': $(entry).width()
+                            });
+                        }
+                    });
+                }
+            )).observe(entry, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ["class", "style"]
+            });
+        });
+    };
+
+    $scope.$on('field.change', function(evt, parms) {
+        if (!g_form.isUserModified()) { // this is probably an onLoad UI action
+            g_form.setVisible(parms.field.name, false);
+            g_form.getField(parms.field.name).originalValue = parms.field.value;
+            if ((g_form.getField(parms.field.name).previousValue || parms.field.value) == parms.field.value) {
+                if (parms.field.name != $scope.data.fieldName) return;
+            }
+        }
+        g_form.getField(parms.field.name).previousValue = parms.field.value;
+        $scope.valueChanged(parms.field.name, parms.field.originalValue, parms.field.value);
+    });
+
+    $scope.valueChanged = function(fieldname, originalValue, newValue) {
+        var flds = g_form.getFieldNames();
+        flds.forEach(function(fld) {
+            g_form.setVisible(fld, showFormField(fld));
+        });
+    };
+
+    $scope.getDisplayedFields = function() {
+        var fieldList = g_form.getFieldNames();
+        return fieldList.filter(showFormField);
+    };
+
+    function formIsDirty() {
+        var mods = g_form.getFieldNames().filter(function(fld) {
+            return g_form.getField(fld).value != g_form.getField(fld).originalValue;
+        });
+        return mods.length > 0;
+    }
+
+    function showFormField(fld) {
+        var show = true;
+        if ((!g_form.isMandatory(fld) && g_form.getField(fld).originalValue == g_form.getField(fld).value) ||
+            (g_form.isMandatory(fld) && g_form.getValue(fld).length > 0 && g_form.getField(fld).originalValue == g_form.getField(fld).value))
+            show = false;
+        if (fld == $scope.data.fieldName) // always show primary field
+            show = true;
+        if (g_form.getField(fld).originalValue != g_form.getField(fld).value) // always show fields that have changed
+            show = true;
+        if (g_form.getField(fld).readonly == false && g_form.getField(fld).messages && g_form.getField(fld).messages.length > 0) // always show fields with messages
+            show = true;
+        return show;
+    }
+	
+	$scope.$on('open-column-editor', function(evt, editParams) {
+		if (angular.element(editParams.event.currentTarget).scope() != evt.currentScope.$parent) return;
+		showWait(true, editParams.event);
+        var opts = { table: editParams.table, id: editParams.id, field: editParams.field, label: editParams.label };
+        $scope.server.get(opts).then(function(resp) {
+			$scope.data = resp.data;
+			$scope.modalEdit($scope.data.tableName, $scope.data.fieldName, $scope.data.fieldLabel, $scope.data.sys_id, editParams.event);
+		});
+	});
+
+    $scope.modalEdit = function(table, field, label, sys_id, evt) {
+        var winSize = "sm";
+        showWait(true, evt);
+        $uibModal.open({
+            templateUrl: 'modalColumnTemplate',
+            controller: ModalFormEditCtrl,
+            scope: $scope,
+            windowClass: 'column-editor',
+            backdrop: false,
+            size: winSize,
+            resolve: {
+                event: function() {
+                    return evt;
+                }
+            }
+        });
+        showWait(false, evt);
+        $scope.select2Observer();
+    };
+
+    function showWait(show, event) {
+        if (show == true && !$scope.waitInstance) { 
+			var pos = angular.element(event.originalEvent.srcElement).offset();
+			var waitTemplate = "<div style='position: absolute; font-size: 18px; left: " + pos.left + "px; top: " + pos.top + "px;'>";
+			waitTemplate += "<i class='fa fa-spinner fa-spin fa-2x fa-fw'></i></div>";
+            $scope.waitInstance = $uibModal.open({ template: waitTemplate, backdrop: false, windowClass: 'column-editor-wait' });
+            $scope.waitInstance.rendered.then(function () { angular.element('.column-editor-wait').css({'display': 'inline-table', 'z-index': 99999 });	});
+        }		
+        if (show == false && $scope.waitInstance) {
+			$scope.waitInstance.dismiss();
+			$scope.waitInstance = null;
+		}
+    }
+
+    function ModalFormEditCtrl($scope, $uibModalInstance, event) {
+        var $ctrl = this;
+        var fld = $scope.data.model[$scope.data.fieldName] || "";
+        $uibModalInstance.rendered.then(function() {
+            angular.element('.column-editor .modal-content').css({'display': 'table', 'min-width': 275 });
+            $scope.adjustWindowSize(fld.type || "", fld.max_length || 0, $scope.data.editable == false ? true : false);
+            $(window).on('wheel', function(evt) {
+                if (!$(evt.target).hasClass('modal-content') && $(evt.target).parents('.modal-content, .select2-drop').length == 0)
+                    $scope.$dismiss("scroll");
+            });
+        });
+        $uibModalInstance.opened.then(function() {
+            // spUtil.addTrivialMessage('In-line editing start.');
+        });
+
+        $uibModalInstance.closed.then(function() {
+            angular.element('.bootstrap-datetimepicker-widget.picker-open').hide();
+        });
+
+        $scope.$on('modal.closing', function(evt, reason, closed) {
+            var why = reason ? reason.status || reason : 'saved';
+            // spUtil.addTrivialMessage('In-line editing complete: ' + why);
+        });
+
+        $scope.$on('field-editor:resized', function() {
+            if (!g_form) return;
+            $scope.adjustWindowSize(fld ? fld.type : "unknown", fld ? fld.max_length : 0, $scope.data.editable == false ? true : false);
+        });
+		
+        $scope.closePopover = function(reason) {
+            drop.disconnect();
+			$uibModalInstance.close(reason);
+        };
+
+        $scope.saveForm = function() {
+            if (!g_form) return;
+            if (g_form.isUserModified() || formIsDirty()) g_form.save();
+            else $scope.closePopover("save without data modification");
+        };
+
+        $scope.$on("spModel.uiActionComplete", function(e, response) {
+            var noError = true;
+            if (response.$$uiNotification.length > 0) {
+                if (response.$$uiNotification[0].type == "error")
+                    noError = false;
+            }
+            if (noError && $scope.data.form) {
+                $scope.closePopover({
+                    "status": 'saved',
+                    "value": $scope.data.form._fields[$scope.data.fieldName].value,
+                    "sys_id": $scope.data.sys_id
+                });
+            }
+        });
+
+        $scope.adjustWindowSize = function(fieldType, fieldLength, readOnly) {
+            var fldWidth = 200;
+            angular.element(event.originalEvent.srcElement).children('i').remove();
+            if (!readOnly && (fieldType == "reference" || fieldType == "choice" || fieldType == "table_name" || fieldType == "field_name" || 
+							(fieldType == "string" && fieldLength > 20) || fieldLength > 50)) {
+                fldWidth = 500 / (fieldType == "choice" ? 2 : 1);
+                angular.element('.modal-dialog').addClass('modal-md').removeClass('modal-sm');
+            }
+            angular.element('.column-editor').css({'z-index': 9999, 'border': 0, 'box-shadow': 'none', 'overflow': 'visible' });
+            angular.element('.column-editor').find('.modal-dialog').css({'position': 'absolute', 'margin': '0px' });
+            var win = angular.element('body').get(0).getBoundingClientRect();
+            var popup = angular.element('.modal-content');
+            var popRect = popup.get(0).getBoundingClientRect();
+            var top = (event.clientY - 120) - 5;
+            var left = event.clientX - (popRect.width / 2);
+            // Out of bounds
+            if (left < 0) { left = 0; }
+            if (top < 0) { top = 0; }
+            if (left + popRect.width > win.width) { left = win.width - popRect.width; }
+            if (top + popRect.height > win.height) { top = win.height - popRect.height - 20; }
+            // Covering element
+            if (left < event.clientX && left + popRect.width > event.clientX && top < event.clientY && top + popRect.height > event.clientY) {
+                left = event.clientX - popRect.width - 20;
+                if (left < 0) left = event.clientX + 20;
+            }
+			angular.element('#columnEditForm').css({ 'min-width': fldWidth });
+            angular.element('.column-editor').css({ 'top': top, 'left': left });
+            angular.element('#popover-arrow').remove();
+            var arrow = [];
+            if (popRect.height <= 125) {
+                arrow.border = 'border-top-color: ';
+                arrow.pos = "left: " + (event.clientX - left) + "px; ";
+            } else if (left + popRect.width > event.clientX) {
+                arrow.border = 'border-right-color: ';
+                arrow.pos = "top: " + (event.clientY - top - 10) + "px; " + "left: -8px; ";
+            } else {
+                arrow.border = 'border-left-color: ';
+                arrow.pos = "top: " + (event.clientY - top - 10) + "px; " + "right: -24px; ";
+            }
+            angular.element('.column-editor .modal-content').append('<div id="popover-arrow" style="' + arrow.pos +
+                'border: solid transparent; content: \'\'; position: absolute; ' +
+                arrow.border + 'white; border-width: 12px; margin-left: -16px;"></div>');
+        };
+    }
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.popover-content {&#13;
+  margin: 5px;&#13;
+  min-width: 275px;&#13;
+}&#13;
+&#13;
+.icon-pop { &#13;
+  font-size: 28px; &#13;
+  padding: 10px; &#13;
+  height: auto; &#13;
+  width: auto; &#13;
+  background-image: none;&#13;
+  background-color: transparent;&#13;
+}&#13;
+&#13;
+.modal-drop {&#13;
+  background-color: red;&#13;
+  width: auto !important;&#13;
+}&#13;
+&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>widget-form-column-v2</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Form Column Edit v2</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+    data.tableName = options.table ? options.table.toString() : input ? input.table : null;
+    data.viewName = options.view ? options.view.toString() : input ? input.view : $sp.getParameter("view") || "default";
+    data.fieldName = options.field ? options.field.toString() : input ? input.field : null;
+    data.fieldLabel = options.label ? options.label.toString() : input ? input.label : null;
+    data.sys_id = options.id ? options.id.toString() : input ? input.id : null;
+	if (!data.tableName) return;
+    var user = gs.getUser().getID();
+    data.canEdit = true;
+    data.form = $sp.getForm(data.tableName, data.sys_id, null, data.viewName);
+    data.view = data.form._view;
+    data.model = data.form._fields;
+	data.editable = data.model[data.fieldName.split(".")[0]] === undefined ? false : !data.form._fields[data.fieldName.split(".")[0]].readonly;
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-02-05 15:06:23</sys_created_on>
+        <sys_id>79132ba82fe101101b6051072799b6bc</sys_id>
+        <sys_mod_count>139</sys_mod_count>
+        <sys_name>Form Column Edit v2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_widget_79132ba82fe101101b6051072799b6bc</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-09-10 13:57:50</sys_updated_on>
+        <template><![CDATA[<script type="text/ng-template" id="modalColumnTemplate">
+   <style>
+     .field-has-reference > div.add-on > button { display : none !important; }
+   </style>
+   <div class="popover-content" element-resized-v2="field-editor" click-outside-v2="closePopover('outside click')">
+     <table style="width: 100%">
+       <tr>
+         <td ng-if="c.data.editable == false">
+           <span>{{c.data.fieldLabel}} is not editable.</span>
+         </td>
+         <td ng-if="c.data.editable == true">
+           <form-column-edit form_model="c.data.form" mandatory template-url="form-column-edit-template"></form-column-edit>
+         </td>
+         <td style="width: 50px; vertical-align: top; padding-top: 25px;" ng-if="c.data.editable == true">
+           <button type="button" id="cell_edit_ok" class="modal-edit btn btn-icon icon-pop icon-check-circle" 
+                   style="color: green; background-color: transparent; font-size: 20px;" ng-click="saveForm()" ng-if="c.data.editable == true">
+           </button>
+         </td>
+         <td style="width: 50px; vertical-align: top; padding-top: 25px;">
+           <button type="button" id="cell_edit_cancel" class="modal-edit btn btn-icon icon-pop icon-cross-circle" 
+                   style="color: red; background-color: transparent; font-size: 20px;" ng-click="closePopover('cancelled')">
+           </button>
+         </td>
+       </tr>
+     </table>
+   </div>
+</script>
+]]></template>
+    </sp_widget>
+</record_update>

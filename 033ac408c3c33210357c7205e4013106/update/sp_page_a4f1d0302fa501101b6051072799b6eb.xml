@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_page">
+    <sp_page action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <css>body .padding-top {&#13;
+    padding-top: 0px;&#13;
+}&#13;
+.panel  {&#13;
+    margin-bottom: 0px !important;&#13;
+}&#13;
+&#13;
+section.page {&#13;
+  overflow: visible !important;&#13;
+}&#13;
+&#13;
+#uiNotificationContainer, .header-loader { &#13;
+	z-index: 10000; &#13;
+} &#13;
+&#13;
+.tooltip {&#13;
+    z-index: 99999 !important;&#13;
+}&#13;
+&#13;
+.modal-form {&#13;
+    overflow: auto;&#13;
+}&#13;
+&#13;
+.modal-form &gt; .modal-dialog.modal-xl {&#13;
+    min-width: calc(100vw - 40px) !important; &#13;
+    max-width: calc(100vw - 40px) !important;&#13;
+    margin-left: auto !important;&#13;
+    margin-right: auto !important;&#13;
+}</css>
+        <draft>false</draft>
+        <dynamic_title_structure>%table %t list</dynamic_title_structure>
+        <human_readable_url_structure/>
+        <id>list_v2</id>
+        <internal>false</internal>
+        <omit_watcher>false</omit_watcher>
+        <public>false</public>
+        <roles/>
+        <seo_script/>
+        <short_description>List of Records using Data Table Tabbed v2</short_description>
+        <sys_class_name>sp_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-02-05 18:32:10</sys_created_on>
+        <sys_id>a4f1d0302fa501101b6051072799b6eb</sys_id>
+        <sys_mod_count>28</sys_mod_count>
+        <sys_name>list_v2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_page_a4f1d0302fa501101b6051072799b6eb</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-09-14 11:41:18</sys_updated_on>
+        <title>List v2</title>
+        <use_seo_script>false</use_seo_script>
+    </sp_page>
+    <sys_translated_text action="delete_multiple" query="documentkey=a4f1d0302fa501101b6051072799b6eb"/>
+</record_update>

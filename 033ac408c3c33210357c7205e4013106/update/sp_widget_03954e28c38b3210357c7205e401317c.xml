@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+	c.data.greeting = c.data.name.toLocaleUpperCase();
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>#homepage-search {
+  color: #fff;
+}
+
+.welcome-container2 {
+  padding-bottom: 15px;
+  background-color: none;
+  height: 70px !important;
+}
+
+.welcome_text{
+  color: #505964;
+}
+
+.welcome_background {
+  background: radial-gradient(4.19% 52.87% at 0.88% 47.12%, rgba(183, 17, 39, 0.15) 0%, rgba(183, 17, 39, 0) 100%);
+}
+
+.rectangle{
+  height:150px;
+  background-color: #A60C3A;
+  width: 10px;
+  margin-right: 10px;
+}
+
+.grid-container{
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  align-items: center;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id/>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Casita Welcome Banner</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  data.sysUserID = $sp.getParameter("sys_id");
+	if(!data.sysUserID)
+		data.sysUserID = gs.getUser().getID();
+	var sysUserGR = new GlideRecord('sys_user');
+	data.userExists = sysUserGR.get(data.sysUserID) && sysUserGR.canRead();
+	if(data.userExists){
+		data.name = sysUserGR.getValue('name');
+	}
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-10 19:25:29</sys_created_on>
+        <sys_id>03954e28c38b3210357c7205e401317c</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Casita Welcome Banner</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_widget_03954e28c38b3210357c7205e401317c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-11 00:52:19</sys_updated_on>
+        <template><![CDATA[<div class="" style="background-color: none !important">
+  <div>
+    <div class="welcome_bakground grid-container">
+      <div class="rectangle grid-child">
+      </div>
+      <div class="grid-child">
+        <h1 class="text-left m-b-lg welcome_text" style="font-size:36px">
+          Welcome, {{data.greeting}}, to Casita Management Console
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+          ]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>03954e28c38b3210357c7205e401317c</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-10 19:25:29</sys_created_on>
+        <sys_id>b619ca20c3cb3210357c7205e401314c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-10 19:25:29</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

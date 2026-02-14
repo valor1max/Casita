@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description/>
+        <global>false</global>
+        <ignore_in_now_experience>false</ignore_in_now_experience>
+        <name>TabbedFormAppProcessesV2</name>
+        <script><![CDATA[angular.module('sn.$sp')
+	.constant('CONSTANTS', {
+        LIST_ID: "list",
+        FORM_ID: "form",
+        FORM_WIDGET: "widget-form",
+        TABBED_LIST_ID: "list_v2",
+        TABBED_FORM_ID: "form_tabbed_v2",
+        TABBED_FORM_WIDGET: "widget-form-tabbed-v2"
+	})
+    .provider('tabbedConfig', function() {
+		var $this = this;
+        var settings = (typeof gblTabbedConfig != "undefined") ? gblTabbedConfig : {};
+        this.enableForm = typeof settings.enableForm != "undefined" ? settings.enableForm : false;
+        this.enableCatalog = typeof settings.enableCatalog != "undefined" ? settings.enableCatalog : false;
+        this.enableInlineEdit = typeof settings.enableInlineEdit != "undefined" ? settings.enableInlineEdit : false;
+        this.enableCatAttachDrop = typeof settings.enableCatAttachDrop != "undefined" ? settings.enableCatAttachDrop : false;
+        this.enableFormAttachDrop = typeof settings.enableFormAttachDrop != "undefined" ? settings.enableFormAttachDrop : false;
+        this.enableModals = typeof settings.enableModals != "undefined" ? settings.enableModals : false;
+        this.enableFluidCtrs = typeof settings.enableFluidCtrs != "undefined" ? settings.enableFluidCtrs : false;
+        this.enableCreateRef = typeof settings.enableCreateRef != "undefined" ? settings.enableCreateRef : false;
+        this.enableReroute = typeof settings.enableReroute != "undefined" ? settings.enableReroute : false;
+        this.showHeader = typeof settings.showHeader != "undefined" ? settings.showHeader : true;
+        this.showFooter = typeof settings.showFooter != "undefined" ? settings.showFooter : true;
+		gblTabbedConfig = this;
+
+		this.loadTabbedTemplates = function($location, $http, $templateCache) {
+            if ($this.enableCatalog == false) return;
+			var templateQ = "/api/now/table/sp_ng_template?sysparm_query=id%3Dtabbed_form_template_v2^ORid%3Dform_container_columns_v2&sysparm_fields=id%2Ctemplate";
+			$http.get(templateQ).success(function (response) { 
+				var templates = response.result; 
+				if (templates.length > 0) { 
+					templates.forEach(function (rec) {
+						$templateCache.put(rec.id, rec.template);
+					});
+				}
+			});
+		};
+		
+		this.$get = ['$location', '$http', '$templateCache', function($location, $http, $templateCache) {
+			this.loadTabbedTemplates($location, $http, $templateCache);
+			return $this;
+        }];
+    })
+    .directive("spModel", ['CONSTANTS', 'tabbedConfig', 'formModal', '$timeout', '$compile', function(CONSTANTS, tabbedConfig, formModal, $timeout, $compile) {
+        return {
+            restrict: 'E',
+            link: function(scope, element, attrs) {
+                if (tabbedConfig.enableModals == true) {
+                    scope.$on('$sp.openReference', function(evt, refData) {
+                        if (!refData.id || tabbedConfig.enableForm == false) return; //This is not a tabbed request
+                        if (evt.defaultPrevented == true) return;
+                        evt.preventDefault();
+                        formModal.open(CONSTANTS.TABBED_FORM_WIDGET, evt, refData, refData.sys_id == -1 ? 'Add' : 'Edit');
+                    });
+                }
+                if (scope.$root.page.id.indexOf("sc_cat_item") !== -1) {
+                    angular.element('body').on("click", '#required_field_bottom', function(evt) {
+                        var field = angular.element(evt.target).scope().f;
+                        var elem = (field.type == "reference" ? "sp_formfield_reference_" : "sp_formfield_") + field.name;
+                        var idx = angular.element(document.getElementById(elem)).parents('.tab-pane').index() + 1;
+                        angular.element(document.getElementById(elem)).parents('.tab-content').siblings('ul').children('li:nth-child(' + idx + ')').find('a').triggerHandler('click');
+                        setTimeout(function() {
+                            angular.element(evt.target).triggerHandler('click');
+                        }, 100);
+                    });
+				}					
+                if ((attrs.formModel.endsWith("data.f") && tabbedConfig.enableFormAttachDrop == true) ||
+                     (attrs.formModel.endsWith("sc_cat_item") && tabbedConfig.enableCatAttachDrop == true)) {
+					if (angular.element(element).closest('.panel').find("#drag-n-drop").length > 0) return;
+                    $timeout(function() {
+                        var attach = '<div id="drag-n-drop" style="display: inline-block !important; float: right;">';
+                        attach += '<div ng-file-drop="attachmentHandler.onFileSelect($files)"';
+                        attach += ' ng-multiple="true" class="sp-attachments" style="padding: 0px 30px 0px 30px;">';
+                        attach += '<div class="sp-no-attachments text-center text-italic text-muted">';
+                        attach += '<em class="sp-drop-area">[Drop files here]</em></div></div></div>';
+                        scope.$apply(function() {
+                           var content = $compile(attach)(scope);
+                           angular.element(element).closest('.panel').find('sp-attachment-button').closest('div').append(content);
+                        });
+                        if ((scope.$root.page.id.indexOf("sc_cat_item") !== -1))
+                            angular.element('sp-attachment-button').closest('div').css({"display": "flex", "flex-direction": "row-reverse", "float": "right", "align-items": "center" });
+                    });
+                }
+            }
+        };
+    }])
+   .directive("main", ['CONSTANTS', 'tabbedConfig', 'formModal', '$window', '$http', '$templateCache', function(CONSTANTS, tabbedConfig,  formModal, $window) {
+        return {
+            restrict: 'E',
+            link: function(scope, element, attrs) {
+                scope.$root.$on('$locationChangeStart', function(evt, next, current) {
+					if (!scope.containers) return;      // Page is loading
+					formModal.openOrNav(evt, next, current);
+				});
+                var reRoute = function(evt, next) {
+                    var nextParams = new URL(next).searchParams;
+                    var id = nextParams.get("id");
+                    if (id == "form" || id == "list" || id == "lf") {
+                        if (evt.preventDefault) evt.preventDefault();
+                        document.location = next.replace("id=form", "id=form_tabbed_v2").replace("id=list", "id=list_v2").replace("id=lf", "id=lf_v2");
+                        angular.element('header')[0].style.display = "none";
+                    }
+                };
+                if (tabbedConfig.enableReroute == true) {
+                    scope.$on('$locationChangeStart', function(event, newUrl, oldUrl) {
+                        reRoute(event, newUrl);
+                    });
+                }
+                var themeWatch = scope.$watch('theme', function() {
+                    if ((tabbedConfig.showHeader == false) && angular.element('header').length > 0) angular.element('header')[0].style.display = "none";
+                    if ((tabbedConfig.showFooter == false) && angular.element('footer').length > 0) angular.element('footer')[0].style.display = "none";
+                });
+                if (tabbedConfig.enableFluidCtrs == true) {
+                    scope.main.getContainerClasses = function(container) {
+                        var classes = [];
+                       if (!container.bootstrap_alt) {
+                            classes[classes.length] = container.width;
+                        }
+                        if (container.container_class_name) {
+                            classes[classes.length] = container.container_class_name;
+                        }
+                        classes.forEach(function(item, idx) {
+                            if (item == "container") classes[idx] = "container-fluid";
+                        });
+                        return classes;
+                    };
+                }
+            }
+        };
+    }])
+    .service("formModal", function(CONSTANTS, tabbedConfig, $rootScope, $http, $window, $location, $timeout, spUtil, $uibModal, $uibModalStack, $templateCache) {
+        var debugMsgs = false;
+        var modalService = this;
+        modalService.open = function(widget, event, obj, title) {
+            openWidgetModal(widget, event, obj, title);
+        };
+        modalService.openOrNav = function(event, next, current) {
+            openOrNav(event, next, current);
+        };
+
+        $templateCache.put("modalTemplate",
+            "<div id=\"{{'scope-' + $id}}\" style=\"background: #fff;\">" +
+            "    <div class=\"modal-header\">" +
+            "		<button type=\"button\" class=\"close\" data-dismiss=\"dialog\" ng-click=\"dismiss('Close Window pressed')\">" +
+            "			<span aria-hidden=\"true\">&times;</span>" +
+            "			<span class=\"sr-only\">Close</span>" +
+            "		</button>" +
+            "      	<h4 class=\"modal-title\">{{modalTitle}}</h4>" +
+            "    </div>" +
+            "    <div ng-show=\"!isFormLoaded\">" +
+            "      <p class=\"text-center\" style=\"font-size: 18px;\">" +
+            "        <i class=\"fa fa-spinner fa-spin fa-2x fa-fw\"></i>" +
+            "        &nbsp;Loading...&nbsp;" +
+            "      </p>" +
+            "    </div>" +
+            "    <div class=\"modal-body\">" +
+            "        <sp-widget widget=\"widgetPayload\"></sp-widget>" +
+            "    </div>" +
+            "  </div>"
+        );
+        $templateCache.put("navigateTemplate",
+            "<div id=\"state-navigation\" style=\"background: #fff;\">" +
+            "    <div class=\"modal-header\">" +
+            "		<button type=\"button\" class=\"close\" data-dismiss=\"dialog\" ng-click=\"$dismiss()\">" +
+            "			<span aria-hidden=\"true\">&times;</span>" +
+            "			<span class=\"sr-only\">Close</span>" +
+            "		</button>" +
+            "   	<h4 class=\"modal-title\">Leave page?</h4>" +
+            "    </div>" +
+            "    <div class=\"modal-body\">" +
+            "        <p>Changes you made will be lost.</p>" +
+            "        <p>[ {{dirtyFormRef}} ]</p>" +
+            "    </div>" +
+            "    <div class=\"modal-footer\">" +
+            "        <button class=\"btn btn-default\" data-dismiss=\"dialog\" ng-click=\"$dismiss()\">Cancel</button>" +
+            "        <button text=\"Leave\" class=\"btn btn-default btn-primary\" ng-click=\"$close('leave')\">Leave</button>" +
+            "    </div>" +
+            "</div>"
+        );
+
+        function openOrNav(evt, next, current) {
+            if (evt.defaultPrevented == true) return;
+            var nextParams = new URL(next).searchParams;
+            var id = nextParams.get("id");
+            var tbl = nextParams.get("table");
+            var key = nextParams.get("sys_id") || -1;
+            var qry = nextParams.get("query");
+            var view = nextParams.get("view") || new URL(current).searchParams.get("view") || "default";
+            if ((nextParams.get("isPopup") == "false" || nextParams.get("isPopup") == "0")) return; // not a modal request
+            if ((id == CONSTANTS.FORM_ID || id == CONSTANTS.TABBED_FORM_ID) && tabbedConfig.enableModals == true) {
+                var widget = id == CONSTANTS.LIST_ID ? CONSTANTS.FORM_WIDGET : CONSTANTS.TABBED_FORM_WIDGET;
+                evt.preventDefault();
+                openWidgetModal(widget, evt, {
+                    table: tbl,
+                    sys_id: key,
+                    query: qry,
+                    view: view
+                }, key == -1 ? 'Add' : 'Edit');
+            } else {
+                navigateAway(next, evt);
+            }
+        }
+
+        function navigateAway(next, evt) {
+            var navigate = false;
+            var doNav = function(reloc) {
+                $uibModalStack.dismissAll();
+                if (reloc == true) $window.location = next;
+            };
+            if (!evt.currentScope.rootForm || !(evt.currentScope.rootForm.some(function(itm) { return itm.isUserModified() === true; } ))) doNav(false);
+            else {
+                evt.preventDefault();
+                $uibModal.open({
+                    templateUrl: 'navigateTemplate',
+					controller: DirtyCtrl,
+                    scope: evt.targetScope,
+                    backdrop: 'static',
+                    size: 'sm',
+					resolve: {
+						dirtyTable: function() {
+							return (evt.currentScope.rootForm.find(function(itm) { return itm.isUserModified() === true; } )).getTableName();
+						},
+						dirtyView: function() {
+							return (evt.currentScope.rootForm.find(function(itm) { return itm.isUserModified() === true; } )).getViewName();
+						}
+					}
+                }).result.then(function(confirm) {
+                    if (confirm == "leave") doNav(true);
+                });
+            }
+        }
+
+		function DirtyCtrl($scope, dirtyTable, dirtyView) {
+            $scope.dirtyFormRef = dirtyTable + (dirtyView.length > 0 ? " / " : "") + dirtyView;
+		}
+	
+		function openWidgetModal(widget, evt, obj, title) {
+            if (evt.stopPropagation) evt.stopPropagation();
+            if (evt.preventDefault) evt.preventDefault();
+            showWait(true, evt.targetScope);
+            var widgetURL = spUtil.getWidgetURL(widget);
+            var widgetOpts = {
+                "table": obj.table,
+                "view": obj.view || 'default',
+                "sys_id": obj.sys_id,
+                "query": obj.query,
+                "isPopup": true
+            };
+            $http.post(widgetURL, widgetOpts).success(function(response) {
+                var widgetPayload = response.result;
+                if (!widgetPayload.data) {
+                    alert("An error occurred.  Please refresh the page.");
+                    showWait(false, evt.targetScope);
+                    return;
+                }
+                if (widgetPayload.data.f.loadError) {
+                    spUtil.addErrorMessage(widgetPayload.data.f.loadError);
+                    showWait(false, evt.targetScope);
+                    return;
+                }
+                if (obj.readonly == true || (widgetPayload.data.f._fields &&
+                        Object.entries(widgetPayload.data.f._fields).filter(function(itm) {
+                            return itm[1].readonly == false;
+                        }).length == 0))
+                    title = "View";
+                if (obj.readonly || obj.parent) widgetPayload.data.canDelete = false;
+                title = title + " " + (widgetPayload.data.tableLabel || widgetPayload.data.table);
+                $uibModal.open({
+                    templateUrl: 'modalTemplate',
+                    controller: ModalFormCtrl,
+                    controllerAs: 'm',
+                    scope: evt.targetScope,
+                    windowClass: 'modal-form',
+                    backdrop: 'static',
+                    size: 'xl',
+                    resolve: {
+                        widgetPayload: function() {
+                            return widgetPayload;
+                        },
+                        title: function() {
+                            return title;
+                        },
+                        event: function() {
+                            return evt;
+                        },
+                        parent: function() {
+                            return obj.parent;
+                        },
+                        readonly: function() {
+                            return obj.readonly;
+                        }
+                    }
+                });
+            }, function(error) {
+                showWait(false, evt.targetScope);
+                alert("A severe error occurred: " + JSON.stringify(error));
+            });
+        }
+
+        function ModalFormCtrl($scope, $uibModalInstance, widgetPayload, title, event, parent, readonly) {
+            var m = this;
+            var g_form;
+            var g_formScopeId;
+            var g_formAction = "";
+            $scope.modalTitle = title;
+            $scope.widgetPayload = widgetPayload;
+            $scope.isFormLoaded = false;
+            $scope.parent = parent;
+            $scope.$on('spModel.gForm.initialized', function(e, gFormInstance) {
+                g_form = gFormInstance;
+                g_formScopeId = e.currentScope.$id;
+                if (readonly == true) {
+                    widgetPayload.data.canAttach = false;
+                    widgetPayload.data.f._ui_actions = [];
+                    g_form.getFieldNames().forEach(function(element) {
+                        g_form.setMandatory(element, false);
+                        g_form.setReadOnly(element, true);
+                    });
+                }
+                gFormInstance.$private.events.on('submitted', function() {
+                    g_formAction = widgetPayload.data.f._ui_actions.find(function(ele) {
+                        return (ele.sys_id == gFormInstance.getActionName() || ele.action_name == gFormInstance.getActionName());
+                    });
+                });
+            });
+            $rootScope.$on('spModel.gForm.rendered', function(e, gFormInstance) {
+                if (g_form != gFormInstance) return;
+                $scope.isFormLoaded = true;
+                angular.element('#scope-' + event.targetScope.$id + ' .panel-body :input:enabled:visible:not(":button, [readonly]"):first').focus();
+            });
+            $rootScope.$on("spModel.uiActionComplete", function(e, response) {
+                if (response.isActionAborted == true) return;
+                if (!$uibModalStack.getTop()) return;
+                if (g_formScopeId != $uibModalStack.getTop().value.modalScope.$id) return;
+                if ($scope.overlay == $rootScope.modalCount) {
+                    e.formScopeId = g_form.$private.options['formScopeId'];
+                    if (response.isInsert && $scope.parent)
+                        $scope.parent.form.setValue($scope.parent.field, response.sys_id);
+                    if (g_formAction.action_name.endsWith("_and_stay") ||
+                        angular.element('#scope-' + $scope.$id).find('.panel-footer').find("#keep_open").is(':checked')) {
+                        if (response.isInsert) $scope.modalTitle = $scope.modalTitle.replace("Add", "Edit");
+                        $scope.isFormLoaded = false;
+                        return;
+                    }
+                    $uibModalInstance.close("UI Action success.");
+                }
+            });
+            $scope.$on("modal.form.updated", function(e, response) {
+                if (response.operation == "delete" && response.table_name == $scope.widgetPayload.data.table && response.sys_id == $scope.widgetPayload.data.sys_id)
+                    $uibModalInstance.close("Record deleted");
+            });
+            $uibModalInstance.rendered.then(function() {
+                if (debugMsgs == true) spUtil.addTrivialMessage('Modal form rendered.');
+                if (widgetPayload.data.tableUnsupported == true || widgetPayload.data.isValid == false || !g_form) $scope.isFormLoaded = true;
+                showWait(false, event.targetScope);
+            });
+            $uibModalInstance.opened.then(function() {
+                if (debugMsgs == true) spUtil.addTrivialMessage('Modal form opended.');
+                $rootScope.modalCount = ($rootScope.modalCount || 0) + 1;
+                $scope.overlay = $rootScope.modalCount;
+            });
+
+            $uibModalInstance.closed.then(function() {
+                if (debugMsgs == true) spUtil.addTrivialMessage('Modal form closed.');
+                $rootScope.modalCount = ($rootScope.modalCount || 0) - 1;
+            });
+
+            $scope.$on('modal.closing', function(event, reason, closed) {
+                var why = reason ? reason.status || reason : 'saved';
+                if (debugMsgs == true) spUtil.addTrivialMessage('Modal form closing: ' + why);
+            });
+            $scope.dismiss = function(reason) {
+                if (g_form) g_form.isUserModified = false;
+                $uibModalInstance.dismiss(reason);
+            };
+        }
+
+        function showWait(show, curScope) {
+            if (show == true && !curScope.waitInstance) {
+                var hasOpenModal = $rootScope.modalCount > 0;
+                var waitTemplate = "<div style='position: absolute; width: 150px; font-size: 18px; left: calc(100vw / 2); top: calc(100vh / 2); color: " + (hasOpenModal ? "black" : "white") + ";'>";
+                waitTemplate += "<i class='fa fa-spinner fa-spin fa-2x fa-fw'></i>&nbsp;Loading...&nbsp;</div>";
+                curScope.waitInstance = $uibModal.open({
+                    template: waitTemplate,
+                    backdrop: 'static',
+                    windowClass: 'modal-form-wait'
+                });
+                curScope.waitInstance.rendered.then(function() {
+                    angular.element('.modal-form-wait').css({
+                        'display': 'inline-table',
+                        'z-index': 99999
+                    });
+                });
+            }
+            if (show == false && curScope.waitInstance) {
+                curScope.waitInstance.dismiss();
+                curScope.waitInstance = null;
+            }
+        }
+
+        $rootScope.$on('spModel.gForm.initialized', function(e, gFormInstance) {
+            if (($rootScope.modalCount || 0) == 0) {
+				if (!e.currentScope.rootForm) e.currentScope.rootForm = [];
+				if (gFormInstance.getTableName()) e.currentScope.rootForm.push(gFormInstance);
+			}
+            gFormInstance.$private.options['formScopeId'] = e.targetScope.$id;
+        });
+    });]]></script>
+        <script_name/>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-06-16 19:25:27</sys_created_on>
+        <sys_id>1a4607f62f4011101b6051072799b6ea</sys_id>
+        <sys_mod_count>88</sys_mod_count>
+        <sys_name>TabbedFormAppProcessesV2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sys_ui_script_1a4607f62f4011101b6051072799b6ea</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-09-11 10:47:06</sys_updated_on>
+        <ui_type>10</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

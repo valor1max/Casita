@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_ng_template">
+    <sp_ng_template action="INSERT_OR_UPDATE">
+        <id>tabbed_form_template_v2</id>
+        <sp_widget display_value="Tabbed Form Widget v2">04269f3b2f4501101b6051072799b6ba</sp_widget>
+        <sys_class_name>sp_ng_template</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-01-21 20:21:23</sys_created_on>
+        <sys_id>843b13bf2f4501101b6051072799b6e5</sys_id>
+        <sys_mod_count>50</sys_mod_count>
+        <sys_name>tabbed_form_template_v2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_ng_template_843b13bf2f4501101b6051072799b6e5</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-09-14 11:25:49</sys_updated_on>
+        <template><![CDATA[<div>
+    <div ng-if="!delayView" ng-attr-id="{{::formModel.table}}.do">
+        <div ng-if="($first)" ng-repeat="titleContainer in containers | limitTo: 1" class="sp-form-container" ng-show="paintForm(titleContainer)" ng-attr-role="{{(titleContainer.caption || titleContainer.captionDisplay) ? 'group' : undefined}}" ng-attr-aria-labelledby="{{(titleContainer.caption || titleContainer.captionDisplay) ? 'container_' + titleContainer.id : undefined}}">
+            <span ng-if="(titleContainer.caption || titleContainer.captionDisplay)" class="container-caption form-container-caption">
+                <span class="h4" role="heading" aria-level="3" id="container_{{::titleContainer.id}}">{{titleContainer.captionDisplay || titleContainer.caption}}</span>
+                <sp-help-tag field="::formModel._fields[titleContainer.name]"></sp-help-tag>
+            </span>
+            <ng-include src="'form_container_columns_v2'" onload="ctr=titleContainer" ng-if="'true'"></ng-include>
+            <div ng-repeat="container in containers | parentContainerFilter : titleContainer" class="sp-form-container" ng-show="paintForm(container)" ng-attr-role="{{(container.caption || container.captionDisplay) ? 'group' : undefined}}" ng-attr-aria-labelledby="{{(container.caption || container.captionDisplay) ? 'container_' + container.id : undefined}}">
+                <span ng-if="(container.caption || container.captionDisplay)" class="container-caption form-container-caption">
+                    <span class="h4" role="heading" aria-level="3" id="container_{{::container.id}}">{{container.captionDisplay || container.caption}}</span>
+                    <sp-help-tag field="::formModel._fields[container.name]"></sp-help-tag>
+                </span>
+                <ng-include src="'form_container_columns_v2'" onload="ctr=container" ng-if="'true'"></ng-include>
+            </div>
+            <scrollable-tabset-v2 auto-recalculate="true">
+                <uib-tabset active="active" justified="false">
+                    <uib-tab index="$index+1" ng-repeat="tabContainer in containers | containerIdFilter" class="tab_header" ng-show="paintForm(tabContainer)" onclick="setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 50)" ng-init="tabIndex = $index">
+                        <uib-tab-heading style="display: inline-flex;">
+                          <span class="tab_caption_text" id="container_{{::tabContainer.id}}">{{tabContainer.captionDisplay || tabContainer.name}}</span>
+                            <sp-help-tag field="::formModel._fields[container.name]"></sp-help-tag>
+                          <span ng-repeat="column in tabContainer.columns | mandatoryColumnFilter : mandatory | limitTo: 1">
+                       	    <span class="fa fa-asterisk mandatory" title="Tab contains missing required entries" style="padding-left: 0.25em;" aria-label="Required" />
+                          </span>
+                        </uib-tab-heading>
+                        <div ng-repeat="tabElements in containers | containerIdFilter : tabContainer.id : tabIndex" ng-show="paintForm(tabElements)">
+                            <ng-include src="'form_container_columns_v2'" onload="ctr=tabElements" ng-if="'true'" ng-show="tabElements.visible">
+                                <div ng-repeat="subContainer in tabElements | parentContainerFilter : tabElements">
+                                    <ng-include src="'form_container_columns_v2'" onload="ctr=subContainer" ng-if="'true'"></ng-include>
+                                </div>
+                            </ng-include>
+                        </div>
+                    </uib-tab>
+                </uib-tabset>
+            </scrollable-tabset-v2>
+        </div>
+        <div ng-init="execItemScripts()"></div>
+    </div>
+</div>
+]]></template>
+    </sp_ng_template>
+</record_update>

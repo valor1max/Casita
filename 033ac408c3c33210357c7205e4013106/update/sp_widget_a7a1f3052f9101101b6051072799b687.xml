@@ -1,0 +1,1408 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>standard</category>
+        <client_script><![CDATA[api.controller=function ($scope, $location, $window, spUtil, amb, $http, spAriaUtil, spModal, $timeout, spNavStateManager, i18n, tabbedConfig) {
+	var c = this;
+	/*
+	 * options:
+	 * hide_footer (bool) = true to remove the data table footer contents
+	 * hide_header (bool) = true to remove the data table header contents
+	 * show_new (bool) = true to show the "New" record button
+	 * show_keywords (bool) = true to show the keyword search field
+	 * table (string) = the table name to query
+	 * filter (string) = the encoded query
+	 * o (string) = the order by column
+	 * d (string) = The order by direction: asc or desc
+	 * p (int) = the page to jump to
+	 * fields (string) = comma separated list of fields that become the list columns
+	 * view (string) = the default view to load for columns, overrides fields
+	*/
+	$scope.isTop = ($scope.$parent.$parent.hasOwnProperty('widget') || $scope.$parent.$parent.hasOwnProperty('rl')) && $scope.$parent.$parent.widget.name == "Data Table from URL Definition v2";
+	$scope.isTab = $scope.$parent.$parent.hasOwnProperty('rl');  	
+	$scope.accessibilityModeEnabled = spAriaUtil.isAccessibilityEnabled();
+	$scope.exportTypes = [{label:'PDF', value: 'PDF'}, {label:'Excel', value:'EXCEL'}, {label:'CSV', value:'CSV'}];
+	var keys = ['table', 'filter', 'p', 'o', 'd'];
+	
+	var i18nMsgs = {
+		filteredResults: i18n.getMessage('Filtered {0} list showing {1} to {2} of {3} records'),
+		unFilteredResults: i18n.getMessage('Unfiltered {0} list showing {1} to {2} of {3} records'),
+		filteredNoResults: i18n.getMessage('Filtered {0} list showing 0 records'),
+		unFilteredNoResults: i18n.getMessage('Unfiltered {0} list showing 0 records')
+	};
+
+	var eventNames = {
+		click: 'data_table.click',
+		setFilter: 'data_table.setFilter',
+		setKeywords: 'data_table.setKeywords'
+	};
+
+	$scope.go = function($event, table, item) {
+		if ($window.getSelection().toString().length > 0)
+			return;
+
+		spNavStateManager.onRecordChange(table).then(function() {
+		var parms = {};
+			parms.id = $scope.page.id == "lf_v2" && $scope.isTop ? "lf_v2" : 'form_tabbed_v2';
+			parms.table = parms.id == "lf_v2" ? $scope.data.table : table;
+			parms.sys_id = item.sys_id;
+			parms.record = item;
+			parms.dep_lists = $location.search().dep_lists;
+			$scope.ignoreLocationChange = true;
+			for (var x in c.data.list) {
+				c.data.list[x].selected = false;
+			}
+			item.selected = true;
+			console.log('MM ran 2')
+			$scope.$emit(eventNames.click, parms);
+			$location.search(parms)
+		}, function() {
+			// do nothing in case of closing the modal by clicking on x
+		});	
+	};
+
+	$scope.goRef = function(evt, table, item) {
+		for (var x in c.data.list) {
+			c.data.list[x].selected = false;
+		}
+		item.selected = true;
+		if (evt) evt.stopPropagation();
+		var parms = {
+			id: 'form_tabbed_v2',
+			table: table,
+			view: $scope.data.view,
+			sys_id: item.sys_id.value || item.sys_id
+		};
+		if ($scope.data.exportQuery != '')
+			parms.query = $scope.data.exportQuery;
+
+		$location.search(parms);
+	};
+
+	$scope.newRecord = function(){
+		console.log('MM click 1')
+		var parms = {
+			id: $scope.page.id == "lf_v2" && $scope.isTop ? "lf_v2" : 'form_tabbed_v2',
+			table: $scope.data.table,
+			view: $scope.data.view,
+			sys_id: '-1',
+			dep_lists: $location.search().dep_lists,
+			tabs: $location.search().tabs
+		};
+		if ($scope.data.exportQuery != '')
+			parms.query = $scope.data.exportQuery;
+
+		if (parms.id == "lf_v2") 
+			$scope.$emit(eventNames.click, parms);
+		else
+			$location.search(parms);
+			console.log('MM click 2 ' + JSON.stringify($location.search(parms)) + ' ' + JSON.stringify($location.search.tabs))
+	};
+
+	function recoverStateFromUrl() {
+		$scope.data.fields = [];
+		var s = $location.search();
+		for (var x in keys) {
+			if (s[keys[x]]) {
+				$scope.data[keys[x]] = s[keys[x]];
+			}
+		}
+		$scope.server.update().then(function(data) {
+			if (s.sys_id) {
+				for (var x in data.list) {
+					if (data.list[x].sys_id == s.sys_id) {
+						$scope.go(null, s.table, data.list[x]);
+					}
+				}
+			}
+		});
+	}
+
+	if ($scope.options.fromUrl) {
+		var origSearch = $location.search();
+		$scope.$on('$locationChangeSuccess', function(e) {
+			var s = $location.search();
+			if (origSearch.id !== s.id)
+				return;
+
+			if ($scope.ignoreLocationChange){
+				$scope.ignoreLocationChange = false;
+				return;
+			}
+
+			// Helps to recover state when using the browser's back button
+			recoverStateFromUrl();
+		});
+	}
+
+
+	$scope.getPageSet = function(setSize, pageNum, totalPages) {
+		if($(window).width() < 600) setSize = 5;
+		if (pageNum > totalPages) pageNum = totalPages; else if (pageNum < 1) pageNum = 1;
+		var start = Math.floor((pageNum -1) / setSize);
+		var pageSetCount = setSize;
+		if (totalPages - (start * setSize) < setSize) pageSetCount = totalPages - (start * setSize);
+        const pageSet = Array(pageSetCount).fill(start * setSize + 1).map(function(x, y) { return x + y; }); 
+		$scope.pages = pageSet;
+		return pageSet;
+	}
+
+	$scope.mathMin = function(v1,v2) {
+		return Math.min(v1,v2);
+	}
+
+	function getData(updateUrl) {
+		var f = $scope.data;
+		$scope.loadingData = true;
+		
+		spUtil.update($scope).then(function(data) {
+			f.view = data.view;
+			if ($scope.options.fromUrl && updateUrl)
+				setPermalink(f.table, f.filter, f.o, f.d, f.p);
+
+			if ($scope.options.show_breadcrumbs && data.filterBreadcrumbs)
+				$scope.$broadcast('widget-filter-breadcrumbs.setBreadcrumbs', data.filterBreadcrumbs.data, data.filter);
+			
+			invokeResultsLiveMessage();
+			initRecordWatcher(f.table, f.filter);
+			$scope.loadingData = false;
+		});
+	}
+	
+	
+	function invokeResultsLiveMessage(){
+		var data = $scope.data;
+		var totalRowCount = data.row_count;
+		var startIndex = data.window_start+1;
+		var endIndex = Math.min(data.window_end, totalRowCount);
+
+		if (totalRowCount > 0)
+			spAriaUtil.sendLiveMessage( (data.filter ? i18nMsgs.filteredResults : i18nMsgs.unFilteredResults).withValues([data.table_plural, startIndex, endIndex, totalRowCount]));	
+		else
+			spAriaUtil.sendLiveMessage( (data.filter ? i18nMsgs.filteredNoResults : i18nMsgs.unFilteredNoResults).withValues([data.table_plural]));
+	}
+
+	function setPermalink(table, filter, orderBy, orderDirection, page){
+		$scope.ignoreLocationChange = true;
+		var search = $location.search();
+		angular.extend(search, {
+			spa: 1,
+			table: table,
+			filter: filter,
+			p: page,
+			o: orderBy,
+			d: orderDirection
+		});
+		$location.search(search);
+	}
+
+	var watcher;
+	function initRecordWatcher(table, filter){
+		if (watcher)
+			watcher.unsubscribe();
+
+		if (table && filter) {
+			var watcherChannel = amb.getChannelRW(table, filter);
+			amb.connect();
+			watcher = watcherChannel.subscribe(function(message) {
+				if (!message.data)
+					return;
+				switch(message.data.action) {
+					case "change":
+						updateRowFromRW(message);
+						break;
+					case "exit":
+						// A record was removed
+					case "enter":
+						// A record was added
+					default:
+						spUtil.update($scope);
+						break;
+				}
+			});
+		}
+	}
+
+	function updateRowFromRW(message) {
+		if (message.data && message.data.sys_id && $scope.data.list) {
+			var row, field;
+			for(var i=0;i<$scope.data.list.length; i++) {
+				row = $scope.data.list[i];
+				if (row.sys_id == message.data.sys_id) {
+					var fields = Object.getOwnPropertyNames(message.data.record);
+					for(var f in fields) {
+						field = fields[f];
+						if(typeof row[field] !== 'undefined') {
+						    row[field].display_value = message.data.record[field].display_value;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	$scope.$on('$destroy', function() {
+		if (watcher)
+			watcher.unsubscribe();
+	});
+
+	$scope.setPageNum = function(num) {
+		if (num > $scope.data.num_pages) num = $scope.data.num_pages; else if (num < 1) num = 1;
+		$scope.data.p = num;
+		getData($scope.isTop & !$scope.isTab ? true : false);
+		$timeout(function() {
+			$scope.focusOnTableHeader();
+		});
+	}
+
+	$scope.setOrderBy = function(event, field) {
+		if ($scope.resize && $scope.resize.length > 0) return;
+		var d = "asc";
+		// descending default sort for date/time columns for UI consistency
+		var fieldType = $scope.data.column_types[field];
+		if (fieldType == "glide_date_time" || fieldType == "glide_date")
+			d = "desc";
+		if ($scope.data.o == field) {
+			if ($scope.data.d == "asc")
+				d = "desc";
+			else
+				d = "asc";
+		}
+
+		if (d === "asc") {
+			spAriaUtil.sendLiveMessage($scope.data.msg.sortingByAsc);
+		} else if (d === "desc") {
+			spAriaUtil.sendLiveMessage($scope.data.msg.sortingByDesc);
+		}
+
+		$scope.data.o = field;
+		$scope.data.d = d;
+		$scope.data.setOrderUserPreferences = true;
+		$scope.setSearch($scope.isTop & !$scope.isTab ? true : false);
+	}
+
+	$scope.setSearch = function(updateUrl) {
+		$scope.data.p = 1;
+		if ($scope.data.keywords) {
+			var previousSearchTerm = $scope.previousSearchTerm;
+			if (previousSearchTerm) {
+			previousSearchTerm = '123TEXTQUERY321=' + previousSearchTerm;
+			var previousSearchTermStartIndex = $scope.data.filter.indexOf(previousSearchTerm);
+			var previousSearchTermEndIndex = previousSearchTermStartIndex + previousSearchTerm.length;
+			if (previousSearchTermStartIndex >= 0)
+				$scope.data.filter = $scope.data.filter.substr(0, previousSearchTermStartIndex) + $scope.data.filter.substr(previousSearchTermEndIndex + 1, $scope.data.filter.length);
+			}
+			$scope.previousSearchTerm = $scope.data.keywords;
+		}
+		getData(updateUrl);
+	}
+
+	$scope.$on(eventNames.setFilter, function(e, newFilter){
+		$scope.data.filter = newFilter;
+		$scope.setSearch(false);
+	});
+
+	$scope.$on(eventNames.setKeywords, function(e, keywords){
+		$scope.data.keywords = keywords;
+		$scope.setSearch(false);
+	});
+
+	$scope.$on('widget-filter-breadcrumbs.queryModified', function(e, newFilter){
+		$scope.data.filter = newFilter;
+		$scope.setSearch($scope.isTop && !$scope.isTab ? true : false);
+	});
+
+	$scope.rowsWerePruned = function() {
+		if (!$scope.data.list || $scope.loadingData)
+			return;
+
+		$scope.rowsPruned = $scope.mathMin($scope.data.window_end,$scope.data.row_count) - $scope.data.window_start - $scope.data.list.length;
+		return $scope.rowsPruned > 0;
+	}
+
+	$scope.showFilter = function() {
+		return !$scope.data.list.length && !$scope.data.num_pages && !$scope.data.invalid_table && !$scope.loadingData;
+	}
+
+	c.appendQuery = function(query){
+		if ($scope.data.filter.length > 1)
+			$scope.data.filter += '^';
+		$scope.data.filter += query;
+			$scope.setSearch();
+
+	}
+
+	// Makes Widget Async
+	$scope.data = $scope.options;
+	$scope.loadingData = true;
+	$scope.server.update().then(function() {
+		if ($scope.data.newButtonUnsupported)
+			console.log("Service Portal: New button not supported for sys_attachment list");
+		$scope.loadingData = false;
+		initRecordWatcher($scope.data.table, $scope.data.filter);
+		$scope.$emit('data_table.loaded', { table: $scope.data.table, rows: $scope.data.row_count, canCreate: $scope.data.canCreate, canWrite: $scope.data.canWrite });
+	});
+
+	function parseQuery(table, queryString){
+		return $http.post('/api/now/sp/parsequery/' + table, queryString).then(function(response){
+				return response.data.result;
+		});
+	}
+
+	c.createQueryTerm = function(table, field, sys_id, operator){
+		return $http.get('/api/now/sp/getInOutQueryTerm', {
+			params: {
+				table: table,
+				sys_id: sys_id,
+				field: field,
+				operator: operator
+			}
+		}).then(function(response){
+			if (response && response.data && response.data.result)
+				return response.data.result.parts;
+		});
+	}
+
+	c.isMultiPart = function(terms) {
+		for (var i = 0; i < terms.length; i++) {
+			var term = terms[i];
+			while (term.left)
+				term = term.left;
+			if (term.NQ)
+				return true;
+		}
+		return false;
+	}
+	
+	c.showMatching = function(field, newTerm) {
+		var queryString = $scope.data.filter;
+		var eq = "";
+		parseQuery($scope.data.table, queryString).then(function(oldTerms) {
+			var isMultiPart = c.isMultiPart(oldTerms);
+			for (var i = 0; i < oldTerms.length; i++) {
+				var term = oldTerms[i];
+				if (!isMultiPart && isSameField(newTerm, term))
+					continue;
+
+				if (eq.length)
+					eq += '^';
+
+				// term may be separated into nested "left" and "right" bits,
+				// follow the lefts to the bottom where "NQ" might be specified
+				var termNQCheck = oldTerms[i];
+				while (termNQCheck.left)
+					termNQCheck = termNQCheck.left;
+				if (termNQCheck.NQ) {
+					// query is multipart so apply new term to each part
+					eq += getEncodedTerm(newTerm);
+					eq += "^NQ";
+				}
+				eq += getEncodedTerm(term);
+			}
+			if (eq.length)
+				eq += '^';
+			eq += getEncodedTerm(newTerm);
+
+			$scope.data.filter = eq;
+			$scope.setSearch($scope.isTop && !$scope.isTab ? true : false);
+			if ($scope.isTop && !$scope.isTab) $location.search(angular.extend($location.$$search, {spa: 1, filter: eq,}));
+		});
+	};
+
+	c.filterOut = function(field, newTerm) {
+		var eq = "";
+		if ($scope.data.filter.indexOf("^NQ") == -1) {
+			// don't need server roundtrip to parse query,
+			// can just append the new term
+			eq = $scope.data.filter;
+			if (eq.length)
+				eq += '^';
+			eq += getEncodedTerm(newTerm);
+			$scope.data.filter = eq;
+			$scope.setSearch($scope.isTop && !$scope.isTab ? true : false);
+			if ($scope.isTop && !$scope.isTab) $location.search(angular.extend($location.$$search, {spa: 1, filter: eq, p: $scope.data.p}));
+			return;
+		}
+		
+		// query may be multipart so must apply new term to each part
+		var queryString = $scope.data.filter;
+		parseQuery($scope.data.table, queryString).then(function(oldTerms) {
+			for (var i = 0; i < oldTerms.length; i++) {
+				var term = oldTerms[i];
+				if (eq.length)
+					eq += '^';
+
+				// term may be separated into nested "left" and "right" bits,
+				// follow the lefts to the bottom where "NQ" might be specified
+				var termNQCheck = oldTerms[i];
+				while (termNQCheck.left)
+					termNQCheck = termNQCheck.left;
+				if (termNQCheck.NQ) {
+					// query is multipart so apply new term to end of each part
+					eq += getEncodedTerm(newTerm);
+					eq += "^NQ";
+				}
+				eq += getEncodedTerm(term);
+			}
+			if (eq.length)
+				eq += '^';
+			eq += getEncodedTerm(newTerm);
+
+			$scope.data.filter = eq;
+			$scope.setSearch($scope.isTop && !$scope.isTab ? true : false);
+			if ($scope.isTop && !$scope.isTab) $location.search(angular.extend($location.$$search, {spa: 1, filter: eq, p: $scope.data.p}));
+		});
+	};
+
+	function isSameField(t1, t2) {
+		if ('left' in t1 && 'left' in t2)
+			return t1.left.query_term_field === t2.left.query_term_field;
+		else if ('left' in t1)
+			return t1.left.query_term_field === t2.query_term_field;
+		else if ('left' in t2)
+			return t1.query_term_field === t2.left.query_term_field;
+		return t1.query_term_field === t2.query_term_field;
+	}
+
+	function getEncodedTerm(term) {
+		var eq;
+		if (term.left) {
+			eq = getEncodedTerm(term.left);
+			eq += '^OR';
+			eq += getEncodedTerm(term.right);
+		} else {
+			eq = term.query_term_field;
+			eq += term.operator;
+			eq += term.value;
+		}
+		return eq;
+	}
+	
+	$scope.$watch('data.row_count', function(newVal, oldVal) {
+		if ($scope.$parent.$parent.rl)
+			$scope.$parent.$parent.rl.count = newVal;
+	});
+	$scope.$on('modal.form.updated', function(evt, data) {
+		if (data.table_name == $scope.data.table && !$scope.data.filter && data.action == "change") updateRowFromRW({ data: data });
+		else if (data.table_name == $scope.data.table) spUtil.update($scope);
+	});
+	
+	c.isRecent = function(lastUpdate, interval) {
+		if (lastUpdate == null) return false;
+		var diff = Math.abs(new Date() - new Date(lastUpdate.display_value));
+		return (diff/1000/60) < interval;
+	}
+	$scope.listRowAction = function(event, item, rowId, actionId) {
+		var action = $scope.data.actions_array.find(function(action) { if (action.sys_id.value == actionId) return action; });
+		if ((action.client.value == "true" ? true : false) == true) {
+			var f = new Function('current', '$window', '$location', '$http', 'spModal', 'spUtil', action.onclick.value + '\n\n' + action.script.value);
+			f(item, $window, $location, $http, spModal, spUtil);
+			return;
+		}
+		c.server.get({  row_id: rowId, action_id: actionId,
+						table: $scope.data.table, view: $scope.data.view, filter: $scope.data.filter, keywords: $scope.data.keywords,
+						p: $scope.data.p, o: $scope.data.o, d: $scope.data.d, enable_filter: $scope.data.enable_filter
+		}).then(function(resp) {
+			resp.data.column_widths_user = $scope.data.column_widths_user;
+			$scope.data = resp.data;
+		});
+	}
+	$scope.getRelatedLists = function(evt, item) {
+		if (item.rl_loading || false) return; 
+		item.collapsed = !(item.collapsed == false ? false : true);
+		if (item.RLwidget) return; 
+		item.rl_loading = true;
+		c.server.get({  row_id: item.sys_id, action: "RelatedLists",
+							table: $scope.data.table, view: $scope.data.view
+		}).then(function(resp) {
+			item.RLwidget = resp.data.RLwidget;
+			item.rl_loading = false;
+		});
+	};
+
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.panel-heading {&#13;
+  padding-left: 8px;&#13;
+}&#13;
+&#13;
+thead {&#13;
+  border-bottom: 1px solid #ddd;&#13;
+}&#13;
+&#13;
+table {&#13;
+  margin-bottom: 0;&#13;
+  width: auto;&#13;
+  min-width: 500px;&#13;
+  border: 1px solid lightgray;&#13;
+}&#13;
+&#13;
+.table &gt; thead &gt; tr &gt; th {&#13;
+  border: 1px solid #ddd;&#13;
+  cursor: pointer;&#13;
+  vertical-align: middle;&#13;
+&#13;
+  &amp;:nth-child(2) {&#13;
+    border-left: none;&#13;
+  }&#13;
+&#13;
+  &amp;:last-child {&#13;
+    border-right: none;&#13;
+  }&#13;
+}&#13;
+&#13;
+th i {&#13;
+  margin-left: 5px;&#13;
+  color: #A0A0A0;&#13;
+}&#13;
+&#13;
+div.data-table-high-contrast th i {&#13;
+ color: $gray; &#13;
+}&#13;
+&#13;
+th .disabled{&#13;
+  color:#ddd;&#13;
+}&#13;
+&#13;
+.th-title {&#13;
+  display: block;&#13;
+  white-space: nowrap;&#13;
+  text-overflow: ellipsis;&#13;
+  overflow: visible;&#13;
+  color: $primary;&#13;
+}&#13;
+&#13;
+.panel-body {&#13;
+  overflow: auto;&#13;
+}&#13;
+&#13;
+.selected &gt; span &gt; a, .selected &gt; a, .selected button:hover {&#13;
+  color: #9afdbd !important;&#13;
+}&#13;
+.selected {&#13;
+  color: #fff;&#13;
+  background-color: $data-table-selected;&#13;
+  border-color: 1px solid #fff;&#13;
+}&#13;
+&#13;
+tbody tr:last-child {&#13;
+  border-bottom: none;&#13;
+}&#13;
+&#13;
+.pruned-msg {&#13;
+  padding-bottom: 10px;&#13;
+  padding-left: 4px;&#13;
+  text-align: center;&#13;
+}&#13;
+&#13;
+.pruned-msg-filter-pad {&#13;
+  padding-top:8px;&#13;
+}&#13;
+&#13;
+.filter-breadcrumbs {&#13;
+  padding-top: 3px;&#13;
+}&#13;
+&#13;
+.filter-breadcrumbs ~ .table {&#13;
+  border-top: 1px solid #ddd;&#13;
+}&#13;
+&#13;
+.dropdown-toggle {&#13;
+  background: none;&#13;
+  padding: 0 0 4px 0;&#13;
+}&#13;
+&#13;
+.sp-list-cell {&#13;
+  white-space: pre-wrap;&#13;
+}&#13;
+&#13;
+table td[role=rowheader], table td[role=cell] {&#13;
+  word-break: break-all;&#13;
+  white-space: nowrap;&#13;
+  text-overflow: ellipsis;&#13;
+  overflow: hidden;&#13;
+  padding: 5px;&#13;
+  font-family: sans-serif;&#13;
+}&#13;
+&#13;
+table td a:not([uib-tab-heading-transclude]) {&#13;
+  overflow: hidden;&#13;
+  text-overflow: ellipsis;&#13;
+}&#13;
+&#13;
+.table th {&#13;
+  position: relative;&#13;
+}&#13;
+.resizer {&#13;
+  /* Displayed at the right side of column */&#13;
+  position: absolute;&#13;
+  z-index: 9999;&#13;
+  top: 0;&#13;
+  right: 0;&#13;
+  width: 5px;&#13;
+  cursor: col-resize;&#13;
+  user-select: none;&#13;
+  overflow: visible !important;&#13;
+}&#13;
+.resizing {&#13;
+  border-right: 2px solid blue;&#13;
+}&#13;
+.nopadding {&#13;
+  padding: 0px !important;&#13;
+  border: none !important;&#13;
+}&#13;
+.fade-out {&#13;
+  transition: 3s linear all;&#13;
+  opacity: 0.2;&#13;
+}&#13;
+.fade-in {&#13;
+  opacity: 1;&#13;
+}&#13;
+.user_image {&#13;
+	max-width: 50px;&#13;
+	max-height: 50px;&#13;
+}&#13;
+</css>
+        <data_table>sp_instance_table</data_table>
+        <demo_data>{"data":
+	{
+		"table": "incident",
+		"view": "default",
+		"o": "opened_at",
+		"d": "desc",
+		"filter": "activeEQtrue",
+		"p": 1,
+		"fields": "number,short_description"
+	}
+}</demo_data>
+        <description/>
+        <docs/>
+        <field_list>table,filter,field_list,maximum_entries,order,order_by,order_direction,title,color,glyph,sp_page</field_list>
+        <has_preview>false</has_preview>
+        <id>widget-data-table-tabbed-v2</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, ctrl){
+	var $ul, $contextMenu;
+	var tabbedConfig = $injector.get('tabbedConfig');
+	
+	scope.focusOnTableHeader = function() {
+		element.find(".data-table-title").attr("tabindex", "-1").focus();
+	}
+
+	scope.getAvailHeight = function() {
+		var avail = $(window).height() - $('#scope-' + scope.$id).find('.panel-body:first').offset().top - $('#scope-' + scope.$id + ' .panel-body:first').next('.panel-footer').outerHeight(true) - ($('footer').outerHeight(true) || 0);
+		return parseInt(avail - 2) + "px";
+	}
+	scope.showFullWidth = function() {
+		if (!scope.isTop) return false;
+		var loading = scope.data.list.some(function(itm) { return itm.rl_loading == true; });
+		var shown = $('#scope-' + scope.$id).find('table:first').find('th:last-child div').css('cursor') == "e-resize";
+		if (loading) if (shown) return true; else return false;
+		if (($('#scope-' + scope.$id).find('table:first').get(0).offsetWidth + (shown ? 0 : 10)) < $('#scope-' + scope.$id).find('.panel-body:first').get(0).clientWidth) return true;
+		return false;
+	}
+	scope.actionClick = function(evt) {
+		var action = $(evt.target).closest('td');
+		var menu = $(evt.target).closest('.dropdown');
+		$(menu).removeClass('dropup');
+		var $ul = $(menu).find('.dropdown-menu');
+		var table = $(action).closest('.panel-body');
+		var bottom = $(action).offset().top + $(action).outerHeight() + $ul.outerHeight();
+		var windowDown = $(window).scrollTop() + $(window).height() - bottom;
+		var tableDown = $(table).offset().top + $(table).height() - bottom;
+		// switch to dropup only if there is no space at the bottom
+		if (windowDown < 0 || tableDown < 0) $(menu).addClass('dropup');
+	};
+	scope.resizerDown = function(evt, fld) {
+		var x = evt.clientX;    // Get the current mouse position
+		var ele = evt.target;
+		var tbl = $(ele).closest('table');
+		var w = $(ele).closest('th').outerWidth(true);
+		const cols = $(tbl).find('thead:first th');
+		if (!scope.data.column_widths_user) scope.data.column_widths_user = new Array(scope.data.fields_array.length).fill(null);
+		scope.data.column_widths_calc = $.map($(cols), function(th) { return $(th).outerWidth(true) + 'px'; });
+		scope.resize = fld;
+		$(ele).css('height', $(ele).closest('table').height() + 'px');
+		$(ele).prev('.th-title').css('overflow', 'hidden');
+		var left = $(tbl).closest('.panel-body').scrollLeft();
+		$(elem).find('.panel-body').on('scroll', function(e) { $(this).scrollLeft(left); $(this).off('scroll'); });
+		$(document).on('mouseup', function(evt) { scope.$evalAsync(resizerUp(evt, tbl, ele, fld)); });
+		$(document).on('mousemove', function(evt) { resizerMove(evt, tbl, ele, fld, w, x); });
+	};
+	const resizerMove = function (evt, tbl, ele, fld, w, x) {
+		const dx = evt.clientX - x;   // Determine how far the mouse has been moved
+		var width = w + dx > 0 ? (w + dx) + 'px' : '0px';
+		var idx = $(tbl).find('th').index($(ele).closest('th'));
+		$(tbl).find('col').eq(idx).css('width', width);   // Update the width of column
+		scope.data.column_widths_calc[idx] = width;
+		scope.data.column_widths_user[scope.data.fields_array.indexOf(fld)] = width;
+		scope.data.table_width = scope.data.column_widths_calc.reduce(function(a, b) { return parseInt(a) + parseInt(b); }, 0);
+		$(tbl).find('tbody:first > tr:not(".rl-row") > td:nth-child(' + (idx + 1) +')').css({'min-width': width, 'max-width': width});
+	};
+	const resizerUp = function (evt, tbl, ele, fld) {
+		$(document).off('mousemove');
+		$(document).off('mouseup');
+		$(ele).css('height', '100%');
+		$(tbl).find('.ui-tabs-scrollable').each(function() { $(this).scope().api.doRecalculate(); });
+		scope.resize = null;
+	};
+	
+	element.on('contextmenu', function(e){
+		var widget_sys_id = "a7a1f3052f9101101b6051072799b687";
+		if (e.ctrlKey) return; // ctrlKey is for the debug menu, not this menu
+		if (!angular.element(e.target).closest('.v' + widget_sys_id).is(angular.element(element).closest('.v' + widget_sys_id))) return; // only lowest level
+
+		var rowScope = angular.element(e.target).scope();
+		var field, item, fieldVal;
+
+		// Context Menu for tbody
+		if (angular.isDefined(rowScope.field) && angular.isDefined(rowScope.item)){
+			e.preventDefault();
+			field = rowScope.field;
+			item = rowScope.item;
+			fieldVal = item[field].value;
+
+			var items = [
+				['${Show Matching}', function(){
+					ctrl.createQueryTerm(rowScope.data.table, field, item.sys_id, '=').then(function(term){
+						ctrl.showMatching(field, term);
+					});
+				}],
+				['${Filter Out}', function(){
+					ctrl.createQueryTerm(rowScope.data.table, field, item.sys_id, '!=').then(function(term){
+						ctrl.filterOut(field, term);
+					});
+				}]
+			];
+			
+			if (element.parents('table').length > 0) items = [];
+			if (scope.data.canWrite == true && (tabbedConfig.enableInlineEdit || false) == true)
+				items.unshift(['${Edit}', function() {
+					scope.$broadcast('open-column-editor', { table: rowScope.data.table, field: field, label: rowScope.data.column_labels[field], id: item.sys_id, event: e });
+				}]);
+
+			if (item.ui_actions && item.ui_actions.length > 0) {
+				items.push(null);
+                for (var i = 0; i < item.ui_actions.length; i++) {
+					const action = item.ui_actions[i];
+                    items.push([action.name, function() {
+						scope.listRowAction(e, item, item.sys_id, action.sys_id);
+					}]);
+				}
+			}
+			
+			renderContextMenu(items);
+			setContextMenuPosition(e);
+		}
+	});
+
+	function renderContextMenu(items){
+		var scrollHeight = $('body').get(0).scrollHeight;
+		$contextMenu = angular.element('<div>', {'class': 'dropdown clearfix context-dropdown open'});
+
+		$contextMenu.on('click', function (e) {
+			if ($(e.target).hasClass('dropdown')) {
+				_clearContextMenus(event);
+			}
+		});
+		$contextMenu.on('contextmenu', function (event) {
+			event.preventDefault();
+			_clearContextMenus(event);
+		});
+
+		$contextMenu.css({
+			position: 'absolute',
+			top: 0,
+			height: scrollHeight,
+			left: 0,
+			right: 0,
+			zIndex: 9999
+		});
+
+		$('body').append($contextMenu);
+
+		$ul = angular.element('<ul>', {
+			'class': 'dropdown-menu',
+			'role': 'menu'
+		});
+		renderItems();
+		$contextMenu.append($ul);
+
+		function renderItems(){
+			angular.forEach(items, function (item) {
+				var $li = angular.element('<li>');
+
+				if (item === null) {
+					$li.addClass('divider');
+				} else {
+					var $a = angular.element('<a>');
+					$a.attr({tabindex: '-1', href:'#'});
+					$a.text(item[0]);
+					$li.append($a);
+					$li.on('click', function (e) {
+						e.preventDefault();
+						scope.$apply(function () {
+							_clearContextMenus(e);
+							item[1].call(item, item);
+						});
+					});
+				}
+
+				$ul.append($li);
+			});
+		}
+	}
+
+	function _clearContextMenus(event){
+		if (!event){
+			return;
+		}
+
+		angular.element(event.currentTarget).removeClass('context');
+
+		var els = angular.element(".context-dropdown");
+		angular.forEach(els, function(el){
+			angular.element(el).remove();
+		});
+	}
+
+	var contextMenuItemHeight = 0;
+	function setContextMenuPosition(event) {
+		if (contextMenuItemHeight === 0)
+			contextMenuItemHeight = $ul.children(0).height();
+
+		// Why not just call .width() and .height() on the container? Because those calculations cause browsers to reflow
+		// that can cause IE10 to take 200ms to render a context menu.
+		var cmWidth = 150;
+		var cmHeight = contextMenuItemHeight * $ul.children().length;
+		var startX = event.pageX + cmWidth >= window.innerWidth ? event.pageX - cmWidth : event.pageX;
+		var startY = event.pageY + cmHeight >= window.innerHeight ? event.pageY - cmHeight : event.pageY;
+
+		$ul.css({
+			display: 'block',
+			position: 'absolute',
+			left: startX,
+			top: startY,
+			'min-width': cmWidth
+		});
+	}
+}]]></link>
+        <name>Data Table Tabbed v2</name>
+        <option_schema>[{"hint":"If enabled, show the list filter in the breadcrumbs of the data table","name":"enable_filter","default_value":"false","section":"Behavior","label":"Enable Filter","type":"boolean"}]</option_schema>
+        <public>false</public>
+        <roles>snc_external,snc_internal</roles>
+        <script><![CDATA[(function() {
+	if (!input) // asynch load list
+		return;
+
+	data.msg = {};
+	data.msg.sortingByAsc = gs.getMessage("Sorting by ascending");
+	data.msg.sortingByDesc = gs.getMessage("Sorting by descending");
+
+	/*
+	 * data.table = the table
+	 * data.p = the current page starting at 1
+	 * data.o = the order by column
+	 * data.d = the order by direction
+	 * data.keywords = the keyword search term
+	 * data.list = the table data as an array
+	 * data.invalid_table = true if table is invalid or if data was not succesfully fetched
+	 * data.table_label = the table's display name. e.g. Incident
+	 * data.table_plural = the table's plural display name. e.g. Incidents
+	 * data.fields = a comma delimited list of field names to show in the data table
+	 * data.column_labels = a map of field name -> display name
+	 * data.window_size = the number of rows to show
+	 * data.filter = the encoded query
+	 */
+	// copy to data[name] from input[name] || option[name]
+	optCopy(['table', 'p', 'o', 'd', 'filter', 'filterACLs', 'fields', 'keywords', 'view', 'uid']);
+	optCopy(['relationship_id', 'apply_to', 'apply_to_sys_id', 'window_size', 'recent_minutes']);
+	if (!data.table) {
+		data.invalid_table = true;
+		data.table_label = "";
+		return;
+	}
+
+	if (!data.fields) {
+		if (data.view)
+			data.fields = getViewColumns(data.table, data.apply_to, data.view);
+		else
+			data.fields = $sp.getListColumns(data.table);
+	}
+
+	if (input) { //input holds the data coming back to the server
+		if (input.action_id) {
+			var rec = new GlideRecord(data.table);
+			rec.get(input.row_id);  
+			var params = { action: gs.action, current: rec };
+            actionExecute(input.action_id, params);
+		}
+		if (input.action == "RelatedLists") {
+			var frm = $sp.getForm(input.table, input.row_id, "", input.view, false);
+			data.RLwidget = $sp.getWidget("tabbed-related-lists-v2", { rl: frm._related_lists, sys_id: input.row_id });
+			return;
+		}
+	}
+	data.show_dep = ($sp.getParameter("dep_lists") == "false" || $sp.getParameter("dep_lists") == "0") ? false : true;
+	if (data.show_dep) data.show_dep = getRelatedListCount(data.table, data.view) > 0 ? true : false;
+	data.actions_array = getListActions(data.table, data.view);
+	data.recent_minutes = data.recent_minutes || $sp.getParameter('recent') || 60;
+	data.view = data.view || $sp.getParameter('view') || $sp.getParameter("v"); // no default
+	data.table = data.table || $sp.getValue('table');
+	data.filter = data.filter || $sp.getValue('filter');
+	data.keywords = data.keywords || $sp.getValue('keywords');
+	data.p = data.p || $sp.getValue('p') || 1;
+	data.p = parseInt(data.p);
+	data.o = data.o || $sp.getValue('o') || $sp.getValue('order_by');
+	data.d = data.d || $sp.getValue('d') || $sp.getValue('order_direction') || 'asc';
+
+	var grForMetaData = new GlideRecord(data.table);
+
+	if (input.setOrderUserPreferences) {
+		// update User Preferences on a manual sort for UI consistency
+		gs.getUser().savePreference(data.table + ".db.order", data.o);
+		gs.getUser().savePreference(data.table + ".db.order.direction", data.d == "asc" ? "" : "DESC");
+		data.setOrderUserPreferences = false;
+	}
+	// if no sort specified, find a default column for UI consistency
+	if (!data.o)
+		getOrderColumn();
+	
+	data.page_index = data.p - 1;
+	data.show_new = data.show_new || options.show_new;
+	var windowSize = data.window_size || $sp.getValue('maximum_entries') || 20;
+	windowSize = parseInt(windowSize);
+	if (isNaN(windowSize) || windowSize < 1)
+		windowSize = 20;
+	data.window_size = windowSize;
+
+	var gr;
+	// FilteredGlideRecord is not supported in scoped apps, so GlideRecordSecure will always be used in an application scope
+	if (typeof FilteredGlideRecord != "undefined" && (gs.getProperty("glide.security.ui.filter") == "true" || grForMetaData.getAttribute("glide.security.ui.filter") != null)) {
+		gr = new FilteredGlideRecord(data.table);
+		gr.applyRowSecurity();
+	} else
+		gr = new GlideRecordSecure(data.table);
+	if (!gr.isValid()) {
+		data.invalid_table = true;
+		data.table_label = data.table;
+		return;
+	}
+
+	data.canRead = gr.canRead();
+	data.canWrite = gr.canWrite();
+	data.canCreate = gr.canCreate();
+	data.newButtonUnsupported = data.table == "sys_attachment";
+	data.table_label = gr.getLabel();
+	data.table_plural = gr.getPlural();
+	data.title = input.useInstanceTitle && input.headerTitle ? gs.getMessage(input.headerTitle) : data.table_plural;
+	data.hasTextIndex = $sp.hasTextIndex(data.table);
+	if (data.filter) {
+		if (data.filterACLs)
+			gr = $sp.addQueryString(gr, data.filter);
+		else
+			gr.addEncodedQuery(data.filter);
+	}
+	if (data.keywords) {
+		gr.addQuery('123TEXTQUERY321', data.keywords);
+		data.keywords = null;
+	}
+
+	data.filter = gr.getEncodedQuery();
+
+	if (data.relationship_id) {
+		var rel = GlideRelationship.get(data.relationship_id);
+		var target = new GlideRecord(data.table);
+		var applyTo = new GlideRecord(data.apply_to);
+		applyTo.get("sys_id", data.apply_to_sys_id);
+		rel.queryWith(applyTo, target); // put the relationship query into target
+		data.exportQuery = target.getEncodedQuery();
+		gr.addEncodedQuery(data.exportQuery); // get the query the relationship made for us
+	}
+	if (data.exportQuery)
+		data.exportQuery += '^' + data.filter;
+	else
+		data.exportQuery = data.filter;
+	data.exportQueryEncoded = encodeURIComponent(data.exportQuery);
+	if (data.o){
+		if (data.d == "asc")
+			gr.orderBy(data.o);
+		else
+			gr.orderByDesc(data.o);
+		if (gs.getProperty("glide.secondary.query.sysid") == "true")
+			gr.orderBy("sys_id");
+	}
+
+	data.window_start = data.page_index * data.window_size;
+	data.window_end = (data.page_index + 1) * data.window_size;
+	gr.chooseWindow(data.window_start, data.window_end);
+	gr.setCategory("service_portal_list");
+	gr._query();
+
+	data.row_count = gr.getRowCount();
+	data.num_pages = Math.ceil(data.row_count / data.window_size);
+	data.column_labels = {};
+	data.column_types = {};
+	data.fields_array = data.fields.split(',');
+
+	// use GlideRecord to get field labels vs. GlideRecordSecure
+	for (var i in data.fields_array) {
+		var field = data.fields_array[i];
+		var ge = grForMetaData.getElement(field);
+		if (ge == null)
+			continue;
+
+		data.column_labels[field] = ge.getLabel();
+		data.column_types[field] = ge.getED().getInternalType();
+	}
+
+	data.list = [];
+	while (gr._next()) {
+		var record = {};
+		$sp.getRecordElements(record, gr, data.fields);
+		if (typeof FilteredGlideRecord != "undefined" && gr instanceof FilteredGlideRecord) {
+			// FilteredGlideRecord doesn't do field-level
+			// security, so take care of that here
+			for (var f in data.fields_array) {
+				var fld = data.fields_array[f];
+				if (!gr.isValidField(fld))
+					continue;
+
+				if (!gr[fld].canRead()) {
+					record[fld].value = null;
+					record[fld].display_value = null;
+				}
+			}
+		}
+		record.sys_id = gr.getValue('sys_id');
+		record.targetTable = gr.getRecordClassName();
+		for (f in data.fields_array) {
+			fld = data.fields_array[f];
+			if (record[fld].type == 'reference') {
+				record[fld].table = gr.getElement(fld).getED().getReference();
+				var recId = gr.getElement(fld).sys_id;
+				record[fld].record = {sys_id: {value: recId.toString(), display_value: record[fld].value}, name: {value: record[fld].display_value,  display_value: record[fld].display_value}};
+			}
+		}
+		if (data.actions_array.length > 0) {
+			record.ui_actions = [];
+			for (j = 0; j < data.actions_array.length; j++) {
+				if (actionConditionMet(data.actions_array[j], { current: gr })) {
+					record["ui_actions"].push({ sys_id: data.actions_array[j].sys_id.value,
+												name: data.actions_array[j].name.value,
+												hint: data.actions_array[j].hint.value});
+				}
+			}
+		}
+		data.list.push(record);
+	}
+
+	data.enable_filter = (input.enable_filter == true || input.enable_filter == "true" ||
+		options.enable_filter == true || options.enable_filter == "true");
+	var breadcrumbWidgetParams = {
+		table: data.table,
+		query: data.filter,
+		uid: data.uid || data.table,
+		enable_filter: data.enable_filter
+	};
+	data.filterBreadcrumbs = $sp.getWidget('tabbed-filter-breadcrumbs-v2', breadcrumbWidgetParams);
+
+	// copy to data from input or options
+	function optCopy(names) {
+		names.forEach(function(name) {
+			data[name] = input[name] || options[name];
+		});
+	}
+
+	// getOrderColumn logic mirrors that of Desktop UI when no sort column is specified
+	function getOrderColumn() {
+		// First check for user preference
+		var pref = gs.getUser().getPreference(data.table + ".db.order");
+		if (!GlideStringUtil.nil(pref)) {
+			data.o = pref;
+			if (gs.getUser().getPreference(data.table + ".db.order.direction") == "DESC")
+				data.d = 'desc';
+			return;
+		}
+
+		// If no user pref, check for table default using same logic as Desktop UI:
+		// 1) if task, use number
+		// 2) if any field has isOrder attribute, use that
+		// 3) use order, number, name column if exists (in that priority)
+		if (grForMetaData.isValidField("sys_id") && grForMetaData.getElement("sys_id").getED().getFirstTableName() == "task") {
+			data.o = "number";
+			return;
+		}
+		
+		// Next check for isOrder attribute on any column
+		var elements = grForMetaData.getElements();
+		// Global and scoped GlideRecord.getElements return two different things,
+		// so convert to Array if needed before looping through
+		if (typeof elements.size != "undefined") {
+			var elementArr = [];
+			for (var i = 0; i < elements.size(); i++)
+				elementArr.push(elements.get(i));
+			elements = elementArr;
+		}
+		// Now we can loop through
+		for (var j = 0; elements.length > j; j++) {
+			var element = elements[j];
+			if (element.getAttribute("isOrder") == "true") {
+				data.o = element.getName();
+				return;
+			}
+		}
+		// As last resort, sort on Order, Number, or Name column
+		if (grForMetaData.isValidField("order"))
+			data.o = "order";
+		else if (grForMetaData.isValidField("number"))
+			data.o = "number";
+		else if (grForMetaData.isValidField("name"))
+			data.o = "name";
+	}
+    function getViewColumns(table, parent, view) {
+        var fields = [];
+        var gr = new GlideRecord("sys_ui_list");
+        gr.addQuery("name",table);
+        gr.addQuery("parent",parent);
+        gr.addQuery("view.name",view);
+        gr.query();
+
+        if (gr.next()) {
+            var grElement = new GlideRecord("sys_ui_list_element");
+            grElement.addQuery("list_id.sys_id", gr.sys_id.toString());
+            grElement.orderBy("position");
+            grElement.query();
+            while (grElement.next()) {
+                fields.push(grElement.getDisplayValue("element"));
+            }
+        }
+
+        if (fields.length != 0)
+            return fields.join(',');
+        else
+            return $sp.getListColumns(data.table, data.view);
+    }
+    function getRelatedListCount(table, view) {
+        var entries = [];
+        var gr = new GlideRecord("sys_ui_related_list_entry");
+        gr.addQuery("list_id.name", table);
+        gr.addEncodedQuery('list_id.view.name=' + view + '^ORlist_id.view.nameISEMPTY');
+        gr.orderBy("order");
+        gr.query();
+        return gr.getRowCount();
+    }
+    function getListActions(table, view) {
+        var actions = [];
+        var gr = new GlideRecord("sys_ui_action");
+        gr.addQuery("table", table);
+        gr.addQuery("list_action", true);
+        gr.addQuery("show_query", true);
+        gr.addQuery("active", true);
+        gr.orderBy("order");
+        gr.query();
+
+        while (gr._next()) {
+            var columns = {};
+            $sp.getRecordElements(columns, gr, new GlideRecordUtil().getFields(gr));
+            actions.push(columns);
+        }
+
+        return actions;
+    }
+	function actionConditionMet(action, actionParameters) {
+		if (action.condition.value.length == 0) return true;
+		var gr = new GlideRecord("sys_ui_action");
+		gr.get(action.sys_id.value);  
+		var evaluator = new GlideScopedEvaluator();
+		Object.keys(actionParameters).map(function(x){
+			evaluator.putVariable(x, actionParameters[x]);
+		});
+		try {
+			var result = evaluator.evaluateScript(gr, 'condition');
+		} catch (e) {
+			gs.error('Error evaluating UI condition: ' + e);
+		}
+		return result || false;
+	}
+	function actionExecute(actionId, actionParameters) {
+		var gr = new GlideRecord("sys_ui_action");
+		gr.get(actionId);  
+		var evaluator = new GlideScopedEvaluator();
+		Object.keys(actionParameters).map(function(x){
+			evaluator.putVariable(x, actionParameters[x]);
+		});
+		gr.script = gr.onclick + '\n\n' + gr.script;
+		try {
+			evaluator.evaluateScript(gr, 'script');
+        } catch (e) {
+            gs.error('Error evaluating UI action script: ' + e);
+        }
+	}
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-01-25 19:11:23</sys_created_on>
+        <sys_id>a7a1f3052f9101101b6051072799b687</sys_id>
+        <sys_mod_count>1352</sys_mod_count>
+        <sys_name>Data Table Tabbed v2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_widget_a7a1f3052f9101101b6051072799b687</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 00:31:48</sys_updated_on>
+        <template><![CDATA[  <div id="{{'scope-' + $id}}" class="panel panel-{{options.color}} b" ng-class="{'data-table-high-contrast': accessibilityModeEnabled}" style="margin-bottom: 0px;">
+    <div class="panel-heading form-inline" ng-hide="options.hide_header">
+      <span class="dropdown m-r-xs">
+        <button aria-label="{{data.title || data.table_plural}} ${Context Menu}" class="btn dropdown-toggle glyphicon glyphicon-menu-hamburger" style="line-height: 1.4em" id="optionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+        <ul class="dropdown-menu" aria-labelledby="optionsMenu">
+          <li ng-repeat="t in ::exportTypes">
+            <a ng-href="/{{data.table}}_list.do?{{::t.value}}&sysparm_query={{data.exportQueryEncoded}}&sysparm_view={{data.view}}&sysparm_fields={{data.fields}}" target="_new" tabindex="-1">${Export as} {{::t.label}}</a>
+          </li>
+        </ul>
+      </span>
+      <h2 class="panel-title" style="display:inline"><i ng-if="options.glyph" class="fa fa-{{options.glyph}} m-r"></i>{{data.title || data.table_plural || page.title}}<span class="sr-only">${table} - ${page} {{data.p}}</span></h2>
+      <button name="new" role="button" class="btn btn-primary btn-sm m-l-xs" ng-click="newRecord()" ng-if="options.show_new && data.canCreate && !data.newButtonUnsupported" aria-label="${Create new record}">${New}</button>
+      <div class="pull-right" ng-if="options.show_keywords">
+		<form ng-if="data.hasTextIndex" ng-submit="setSearch(isTop && !isTab ? true : false)">
+        <div class="input-group">
+          <input type="text" name="datatable-search" ng-model="data.keywords" ng-model-options="{debounce:250}" class="form-control" placeholder="${Keyword Search}" aria-label="${Keyword Search}">
+          <span class="input-group-btn">
+            <button name="search" class="btn btn-default" type="submit" aria-label="${Search}"><span class="glyphicon glyphicon-search"></span></button>
+          </span>
+        </div>
+        </form>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <!-- body -->
+    <div class="panel-body" ng-style="isTop && data.list.length > 0 && loadingData == false && {'max-height': getAvailHeight()}" style="padding-bottom: 0px;">
+      <div ng-if="options.show_breadcrumbs && (data.filter || data.enable_filter)" class="filter-breadcrumbs">
+	    		<sp-widget widget="data.filterBreadcrumbs"></sp-widget>
+      </div>
+      <div class="clearfix"></div>
+      <div class="alert alert-info" ng-if="!data.list.length && !data.num_pages && !data.invalid_table && !loadingData && data.canRead">
+        ${No records in {{data.table_label}} <span ng-if="data.filter">using that filter</span>}
+      </div>
+      <div class="alert alert-info" ng-if="!data.list.length && !data.num_pages && !data.invalid_table && !loadingData && !data.canRead">
+        ${No permission to read data from {{data.table_label}}}
+      </div>
+      <div class="alert alert-info" ng-if="loadingData" style="position: absolute; width: calc(100% - 20px); z-index: 9999;">
+          <fa name="spinner" spin="true"></fa> ${Loading {{data.table_label}} data}...
+      </div>
+      <table class="table table-striped table-hover table-responsive" ng-if="data.list.length"  ng-class="loadingData ? 'fade-out' : 'fade-in'"
+             ng-style="{'width': resize ? '50px' : data.fullWidth && showFullWidth() ? 'calc(100% - 2px)' : 'auto', 'table-layout': resize ? 'fixed' : 'auto'}" ng-init="data.fullWidth = false">
+        <caption class="sr-only">{{data.title || data.table_plural}}</caption>
+        <colgroup ng-if="data.column_widths_calc">
+          <col ng-repeat="col in data.column_widths_calc track by $index" span="1" ng-style="col && {'width': col}"></col>
+        </colgroup>
+        <thead>
+          <tr>
+            <th ng-if="data.show_dep" style="padding: 3px; width: 20px; max-width: 20px;">
+              <div class="th-title"><i class="fa fa-list" aria-hidden="true" style="margin: 0px;" title="Related Lists"></i></div>
+            </th>
+            <th ng-repeat="field in data.fields_array track by $index" class="text-nowrap" ng-mouseup="setOrderBy($event, field)" ng-class="{nopadding: data.column_widths_user[$index] == '0px'}"
+                ng-style="data.column_widths_user[$index] != null ? {'width': data.column_widths_user[$index], 'min-width': data.column_widths_user[$index], 'max-width': data.column_widths_user[$index]} : {}"
+                scope="col" role="columnheader" aria-sort="{{field == data.o ? (data.d == 'asc'? 'ascending': 'descending') : 'none'}}">
+              <div class="th-title" title="${Sort {{data.column_labels[field]}} } {{field == data.o ? (data.d == 'asc' ?  '${Descending}': '${Ascending}') : '${Ascending}'}}" role="button" tabindex="0" aria-label="{{data.column_labels[field]}}" ng-if="data.column_widths_user[$index] != '0px'">{{data.column_labels[field]}}
+                <i class="fa" ng-if="field == data.o" ng-class="{'asc': 'fa-chevron-up', 'desc': 'fa-chevron-down'}[data.d]"></i>
+              </div>
+              <div class="resizer" style="min-height: 100%;" ng-mousedown="resizerDown($event, field)" ng-class="{resizing: resize==field}" ng-click="$event.stopPropagation();" ng-if="data.column_widths_user[$index] != '0px'"></div>
+            </th>
+            <th ng-if="data.actions_array.length > 0" class="UIactions" style="width: 60px; max-width: 60px; cursor: default;">
+              <div class="th-title">Actions</div>
+            </th>
+            <th ng-if="showFullWidth()" style="padding-left: 0; padding-right: 0; width: 5px; max-width: 5px; text-align: center; cursor: default;">
+              <div style="cursor: e-resize;" ng-click="data.fullWidth = !data.fullWidth" title="{{ data.fullWidth ? 'Compress' : 'Full Width' }}">
+				<i class="fa" ng-class="data.fullWidth == false ? 'fa-expand' : 'fa-compress'" style="margin: 0;"></i>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat-start="item in data.list track by item.sys_id" ng-style="c.isRecent(item.sys_updated_on, (data.recent_minutes || 0)) == true && {'background-color': 'lightyellow'}" 
+              data-ng-attr-title="{{c.isRecent(item.sys_updated_on, (data.recent_minutes || 0)) == true ? 'Recently updated': ''}}" ng-init="item.collapsed = true">
+            <td role="cell" class="sp-list-cell" ng-class="{selected: item.selected}" ng-if="data.show_dep" ng-click="getRelatedLists($event, item)">
+              <a href="javascript:void(0)" style="padding: 0;">
+                <i class="glyphicon" ng-class="item.collapsed == false ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></i>
+              </a>
+            </td>
+            <td role="{{$first ? 'rowheader' : 'cell'}}" class="pointer sp-list-cell" ng-class="{selected: item.selected, nopadding: data.column_widths_user[data.fields_array.indexOf(field)] == '0px'}"
+                ng-init="colWidth = data.column_widths_user[data.fields_array.indexOf(field)]; maxWidth = (((item[field].limit || 100) * 7.5) + 20) + 'px'"
+                ng-style="colWidth != null ? {'width': colWidth, 'min-width': colWidth, 'max-width': colWidth} : {'max-width': maxWidth}"
+                ng-click="go($event, item.targetTable, item)"
+                ng-repeat="field in ::data.fields_array"
+                data-field="{{::field}}"
+                data-th="{{::data.column_labels[field]}}">
+                <a href="javascript:void(0)" ng-if="$first" aria-label="${Open record}: {{::item[field].display_value}}">{{item[field].display_value}}</a>
+                <span ng-if="!$first && data.column_widths_user[data.fields_array.indexOf(field)] != '0px'">
+                	<a ng-if="item[field].value && item[field].type == 'reference'" href="javascript:void(0)" ng-click="goRef($event, item[field].table, item[field].record)" title="${Click to open: }{{item[field].display_value}}">{{item[field].display_value | limitTo : item[field].limit}}{{item[field].display_value.length > item[field].limit ? '...' : ''}}</a>
+                	<span ng-if="!(item[field].type == 'reference' || item[field].type == 'user_image')">{{item[field].display_value}}</span>
+                    <span ng-if="item[field].type === 'user_image'">
+                        <img class="user_image" src="{{item[field].display_value}}"/>
+                    </span>
+                </span>
+            </td>
+            <td ng-if="data.actions_array.length > 0" ng-class="{selected: item.selected}" style="padding: 5px;">
+             <div ng-if="item['ui_actions'].length > 0" class="btn-group btn-xs" uib-dropdown ng-click="actionClick($event)" style="width: 60px;">
+              <button id="btnAction" type="button" class="btn btn-light btn-xs" data-toggle="dropdown" aria-haspopup="true" uib-dropdown-toggle style="font-family: sans-serif; padding: 0; margin: 0;">
+                Action&nbsp;<span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="btnAction">
+                <li ng-repeat="action in item['ui_actions'] track by action.sys_id">
+                    <a class="linked list2_action_list" href="javascript:void(0)" ng-click="listRowAction($event, item, item.sys_id, action.sys_id)" title="{{::action.hint}}">{{::action.name}}</a>
+                </li>
+              </ul>
+             </div>
+            </td>
+            <td role="cell" ng-if="showFullWidth()" ng-class="{selected: item.selected}"></td>
+          </tr>
+          <tr ng-repeat-end ng-show="item.collapsed == false && data.show_dep" class="rl-row">
+            <td role="cell" ng-if="!item.collapsed && data.show_dep"></td>
+            <td role="cell" ng-if="!item.collapsed" class="sp-list-cell" colspan="{{data.fields_array.length + (data.actions_array.length > 0 ? 1 : 0)}}" style="padding-left: 50px; overflow: visible;">
+              <div ng-if="item.rl_loading || (item.RLwidget && (item.RLwidget.data.related_lists | filter: { loaded: '!true' }).length > 0)">
+                <i class='fa fa-spinner fa-spin fa-2x fa-fw'></i>&nbsp;Loading related lists...&nbsp;
+              </div>
+              <div ng-if="item.RLwidget" ng-style="{'width': 'fit-content', 'max-width': item.RLwidget.data.related_lists.length > 8 ? 8 * 200 + 'px' : 'max-content'}">
+               <sp-widget widget="::item.RLwidget"></sp-widget>
+              </div>
+            </td>
+            <td role="cell" ng-if="!item.collapsed && showFullWidth()" style="padding-left: 0; padding-right: 0; width: 5px; max-width: 5px;"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div ng-class="{'pruned-msg-filter-pad': (!options.show_breadcrumbs || !data.filter) && !data.list.length}" class="pruned-msg" ng-if="rowsWerePruned()">
+        <span ng-if="rowsPruned == 1">${{{rowsPruned}} row removed by security constraints}</span>
+        <span ng-if="rowsPruned > 1">${{{rowsPruned}} rows removed by security constraints}</span>
+      </div>
+    </div>
+    <!-- footer -->
+    <div class="panel-footer" ng-hide="options.hide_footer" ng-if="data.list.length + rowsPruned > 0 && data.row_count" role="navigation" aria-label="${Pagination}">
+      <div class="btn-toolbar m-r pull-left" ng-hide="data.num_pages==1">
+        <div class="btn-group" title="First">
+          <a ng-disabled="pages[0] == 1" href="javascript:void(0)" ng-click="setPageNum(1)" class="btn btn-default" aria-label="${First page} {{data.p == 1 ? '${disabled}' : ''}}" tabindex="{{(data.p == 1) ? -1 : 0}}"><i class="fa fa-angle-double-left" style="font-size: 18px;"></i></a>
+        </div>
+        <div class="btn-group" title="Previous">
+          <a ng-disabled="pages[0] == 1" href="javascript:void(0)" ng-click="setPageNum(pages[0] - 10)" class="btn btn-default" aria-label="${Previous page} {{data.p == 1 ? '${disabled}' : ''}}" tabindex="{{(data.p == 1) ? -1 : 0}}"><i class="fa fa-chevron-left"></i></a>
+        </div>
+        <div ng-if="data.num_pages > 1" class="btn-group">
+          <a ng-repeat="page in getPageSet(10, data.p, data.num_pages) track by page" ng-mousedown="setPageNum(page); $event.preventDefault();" href="javascript:void(0)" ng-class="{active: page == data.p}" type="button" class="btn btn-default" aria-label="${Page} {{page}}" ng-attr-aria-current="{{pages == data.p ? 'page' : undefined}}">
+            <span style="min-width: 14px; display: inline-block;">{{page}}</span>
+          </a>
+        </div>
+        <div class="btn-group" title="Next">
+          <a ng-disabled="pages[pages.length -1] == data.num_pages" href="javascript:void(0)" ng-click="setPageNum(pages[pages.length -1] + 1)" class="btn btn-default" aria-label="${Next page} {{data.p == data.num_pages ? '${disabled}' : ''}}" tabindex="{{(data.p == data.num_pages) ? -1 : 0}}"><i class="fa fa-chevron-right"></i></a>
+        </div>
+        <div class="btn-group" title="Last">
+          <a ng-disabled="pages[pages.length -1] == data.num_pages" href="javascript:void(0)" ng-click="setPageNum(data.num_pages)" class="btn btn-default" aria-label="${Last page} {{data.p == data.num_pages ? '${disabled}' : ''}}" tabindex="{{(data.p == data.num_pages) ? -1 : 0}}"><i class="fa fa-angle-double-right" style="font-size: 18px;"></i></a>
+        </div>
+      </div>
+      <div class="m-t-xs panel-title">${Rows {{data.window_start + 1}} - {{ mathMin(data.window_end,data.row_count) }} of {{data.row_count}}}</div>
+
+      <span class="clearfix"></span>
+    </div>
+    <widget id="widget-form-column-v2"></widget>
+  </div>]]></template>
+    </sp_widget>
+</record_update>

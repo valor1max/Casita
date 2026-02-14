@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_css">
+    <sp_css action="INSERT_OR_UPDATE">
+        <css>$text-primary: #181A1F !default;&#13;
+$text-tertiary: #656E81 !default;&#13;
+$sp-panel-box-shadow: 0px 4px 8px 0px rgba(23, 40, 52, 0.08) !default;&#13;
+$background-primary: #ffffff !default;&#13;
+$sp-space--xl: 24px !default;&#13;
+$sp-space--lg: 16px !default;&#13;
+$brand-primary: #4f52bd !default;&#13;
+$border-color: rgba(60, 89, 231, 1) !default;&#13;
+&#13;
+.sca-creator-toggle {&#13;
+    background-color: rgba($navbar-inverse-bg, 70%);&#13;
+}&#13;
+&#13;
+.sca-creator-toggle .fa {&#13;
+    color: $brand-primary;&#13;
+}&#13;
+&#13;
+.portal-authoring-empty {&#13;
+    height: 100%;&#13;
+}&#13;
+&#13;
+.portal-authoring {&#13;
+&#13;
+  .dropdown {&#13;
+    li {&#13;
+      a {&#13;
+        &amp;:hover {&#13;
+          background-color: rgba($brand-primary-lightest, .5);&#13;
+        }&#13;
+      }&#13;
+    }&#13;
+  }&#13;
+  &#13;
+  #sca-author-view-empty {&#13;
+    display: flex;&#13;
+    flex-direction: column;&#13;
+    justify-content: center;&#13;
+    align-items: center;&#13;
+    height: 100%;&#13;
+    gap: 24px;&#13;
+    padding: 36px 24px;&#13;
+    color: $text-primary;&#13;
+    border-radius: 8px;&#13;
+    box-shadow: $sp-panel-box-shadow;&#13;
+    background: $background-primary;&#13;
+    &#13;
+    .add-body {&#13;
+      display: flex;&#13;
+      flex-direction: column;&#13;
+      align-items: center;&#13;
+      gap: 16px;&#13;
+    }&#13;
+&#13;
+    .add-icon {&#13;
+      color: $text-tertiary;&#13;
+    }&#13;
+    &#13;
+    .btn.btn-default:focus {&#13;
+      box-shadow: 0 0 5px sp-rgb(--now-color--focus-2, #3C59E7);&#13;
+    }&#13;
+  }&#13;
+  &#13;
+  .sca-author-view-outline {&#13;
+    position: absolute;&#13;
+    inset: 0;&#13;
+    border: 3px solid $brand-primary; &#13;
+    &#13;
+    .sca-author-view-links {&#13;
+      display: flex;&#13;
+      padding-top: 0.375rem;&#13;
+      position: absolute;&#13;
+      right: -3px;&#13;
+      margin-top: -33px;&#13;
+      height: 30px;&#13;
+      &#13;
+      button {&#13;
+        border-radius: 6px 6px 0 0;&#13;
+        &amp;:focus {&#13;
+          border-radius: 6px 6px 0 0;&#13;
+        }&#13;
+      }&#13;
+      &#13;
+      .btn.btn-default:focus {&#13;
+        box-shadow: 0 0 5px sp-rgb(--now-color--focus-2, #3C59E7);&#13;
+      }&#13;
+    }&#13;
+}</css>
+        <name>casita-portal-authoring.css</name>
+        <sys_class_name>sp_css</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-12 15:26:20</sys_created_on>
+        <sys_id>1f85af8dc383b610357c7205e40131fe</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>casita-portal-authoring.css</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_css_1f85af8dc383b610357c7205e40131fe</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 15:26:34</sys_updated_on>
+        <turn_off_scss_compilation>false</turn_off_scss_compilation>
+    </sp_css>
+</record_update>

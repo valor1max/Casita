@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_section action="DELETE" caption="New section 1" section_id="a7b77c00c3cb3210357c7205e4013176" sys_domain="global" table="u_paycheck" version="3" view="">
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>u_remaining_funds</element>
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-09 00:13:04</sys_created_on>
+            <sys_id>e3b77c00c3cb3210357c7205e40131a6</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="New section 1" display_value="New section 1" name="u_paycheck" sys_domain="global" view="Default view">a7b77c00c3cb3210357c7205e4013176</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-09 00:13:04</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.split</element>
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-09 00:13:04</sys_created_on>
+            <sys_id>afb77c00c3cb3210357c7205e40131a6</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="New section 1" display_value="New section 1" name="u_paycheck" sys_domain="global" view="Default view">a7b77c00c3cb3210357c7205e4013176</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-09 00:13:04</sys_updated_on>
+            <sys_user/>
+            <type>.split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>u_paycheck_amount</element>
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-09 00:13:04</sys_created_on>
+            <sys_id>6bb77c00c3cb3210357c7205e40131a7</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="New section 1" display_value="New section 1" name="u_paycheck" sys_domain="global" view="Default view">a7b77c00c3cb3210357c7205e4013176</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-09 00:13:04</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_section action="DELETE">
+            <caption>New section 1</caption>
+            <header>false</header>
+            <name>u_paycheck</name>
+            <roles/>
+            <sys_class_name>sys_ui_section</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-02-09 00:13:03</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>a7b77c00c3cb3210357c7205e4013176</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>u_paycheck</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+            <sys_update_name>sys_ui_section_a7b77c00c3cb3210357c7205e4013176</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-02-09 00:13:03</sys_updated_on>
+            <sys_user/>
+            <title>false</title>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_section>
+    </sys_ui_section>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Casita">033ac408c3c33210357c7205e4013106</application>
+        <file_path/>
+        <instance_id>1f3061f91bd2ce10c8432f8dee4bcb8a</instance_id>
+        <instance_name>dev271864</instance_name>
+        <name>sys_ui_section_a7b77c00c3cb3210357c7205e4013176</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update><sys_ui_section caption="New section 1" section_id="a7b77c00c3cb3210357c7205e4013176" sys_domain="global" table="u_paycheck" version="3" view=""><sys_ui_element action="INSERT_OR_UPDATE"><element>u_remaining_funds</element><position>0</position><sys_created_by>admin</sys_created_by><sys_created_on>2026-02-09 00:13:04</sys_created_on><sys_id>e3b77c00c3cb3210357c7205e40131a6</sys_id><sys_mod_count>0</sys_mod_count><sys_ui_formatter/><sys_ui_section caption="New section 1" display_value="New section 1" name="u_paycheck" sys_domain="global" view="Default view">a7b77c00c3cb3210357c7205e4013176</sys_ui_section><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-02-09 00:13:04</sys_updated_on><sys_user/><type/></sys_ui_element><sys_ui_element action="INSERT_OR_UPDATE"><element>.split</element><position>1</position><sys_created_by>admin</sys_created_by><sys_created_on>2026-02-09 00:13:04</sys_created_on><sys_id>afb77c00c3cb3210357c7205e40131a6</sys_id><sys_mod_count>0</sys_mod_count><sys_ui_formatter/><sys_ui_section caption="New section 1" display_value="New section 1" name="u_paycheck" sys_domain="global" view="Default view">a7b77c00c3cb3210357c7205e4013176</sys_ui_section><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-02-09 00:13:04</sys_updated_on><sys_user/><type>.split</type></sys_ui_element><sys_ui_element action="INSERT_OR_UPDATE"><element>u_paycheck_amount</element><position>2</position><sys_created_by>admin</sys_created_by><sys_created_on>2026-02-09 00:13:04</sys_created_on><sys_id>6bb77c00c3cb3210357c7205e40131a7</sys_id><sys_mod_count>0</sys_mod_count><sys_ui_formatter/><sys_ui_section caption="New section 1" display_value="New section 1" name="u_paycheck" sys_domain="global" view="Default view">a7b77c00c3cb3210357c7205e4013176</sys_ui_section><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-02-09 00:13:04</sys_updated_on><sys_user/><type/></sys_ui_element><sys_ui_section action="INSERT_OR_UPDATE"><caption>New section 1</caption><header>false</header><name>u_paycheck</name><roles/><sys_class_name>sys_ui_section</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-02-09 00:13:03</sys_created_on><sys_domain>global</sys_domain><sys_domain_path>/</sys_domain_path><sys_id>a7b77c00c3cb3210357c7205e4013176</sys_id><sys_mod_count>0</sys_mod_count><sys_name>u_paycheck</sys_name><sys_overrides/><sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package><sys_policy/><sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope><sys_update_name>sys_ui_section_a7b77c00c3cb3210357c7205e4013176</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-02-09 00:13:03</sys_updated_on><sys_user/><title>false</title><view display_value="Default view" name="NULL">Default view</view><view_name/></sys_ui_section></sys_ui_section></record_update>]]></payload>
+        <payload_hash>1259748373</payload_hash>
+        <record_name>Paycheck</record_name>
+        <reverted_from/>
+        <source>f250a17ee882121087debb3e47d14f79</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-09 00:13:04</sys_created_on>
+        <sys_id>63b77c00c3cb3210357c7205e40131ab</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19c3fbea31a0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-09 00:13:04</sys_updated_on>
+        <type>Form Layout</type>
+        <update_guid>27b77c00d6cb3210331c174e184715aa</update_guid>
+        <update_guid_history>27b77c00d6cb3210331c174e184715aa:1259748373</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-09 00:13:36</sys_created_on>
+        <sys_db_object display_value="" name="sys_ui_section">sys_ui_section</sys_db_object>
+        <sys_id>149dfa81fc4b4e68a4a5eaaaa30ff210</sys_id>
+        <sys_metadata>a7b77c00c3cb3210357c7205e4013176</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>New section 1</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_parent display_value="Paycheck">914520ccc3c73210357c7205e401310e</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_scope_delete display_value="">6f83a182e33f4e0099e2eb920cfa2690</sys_scope_delete>
+        <sys_update_name>sys_ui_section_a7b77c00c3cb3210357c7205e4013176</sys_update_name>
+        <sys_update_version display_value="sys_ui_section_a7b77c00c3cb3210357c7205e4013176">63b77c00c3cb3210357c7205e40131ab</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-09 00:13:36</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

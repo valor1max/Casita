@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $http, $window, $location, $timeout) {
+    /* widget controller */
+    var c = this;
+
+	$scope.$on('data_table.loaded', function(evt, params) {
+		var rlScope = evt.targetScope.$parent.$parent;
+		if (!rlScope.hasOwnProperty("rl") && rlScope.rl.count > 0) return;   // Not a related list
+		if (evt.currentScope.$id != rlScope.$parent.$parent.$parent.$parent.$parent.$id) return;  // Not immediate parent tabset
+		var rl_index = rlScope.$index;
+		evt.currentScope.data.related_lists[rl_index].loaded = true;
+		if (params.rows == 0 && params.canCreate == false)
+			evt.currentScope.data.related_lists[rl_index].visible = false;
+        $timeout($('#scope-' + evt.currentScope.$id + ' .ui-tabs-scrollable').scope().api.doRecalculate());
+	});
+	
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.tab-pane {&#13;
+  height: auto !important;&#13;
+}&#13;
+.panel-body {&#13;
+  height: auto !important;&#13;
+  max-height: max-content !important;&#13;
+}&#13;
+table td[role=rowheader], table td[role=cell] {&#13;
+  white-space: nowrap;&#13;
+  text-overflow: ellipsis;&#13;
+}&#13;
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>tabbed-related-lists-v2</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+    angular.element(element).ready(function() {
+        setTimeout(function() {
+            window.dispatchEvent(new Event('resize'));
+        }, 50);
+    });
+}]]></link>
+        <name>Tabbed Related Lists v2</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+    data.related_lists = options.rl || null;
+    data.sys_id = options.sys_id || $sp.getParameter('sys_id');
+	data.view = options.view || $sp.getParameter('view') || 'sp';
+
+    for (var i in data.related_lists) {
+        var rl = data.related_lists[i];
+        data.optionList = {};
+        data.optionList.table = rl.table;
+        if (rl.type == "REL") {
+            data.optionList.apply_to = rl.apply_to;
+            data.optionList.apply_to_sys_id = rl.apply_to_sys_id;
+            data.optionList.relationship_id = rl.relationship_id;
+        } else {
+            data.optionList.filter = rl.field + '=' + data.sys_id;
+        }
+        data.optionList.enable_filter = false;
+        data.optionList.show_breadcrumbs = false;
+        data.optionList.show_keywords = false;
+		data.optionList.show_new = true;
+		data.optionList.view = data.view;
+		data.optionList.window_size = 5;
+
+        rl.dataTableWidget = $sp.getWidget('widget-data-table-tabbed-v2', data.optionList);
+    }
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-01-22 21:13:54</sys_created_on>
+        <sys_id>e43070102f5501101b6051072799b6c6</sys_id>
+        <sys_mod_count>425</sys_mod_count>
+        <sys_name>Tabbed Related Lists v2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_widget_e43070102f5501101b6051072799b6c6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-09-10 14:07:24</sys_updated_on>
+        <template><![CDATA[<div id="{{'scope-' + $id}}">
+  <div ng-show="!data.related_lists">
+    There are no related lists.
+  </div>
+  <div ng-show="data.related_lists && (data.related_lists | filter: { visible: true }).length == 0">
+    Related lists have been suppressed by filters or security constraints.
+  </div>
+  <div ng-show="! data.related_lists && $parent.item && (data.related_lists | filter: { loaded: '!true' }).length > 0">
+    <i class='fa fa-spinner fa-spin fa-2x fa-fw'></i>&nbsp;Loading related lists...&nbsp;
+  </div>
+  <div ng-hide="! data.related_lists || (data.related_lists | filter: { loaded: true }).length != data.related_lists.length || (data.related_lists | filter: { visible: true }).length == 0">
+    <label role="heading" aria-level="{{$parent.embeddedInModal ? '2' : '3'}}" style="margin: 0">${Related Lists}</label>
+    <scrollable-tabset-v2 auto-recalculate="true" tooltip-left-placement="bottom-left" tooltip-right-placement="bottom-right">
+      <uib-tabset active="active" justified="false">
+        <uib-tab index="$index+1" ng-repeat="rl in data.related_lists" ng-if="rl.visible">
+         <uib-tab-heading>
+           <span class="tab_caption_text">{{rl.type == 'REL' ? rl.label : rl.plural}}</span>
+           <span ng-if="rl.count" class="label label-as-badge label-primary">{{rl.count}}</span>
+          </uib-tab-heading>
+          <sp-widget widget="rl.dataTableWidget"></sp-widget>
+        </uib-tab>
+      </uib-tabset>
+    </scrollable-tabset-v2>
+  </div>
+  <widget id="widget-form-column-v2"></widget>
+</div>]]></template>
+    </sp_widget>
+</record_update>

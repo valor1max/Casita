@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="e174ac0cc3c73210357c7205e401311d" label="Monthly Bills" max_length="40" name="u_monthly_bills" type="collection">
+        <element label="Amount Paid" mandatory="true" max_length="20" name="u_amount_paid" type="currency"/>
+        <element choice="1" label="Type of Bill" mandatory="true" max_length="40" name="u_type_of_bill" type="string">
+            <choice>
+                <element inactive_on_update="false" label="Amex" sequence="1" value="Amex"/>
+                <element inactive_on_update="false" label="Capital One" sequence="0" value="Capital One"/>
+                <element inactive_on_update="false" label="Internet" sequence="3" value="Internet"/>
+                <element inactive_on_update="false" label="Katrina Sapphire" sequence="9" value="Katrina Sapphire"/>
+                <element inactive_on_update="false" label="Car" sequence="7" value="Car"/>
+                <element inactive_on_update="false" label="Mortgage" sequence="5" value="Mortgage"/>
+                <element inactive_on_update="false" label="Trash" sequence="11" value="Trash"/>
+                <element inactive_on_update="false" label="Electricity" sequence="4" value="Electricity"/>
+                <element inactive_on_update="false" label="Phone" sequence="2" value="Phone"/>
+                <element inactive_on_update="false" label="Other" sequence="12" value="Other"/>
+                <element inactive_on_update="false" label="Water" sequence="10" value="Water"/>
+                <element inactive_on_update="false" label="Max Sapphire" sequence="8" value="Max Sapphire"/>
+                <element inactive_on_update="false" label="Lowe's" sequence="6" value="Lowes"/>
+            </choice>
+        </element>
+        <element label="Due Date" mandatory="true" max_length="40" name="u_due_date" type="glide_date"/>
+        <element label="Parent Project" max_length="32" name="u_parent_project" read_only="true" reference="u_casita_monthly_project" type="reference"/>
+        <element choice="1" label="Method of Payment" mandatory="true" max_length="40" name="u_method_of_payment" type="string">
+            <choice>
+                <element inactive_on_update="false" label="Available Funds" sequence="1" value="Available Funds"/>
+                <element inactive_on_update="false" label="Paycheck" sequence="0" value="Paycheck"/>
+            </choice>
+        </element>
+        <element label="Amount Due" mandatory="true" max_length="20" name="u_amount_due" type="currency"/>
+        <element label="Date Paid" max_length="40" name="u_date_paid" type="glide_date"/>
+        <element label="Parent Sub-Project" max_length="32" name="u_parent_sub_project" read_only="true" reference="u_sub_casita_monthly_project" type="reference"/>
+        <element label="Available Funds" max_length="20" name="u_available_funds" read_only="true" type="currency"/>
+        <element label="Source of Payment" max_length="32" name="u_source_of_payment" reference="u_paycheck" reference_qual="u_project.u_active_project=true^EQ" reference_qual_condition="u_project.u_active_project=true^EQ" type="reference"/>
+        <index name="index">
+            <element name="u_parent_project"/>
+        </index>
+        <index name="index2">
+            <element name="u_parent_sub_project"/>
+        </index>
+        <index name="index3">
+            <element name="u_source_of_payment"/>
+        </index>
+    </element>
+</database>

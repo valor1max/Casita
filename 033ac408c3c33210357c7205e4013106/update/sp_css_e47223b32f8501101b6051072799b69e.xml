@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_css">
+    <sp_css action="INSERT_OR_UPDATE">
+        <css>.nav-tabs &gt; li:hover, .nav-tabs &gt; li.hover, .nav-tabs &gt; li:focus, .nav-tabs &gt; li.focus, .nav-tabs .tabs2_tab:hover, .nav-tabs .tabs2_tab.hover, .nav-tabs .tabs2_tab:focus, .nav-tabs .tabs2_tab.focus, .tabs2_strip &gt; li:hover, .tabs2_strip &gt; li.hover, .tabs2_strip &gt; li:focus, .tabs2_strip &gt; li.focus, .tabs2_strip .tabs2_tab:hover, .tabs2_strip .tabs2_tab.hover, .tabs2_strip .tabs2_tab:focus, .tabs2_strip .tabs2_tab.focus {&#13;
+  border-bottom: 1px solid #cbcbcb;&#13;
+  border-top-color: #1f8476; &#13;
+}&#13;
+.nav-tabs &gt; li.active &gt; a {&#13;
+   font-weight: bold;&#13;
+   letter-spacing: 0px;&#13;
+}&#13;
+.nav-tabs &gt; li.active, .nav-tabs &gt; li.active &gt; a {&#13;
+    box-sizing: border-box;&#13;
+    box-shadow: 0em 0em 1em #1f8476;&#13;
+}&#13;
+.nav-tabs &gt; li.active, .nav-tabs &gt; li.tabs2_active, .nav-tabs .tabs2_tab.active, .nav-tabs .tabs2_tab.tabs2_active, .tabs2_strip &gt; li.active, .tabs2_strip &gt; li.tabs2_active, .tabs2_strip .tabs2_tab.active, .tabs2_strip .tabs2_tab.tabs2_active {&#13;
+	background-color: #fff;&#13;
+	z-index: 3;&#13;
+  	border-bottom: 1px solid transparent;&#13;
+  	border-top-color: #1f8476; &#13;
+}&#13;
+.nav-tabs &gt; li:hover, .nav-tabs &gt; li.hover, .nav-tabs &gt; li:focus, .nav-tabs &gt; li.focus, .nav-tabs .tabs2_tab:hover, .nav-tabs .tabs2_tab.hover, .nav-tabs .tabs2_tab:focus, .nav-tabs .tabs2_tab.focus, .tabs2_strip &gt; li:hover, .tabs2_strip &gt; li.hover, .tabs2_strip &gt; li:focus, .tabs2_strip &gt; li.focus, .tabs2_strip .tabs2_tab:hover, .tabs2_strip .tabs2_tab.hover, .tabs2_strip .tabs2_tab:focus, .tabs2_strip .tabs2_tab.focus {&#13;
+  border-bottom: 1px solid #cbcbcb;&#13;
+  border-top-color: #1f8476; &#13;
+}&#13;
+.nav-tabs &gt; li:hover.active, .nav-tabs &gt; li:hover.tabs2_active, .nav-tabs &gt; li.hover.active, .nav-tabs &gt; li.hover.tabs2_active, .nav-tabs &gt; li:focus.active, .nav-tabs &gt; li:focus.tabs2_active, .nav-tabs &gt; li.focus.active, .nav-tabs &gt; li.focus.tabs2_active, .nav-tabs .tabs2_tab:hover.active, .nav-tabs .tabs2_tab:hover.tabs2_active, .nav-tabs .tabs2_tab.hover.active, .nav-tabs .tabs2_tab.hover.tabs2_active, .nav-tabs .tabs2_tab:focus.active, .nav-tabs .tabs2_tab:focus.tabs2_active, .nav-tabs .tabs2_tab.focus.active, .nav-tabs .tabs2_tab.focus.tabs2_active, .tabs2_strip &gt; li:hover.active, .tabs2_strip &gt; li:hover.tabs2_active, .tabs2_strip &gt; li.hover.active, .tabs2_strip &gt; li.hover.tabs2_active, .tabs2_strip &gt; li:focus.active, .tabs2_strip &gt; li:focus.tabs2_active, .tabs2_strip &gt; li.focus.active, .tabs2_strip &gt; li.focus.tabs2_active, .tabs2_strip .tabs2_tab:hover.active, .tabs2_strip .tabs2_tab:hover.tabs2_active, .tabs2_strip .tabs2_tab.hover.active, .tabs2_strip .tabs2_tab.hover.tabs2_active, .tabs2_strip .tabs2_tab:focus.active, .tabs2_strip .tabs2_tab:focus.tabs2_active, .tabs2_strip .tabs2_tab.focus.active, .tabs2_strip .tabs2_tab.focus.tabs2_active {&#13;
+  background-color: #fff;&#13;
+  border-color: #cbcbcb;&#13;
+  border-bottom: transparent;&#13;
+  border-top-color: #1f8476; &#13;
+}&#13;
+.nav-tabs &gt; li, .nav-tabs .tabs2_tab, .tabs2_strip &gt; li, .tabs2_strip .tabs2_tab {&#13;
+  position: relative;&#13;
+  display: block;&#13;
+  float: left;&#13;
+  z-index: 2;&#13;
+  box-sizing: border-box;&#13;
+  border: 1px solid #cbcbcb;&#13;
+  border-right-width: 0;&#13;
+  border-top-width: 3px;&#13;
+  background-color: #e6e9eb;&#13;
+  cursor: pointer; &#13;
+}&#13;
+.ui-tabs-scrollable &gt; .nav-button, .ui-tabs-scrollable &gt; .dropdown &gt; .dropdown-toggle {&#13;
+  top: 3px;&#13;
+}&#13;
+/* v2.3 improve box shadow */ &#13;
+.ui-tabs-scrollable ul.nav-tabs {&#13;
+  padding: 5px 5px 5px 5px;&#13;
+}&#13;
+.ui-tabs-scrollable .btn.nav-button, .ui-tabs-scrollable .btn.dropdown-toggle {&#13;
+  margin: 5px 0px 5px 0px;&#13;
+}&#13;
+.nav-tabs &gt; li &gt; a {&#13;
+  border-bottom: .3rem solid transparent;&#13;
+  text-align: center;&#13;
+  min-width: 12.4rem;&#13;
+}&#13;
+.tooltip &gt; .tooltip-inner {&#13;
+  text-align: left !important;&#13;
+  max-width: 400px !important;&#13;
+}&#13;
+ul.dropdown-menu li a {&#13;
+  overflow: hidden;&#13;
+  text-overflow: clip;&#13;
+  color: black !important;&#13;
+  max-width: 400px;&#13;
+}&#13;
+ul.dropdown-menu li.active a, ul.dropdown-menu li a:hover {&#13;
+  color: white !important;&#13;
+}</css>
+        <name>scrollable-tabs-xtra-v2-.css</name>
+        <sys_class_name>sp_css</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-01-21 20:55:57</sys_created_on>
+        <sys_id>e47223b32f8501101b6051072799b69e</sys_id>
+        <sys_mod_count>21</sys_mod_count>
+        <sys_name>scrollable-tabs-xtra-v2-.css</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_css_e47223b32f8501101b6051072799b69e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-02-10 21:19:45</sys_updated_on>
+        <turn_off_scss_compilation>false</turn_off_scss_compilation>
+    </sp_css>
+</record_update>

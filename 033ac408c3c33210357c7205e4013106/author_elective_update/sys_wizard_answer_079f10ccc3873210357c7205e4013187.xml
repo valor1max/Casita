@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_wizard_answer">
+    <sys_wizard_answer action="DELETE">
+        <active>true</active>
+        <answer>Sub Casita Project</answer>
+        <button_label/>
+        <dependent_value/>
+        <element/>
+        <name>Sub Casita Project</name>
+        <next_question/>
+        <order>100</order>
+        <payload_name/>
+        <question display_value="Task" name="Task">cebbdd3ae802121087debb3e47d14f2c</question>
+        <roles/>
+        <script/>
+        <sys_class_name>sys_wizard_answer</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-08 22:27:37</sys_created_on>
+        <sys_id>079f10ccc3873210357c7205e4013187</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Sub Casita Project</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sys_wizard_answer_079f10ccc3873210357c7205e4013187</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-08 22:27:37</sys_updated_on>
+        <table/>
+        <target_url>u_sub_casita_project.do</target_url>
+        <type>1</type>
+    </sys_wizard_answer>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Casita">033ac408c3c33210357c7205e4013106</application>
+        <file_path/>
+        <instance_id>1f3061f91bd2ce10c8432f8dee4bcb8a</instance_id>
+        <instance_name>dev271864</instance_name>
+        <name>sys_wizard_answer_079f10ccc3873210357c7205e4013187</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_wizard_answer"><sys_wizard_answer action="INSERT_OR_UPDATE"><active>true</active><answer>Sub Casita Project</answer><button_label/><dependent_value/><element/><name>Sub Casita Project</name><next_question/><order>100</order><payload_name/><question display_value="Task" name="Task">cebbdd3ae802121087debb3e47d14f2c</question><roles/><script/><sys_class_name>sys_wizard_answer</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-02-08 22:27:37</sys_created_on><sys_id>079f10ccc3873210357c7205e4013187</sys_id><sys_mod_count>0</sys_mod_count><sys_name>Sub Casita Project</sys_name><sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package><sys_policy/><sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope><sys_update_name>sys_wizard_answer_079f10ccc3873210357c7205e4013187</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-02-08 22:27:37</sys_updated_on><table/><target_url>u_sub_casita_project.do</target_url><type>1</type></sys_wizard_answer></record_update>]]></payload>
+        <payload_hash>-1922131891</payload_hash>
+        <record_name>Sub Casita Project</record_name>
+        <reverted_from/>
+        <source>c7921920c3303210357c7205e4013106</source>
+        <source_table>sys_upgrade_history</source_table>
+        <state>previous</state>
+        <sys_created_by/>
+        <sys_created_on>2025-10-21 19:06:07</sys_created_on>
+        <sys_id>f0cf18ccc3873210357c7205e40131fe</sys_id>
+        <sys_mod_count/>
+        <sys_recorded_at>19a082a15180000000</sys_recorded_at>
+        <sys_updated_by/>
+        <sys_updated_on/>
+        <type>Answer</type>
+        <update_guid>b0cf18ccd5873210f2c835a573847ffe</update_guid>
+        <update_guid_history>b0cf18ccd5873210f2c835a573847ffe:-1922131891</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-08 22:28:17</sys_created_on>
+        <sys_db_object display_value="" name="sys_wizard_answer">sys_wizard_answer</sys_db_object>
+        <sys_id>09c7ff209a0f4124adb78d2bf00226a9</sys_id>
+        <sys_metadata>079f10ccc3873210357c7205e4013187</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Sub Casita Project</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_parent display_value="Task">cebbdd3ae802121087debb3e47d14f2c</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_scope_delete display_value="">6f83a182e33f4e0099e2eb920cfa2690</sys_scope_delete>
+        <sys_update_name>sys_wizard_answer_079f10ccc3873210357c7205e4013187</sys_update_name>
+        <sys_update_version display_value="sys_wizard_answer_079f10ccc3873210357c7205e4013187">f0cf18ccc3873210357c7205e40131fe</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-08 22:28:17</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

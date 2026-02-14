@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_policy_action">
+    <sys_ui_policy_action action="INSERT_OR_UPDATE">
+        <cleared>false</cleared>
+        <disabled>true</disabled>
+        <field>u_parent_project.u_available_funds</field>
+        <field_message/>
+        <field_message_type>none</field_message_type>
+        <mandatory>ignore</mandatory>
+        <sys_class_name>sys_ui_policy_action</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-10 01:53:58</sys_created_on>
+        <sys_id>ff689a54c3c77210357c7205e40131bf</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>u_parent_project.u_available_funds</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sys_ui_policy_action_ff689a54c3c77210357c7205e40131bf</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-10 01:53:58</sys_updated_on>
+        <table>u_sub_casita_monthly_project</table>
+        <ui_policy display_value="Read Only Available Funds">bf689a54c3c77210357c7205e40131b8</ui_policy>
+        <value/>
+        <value_action>ignore</value_action>
+        <visible>ignore</visible>
+    </sys_ui_policy_action>
+    <sys_translated_text action="delete_multiple" query="documentkey=ff689a54c3c77210357c7205e40131bf"/>
+</record_update>

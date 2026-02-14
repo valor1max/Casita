@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_rel_widget_clone">
+    <sp_rel_widget_clone action="INSERT_OR_UPDATE">
+        <child display_value="Casita Next Bill Due Card">59903df8c30fb210357c7205e4013121</child>
+        <cloned>2026-02-10 20:19:57</cloned>
+        <last_validated>2026-02-10 20:19:57</last_validated>
+        <parent display_value="EC Request Card">382a26143f552210234d2f9d001f8b13</parent>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;sp_widget&gt;&lt;category&gt;custom&lt;/category&gt;&lt;client_script&gt;&lt;![CDATA[api.controller = function($scope, $timeout) {
+    /* widget controller */
+    var c = this;
+
+    $('.request-card-timestamp time').attr('tabindex', -1);
+
+    $scope.getLabelBackground = function(status) {
+        var lowerCased = status.toLowerCase();
+        var titleCase = lowerCased.charAt(0).toUpperCase() + lowerCased.slice(1);
+        return c.data.supportedColors[titleCase] || 'label-info-color';
+    };
+
+    c.navigateOnKeyEnter = function(event) {
+        if (event.keyCode === 13) {
+            $timeout(function() {
+                event.preventDefault();
+                event.stopPropagation();
+                event.target.click();
+            });
+        }
+    };
+
+    $scope.handleAction = function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        $scope.$emit(c.data.actionConfig.eventName, c.data.actionConfig.eventPayload);
+    };
+};]]&gt;&lt;/client_script&gt;&lt;controller_as&gt;c&lt;/controller_as&gt;&lt;css&gt;$sp-space--lg: 16px !default;
+$text-primary: #181A1F !default;
+$font-size-base: 16px !default;
+$font-size-xs: 12px !default;
+$font-weight-semibold: 600 !default;
+$navbar-inverse-bg: #ffffff !default;
+$request-card-background: $navbar-inverse-bg !default;
+$border-color: $border-tertiary !default;
+$label-info-bg: #CBE9FC !default;
+$label-default-bg: #C2C4CA !default;
+$label-primary-bg: #D1D2EE !default;
+$label-success-bg: #D2EABC !default;
+$label-warning-bg: #FBF7BC !default;
+$label-danger-bg: #FFCCD2 !default;
+
+
+.label-info-color {
+  background-color: $label-info-bg; 
+}
+
+.label-warning-color {
+  background-color: $label-warning-bg;
+}
+
+.label-success-color {
+  background-color: $label-success-bg;
+}
+
+.label-danger-color {
+  background-color: $label-danger-bg;
+}
+
+.label-default-color {
+  background-color: $label-default-bg; 
+}
+
+.label-primary-bg {
+    background-color: $label-primary-bg;
+}
+
+.request-card-container {
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.request-card {  
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 8px;
+  cursor: pointer;
+  background: $request-card-background;
+  padding: $sp-space--lg;
+  width: 100%;
+  height: 172px;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+}
+
+.draft-card {
+  height:192px;
+}
+
+.request-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+
+.request-card-label {
+  pointer-events: none;
+}
+
+.request-card-action {
+  margin-top: auto;
+  button {
+    font-size: $font-size-small;
+    font-weight: normal;
+    font-color: $brand-primary;
+    width: 100%;
+    background: none;
+    border: 1px solid $brand-primary;
+    border-radius: $border-radius-base;
+    &amp;amp;:hover {
+      font-color: $brand-primary;
+    }
+  }
+}
+
+.request-card-timestamp {
+  color: $text-primary;
+  font-size: $font-size-xs;
+  pointer-events: none;
+}
+
+.request-card-title {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color:$text-primary;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  padding: 2px;
+}
+
+.request-card-container .request-card-title:focus {
+  box-shadow: none;
+  padding: 0px;
+  border: 1.5px solid $input-border-focus ;
+}
+
+.request-card-secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.request-card-secondary-field-item {
+  font-size: $font-size-xs;
+  color: $text-primary;
+  pointer-events: none;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}&lt;/css&gt;&lt;data_table&gt;sp_instance&lt;/data_table&gt;&lt;demo_data/&gt;&lt;description/&gt;&lt;docs/&gt;&lt;field_list/&gt;&lt;has_preview&gt;false&lt;/has_preview&gt;&lt;id&gt;ec-request-card&lt;/id&gt;&lt;internal&gt;false&lt;/internal&gt;&lt;link&gt;&lt;![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]&gt;&lt;/link&gt;&lt;name&gt;EC Request Card&lt;/name&gt;&lt;option_schema/&gt;&lt;public&gt;false&lt;/public&gt;&lt;roles/&gt;&lt;script&gt;&lt;![CDATA[(function() {
+    data.cardData = options;
+    data.title = data.cardData.title;
+    data.secondaryData = data.cardData.description;
+    data.url = data.cardData.url;
+    data.timestamp = data.cardData.timestamp;
+    data.status = data.cardData.status;
+    data.sysID = data.cardData.sysID;
+    data.actionConfig = options.actionConfig;
+    data.supportedColors = new sn_ex_sp.RequestUtil().getLabelColorBackground() || {};
+})();]]&gt;&lt;/script&gt;&lt;servicenow&gt;true&lt;/servicenow&gt;&lt;sys_class_name&gt;sp_widget&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2025-04-30 07:10:47&lt;/sys_created_on&gt;&lt;sys_id&gt;382a26143f552210234d2f9d001f8b13&lt;/sys_id&gt;&lt;sys_mod_count&gt;230&lt;/sys_mod_count&gt;&lt;sys_name&gt;EC Request Card&lt;/sys_name&gt;&lt;sys_package display_value="Employee Center" source="sn_ex_sp"&gt;4249e63a28d54d61bb6fbf61fd86cccb&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Employee Center"&gt;4249e63a28d54d61bb6fbf61fd86cccb&lt;/sys_scope&gt;&lt;sys_update_name&gt;sp_widget_382a26143f552210234d2f9d001f8b13&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2025-06-27 15:00:47&lt;/sys_updated_on&gt;&lt;template&gt;&lt;![CDATA[&lt;div class="request-card-container"  tabindex="-1"&gt;
+  &lt;a class="request-card" ng-href="{{data.url}}" tabindex="-1" ng-class="{'draft-card': c.data.status=='Draft'}"&gt;
+    &lt;div class="request-card-header" tabindex="-1"&gt;
+     &lt;span class="label request-card-label" ng-class="getLabelBackground(data.status)" id="request-status-{{data.sysID}}" tabindex="-1"&gt;
+          {{data.status}}&lt;/span&gt;
+      &lt;sn-time-ago class="request-card-timestamp" timestamp="data.timestamp" tabindex="-1"&gt;&lt;/sn-time-ago&gt;
+    &lt;/div&gt;
+  	&lt;div class="request-card-title"
+          id = "request-card-title-{{data.sysID}}" tabindex="0"
+          aria-labelledby="request-status-{{data.sysID}} request-title-{{data.sysID}} request-card-title-{{data.sysID}}"
+          ng-keydown="c.navigateOnKeyEnter($event)"
+          ec-multiline-ellipsis-tooltip
+          ec-ellipsis-tooltip-title="{{data.title}}"
+          ec-ellipsis-tooltip-data-toggle="tooltip"
+          ec-ellipsis-tooltip-data-container="body"&gt;{{data.title}}&lt;/div&gt;
+    &lt;div class="request-card-secondary"&gt;
+    	&lt;span class="request-card-secondary-field-item" ng-repeat="field in data.secondaryData" tabindex=-1&gt;{{field}}&lt;/span&gt;
+    &lt;/div&gt;
+    
+    &lt;div class="request-card-action" ng-if="c.data.actionConfig"&gt;
+      &lt;button type="button" class="btn" ng-click="handleAction($event)"&gt;
+        {{ data.actionConfig.label }}
+      &lt;/button&gt;
+    &lt;/div&gt;
+  
+    &lt;span id="request-title-{{data.sysID}}" class="sr-only"&gt;${ Request , }&lt;/span&gt;
+  &lt;/a&gt;
+&lt;/div&gt;
+
+]]&gt;&lt;/template&gt;&lt;/sp_widget&gt;</payload>
+        <sys_class_name>sp_rel_widget_clone</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-11 12:16:50</sys_created_on>
+        <sys_id>e1903df8c30fb210357c7205e4013130</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>59903df8c30fb210357c7205e4013121</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_rel_widget_clone_e1903df8c30fb210357c7205e4013130</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-11 12:16:50</sys_updated_on>
+    </sp_rel_widget_clone>
+</record_update>

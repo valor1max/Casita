@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="m2m_sp_widget_dependency">
+    <m2m_sp_widget_dependency action="INSERT_OR_UPDATE">
+        <sp_dependency display_value="Tabbed Form Scroll Dependency v2">9a2063b32f8501101b6051072799b610</sp_dependency>
+        <sp_widget display_value="SC Order Guide">480ca054db03320064301150f0b8f545</sp_widget>
+        <sys_class_name>m2m_sp_widget_dependency</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-10-28 11:23:40</sys_created_on>
+        <sys_id>0f6d9ff92f7691101b6051072799b612</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Tabbed Form Scroll Dependency v2.SC Order Guide</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>m2m_sp_widget_dependency_0f6d9ff92f7691101b6051072799b612</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-10-28 11:23:40</sys_updated_on>
+    </m2m_sp_widget_dependency>
+</record_update>

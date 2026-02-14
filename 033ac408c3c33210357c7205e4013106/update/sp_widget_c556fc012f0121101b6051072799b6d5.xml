@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>standard</category>
+        <client_script><![CDATA[function($scope) {
+  /* widget controller */
+  var c = this;
+
+	c.config = {
+		outputType: "encoded_query",
+		closeFilter: true,
+		encodedQuery: massageEncodedQuery(c.data.initialQuery),
+		manageFiltersLink: "?id=lf&table=sys_filter"
+	};
+
+	function massageEncodedQuery(encodedQuery) {
+		return (encodedQuery) ? encodedQuery.replace(/CONTAINS/g, "LIKE").replace(/DOES NOT CONTAIN/g, "NOT LIKE") : encodedQuery;
+	}
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css/>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>tabbed-desktop-filter-v2</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Tabbed Desktop Filter v2</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	data.table = input.table || options.table || $sp.getParameter("table");
+	data.initialQuery = options.initialQuery || $sp.getParameter("filter");
+	data.uid = options.uid;
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-02-14 11:39:27</sys_created_on>
+        <sys_id>c556fc012f0121101b6051072799b6d5</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Tabbed Desktop Filter v2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_widget_c556fc012f0121101b6051072799b6d5</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-02-14 11:41:26</sys_updated_on>
+        <template><![CDATA[<div>
+	<sn-filter-widget uid="c.data.uid" table="{{c.data.table}}" filter-config="c.config" />
+</div>]]></template>
+    </sp_widget>
+</record_update>

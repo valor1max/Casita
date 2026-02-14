@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_action_view">
+    <sys_ui_action_view action="DELETE">
+        <sys_class_name>sys_ui_action_view</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-09 03:22:12</sys_created_on>
+        <sys_id>0e03e5c4c3437210357c7205e4013196</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Start Project.Portal</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_ui_action display_value="Start Project">61471c48c3473210357c7205e401317e</sys_ui_action>
+        <sys_ui_view display_value="Portal" name="portal">328ad172e802121087debb3e47d14f90</sys_ui_view>
+        <sys_update_name>sys_ui_action_view_0e03e5c4c3437210357c7205e4013196</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-09 03:22:12</sys_updated_on>
+        <visibility>include</visibility>
+    </sys_ui_action_view>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Casita">033ac408c3c33210357c7205e4013106</application>
+        <file_path/>
+        <instance_id>1f3061f91bd2ce10c8432f8dee4bcb8a</instance_id>
+        <instance_name>dev271864</instance_name>
+        <name>sys_ui_action_view_0e03e5c4c3437210357c7205e4013196</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_action_view"><sys_ui_action_view action="INSERT_OR_UPDATE"><sys_class_name>sys_ui_action_view</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-02-09 03:22:12</sys_created_on><sys_id>0e03e5c4c3437210357c7205e4013196</sys_id><sys_mod_count>0</sys_mod_count><sys_name>Start Project.Portal</sys_name><sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package><sys_policy/><sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope><sys_ui_action display_value="Start Project">61471c48c3473210357c7205e401317e</sys_ui_action><sys_ui_view display_value="Portal" name="portal">328ad172e802121087debb3e47d14f90</sys_ui_view><sys_update_name>sys_ui_action_view_0e03e5c4c3437210357c7205e4013196</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-02-09 03:22:12</sys_updated_on><visibility>include</visibility></sys_ui_action_view></record_update>]]></payload>
+        <payload_hash>1304960630</payload_hash>
+        <record_name>include</record_name>
+        <reverted_from/>
+        <source>f250a17ee882121087debb3e47d14f79</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-09 03:22:12</sys_created_on>
+        <sys_id>0203e5c4c3437210357c7205e401319b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19c406bcb010000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-09 03:22:12</sys_updated_on>
+        <type>UI View Action</type>
+        <update_guid>ce03e5c43e437210cd513dac07cddc99</update_guid>
+        <update_guid_history>ce03e5c43e437210cd513dac07cddc99:1304960630</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-09 03:22:48</sys_created_on>
+        <sys_db_object display_value="" name="sys_ui_action_view">sys_ui_action_view</sys_db_object>
+        <sys_id>05f3e4e3957a4000804a500f9b36c010</sys_id>
+        <sys_metadata>0e03e5c4c3437210357c7205e4013196</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Start Project.Portal</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_parent display_value="Start Project">61471c48c3473210357c7205e401317e</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_scope_delete display_value="">6f83a182e33f4e0099e2eb920cfa2690</sys_scope_delete>
+        <sys_update_name>sys_ui_action_view_0e03e5c4c3437210357c7205e4013196</sys_update_name>
+        <sys_update_version display_value="sys_ui_action_view_0e03e5c4c3437210357c7205e4013196">0203e5c4c3437210357c7205e401319b</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-09 03:22:48</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>global.TabbedFormUtilsV2</api_name>
+        <caller_access/>
+        <client_callable>true</client_callable>
+        <description/>
+        <mobile_callable>false</mobile_callable>
+        <name>TabbedFormUtilsV2</name>
+        <sandbox_callable>true</sandbox_callable>
+        <script><![CDATA[var TabbedFormUtilsV2 = Class.create();
+TabbedFormUtilsV2.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+	canCreateRef: function() {		               //User can Insert data into reference table
+        var portal = this.getParameter("sysparm_portalSuffix");
+        var page = this.getParameter("sysparm_page");
+        var table = this.getParameter("sysparm_table");
+        var view = this.getParameter("sysparm_view");
+        var omitNew = this.getParameter("sysparm_omitNew");
+		
+//      if (omitNew != "false") return false;      // Globally Turn off reference create capability, but allow specific overrides		
+		if (omitNew == "true") return false;
+		var gr = new GlideRecord(table);
+		return gr.canCreate();
+	},
+    evalRefQualifier: function() {                 //Evaluate a Reference Qualifer
+        var script = this.getParameter("sysparm_script");
+        var curValues = JSON.parse(this.getParameter("sysparm_curValues"));
+		var newScript = script;
+		if (newScript.startsWith('javascript:'))
+			newScript = newScript.replace('javascript:', 'var js = ');
+		else
+			return script;
+		
+		var gr = new GlideRecord('sys_script');
+        gr.addQuery('sys_policy', 'read');         // prevent accidental updates
+        gr.orderByDesc('sys_updated_on');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.hasNext()) gr.next();
+        gr.script = newScript;
+
+        var evaluator = new GlideScopedEvaluator();
+        evaluator.putVariable('js', '');
+		evaluator.putVariable('current', curValues);
+		try {
+            var result = evaluator.evaluateScript(gr, 'script');
+			var jsResult = evaluator.getVariable('js');
+			return (jsResult && jsResult.length > 0) ? jsResult : result;
+
+        } catch (e) {
+            gs.error('Error in evaluating script: ' + e);
+        }
+    },
+
+    type: 'TabbedFormUtilsV2'
+});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-05-14 20:37:25</sys_created_on>
+        <sys_id>a54a91d82f2301101b6051072799b688</sys_id>
+        <sys_mod_count>37</sys_mod_count>
+        <sys_name>TabbedFormUtilsV2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sys_script_include_a54a91d82f2301101b6051072799b688</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-05-27 21:45:25</sys_updated_on>
+    </sys_script_include>
+</record_update>

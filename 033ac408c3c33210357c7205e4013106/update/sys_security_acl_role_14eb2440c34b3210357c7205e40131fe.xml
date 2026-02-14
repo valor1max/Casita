@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl_role">
+    <sys_security_acl_role action="INSERT_OR_UPDATE">
+        <sys_class_name>sys_security_acl_role</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-08 23:21:14</sys_created_on>
+        <sys_id>14eb2440c34b3210357c7205e40131fe</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>u_casita_task.u_casita_task_user</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_security_acl display_value="u_casita_task">58eb2440c34b3210357c7205e40131db</sys_security_acl>
+        <sys_update_name>sys_security_acl_role_14eb2440c34b3210357c7205e40131fe</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-08 23:21:14</sys_updated_on>
+        <sys_user_role display_value="u_casita_task_user" name="u_casita_task_user">10eb6040c34b3210357c7205e4013155</sys_user_role>
+    </sys_security_acl_role>
+</record_update>

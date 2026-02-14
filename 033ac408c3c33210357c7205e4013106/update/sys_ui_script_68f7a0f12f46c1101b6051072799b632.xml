@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description/>
+        <global>false</global>
+        <ignore_in_now_experience>false</ignore_in_now_experience>
+        <name>spReferenceFieldTabbedV2</name>
+        <script><![CDATA[/*! RESOURCE: /scripts/app.$sp/directive.spReferenceField.js */
+angular.module('sn.$sp')
+    .constant("tabbedConfig", (typeof tabbedConfig != "undefined") ? tabbedConfig : gblTabbedConfig || {})
+	.directive('spReferenceField', function($rootScope, $compile, $location, $timeout, $http, spAriaUtil, i18n) {
+    'use strict';
+    return {
+        restrict: 'E',
+        replace: true,
+        template: '<span class="ref-picker-container">' +
+                    '<div class="add-on" ng-if="field.value != \'\'">' +
+                       '<button type="button" class="btn btn-default bg-white lookup" ng-click="openReference(field, formModel.view)"' + 
+                       ' ng-disabled="(field.isReadonly() && !field.readonlyClickthrough) || field.name == \'internal_type\'"' + 
+                       ' data-original-title="Open this record {{field.displayValue}}" data-toggle="tooltip"' +
+                       ' data-placement="top" data-container="body" aria-label="Open this record {{field.displayValue}}">' +
+                         '<span class="fa fa-info-circle"></span>' +
+                       '</button>' +
+                     '</div>' +
+                     '<div class="reference">' +
+                        '<sp-reference-element field="field" sn-select-width="100%" ref-table="formModel.table" ref-id="formModel.sys_id"' +
+                        ' glide-form="getGlideForm()" sn-options="{placeholder: field.placeholder}" record-values="getEncodedRecordValues()"' +
+                        ' sn-disabled="field.isReadonly()" label-id="sp_reference_element_sr_{{::field.name}}"></sp-reference-element>' +
+                     '</div>' +
+                  '</span>',
+        controller: function($scope, tabbedConfig) {
+            var unregister;
+			var refAttributes = getRefAttributes();
+			if ($scope.field.isReadonly() == true || tabbedConfig.enableCreateRef == false)
+				$scope.field.canWrite = false;
+			else {
+				var ga = new GlideAjax('global.TabbedFormUtilsV2');
+				ga.addParam('sysparm_name','canCreateRef');
+				ga.addParam('sysparm_portalSuffix', $rootScope.portal.url_suffix);
+				ga.addParam('sysparm_page', $rootScope.page.id);
+				ga.addParam('sysparm_view', refAttributes["clickthrough_view"] || $scope.getGlideForm().getViewName());
+				ga.addParam('sysparm_table', $scope.field.refTable);
+				ga.addParam('sysparm_omitNew', refAttributes["omitnew_clickthrough"]);
+				ga.getXML(function(resp) { 
+					$scope.field.canWrite = JSON.parse(resp.responseXML.documentElement.getAttribute("answer"));
+				});
+			}
+			$scope.createReference = function(field, view) {
+				angular.element('.select2-container').select2("close");
+				var newField = Object.assign({},field);
+				newField.value = "-1";
+				var qry;
+				var refCondition = field.ed.qualifier;
+				if (refCondition) {
+					var formValues = function() {
+						var result = {};
+						angular.forEach($scope.formModel._fields, function(f){
+							if (f.type != 'user_image')
+								result[f.name] = f.value;
+							else if (f.value)
+								result[f.name] = 'data:image/jpeg;base64,A==';
+						});
+						return result;
+					};	
+					var ga2 = new GlideAjax('global.TabbedFormUtilsV2');
+					ga2.addParam('sysparm_name','evalRefQualifier');
+					ga2.addParam('sysparm_script', refCondition);
+					ga2.addParam('sysparm_curValues', JSON.stringify(formValues()));
+					ga2.getXML(function(resp) {
+						qry = "sys_idISNOTEMPTY^" + resp.responseXML.documentElement.getAttribute("answer");
+						$scope.openReference(newField, view, qry);
+					});
+				}
+				else
+					$scope.openReference(newField, view, null);
+			};
+            $scope.openReference = function(fld, view, qry) {
+                var data = {
+					id: "form_tabbed_v2",
+                    table: fld.refTable,
+                    sys_id: fld.value,
+                    view: refAttributes['clickthrough_view'] || view || new URL($location.absUrl()).searchParams.get("view"),
+					query: qry,
+					isPopup: true
+                };
+				if (angular.isDefined(fld.reference_key))
+					data[fld.reference_key] = fld.value;
+				else
+					data.sys_id = fld.value;
+                if (unregister)
+                    unregister();
+                unregister = $rootScope.$on('$sp.openReference', function(evt, data) {
+                    unregister();
+                    unregister = null;
+                    if (!evt.defaultPrevented && evt.targetScope === $scope) {
+						$location.url('?' + new URLSearchParams(data).toString());
+					}
+                });
+				data.parent = { field: fld.name, form: $scope.getGlideForm() };
+				data.readonly = JSON.parse(refAttributes["clickthrough_readonly"] || false) && data.sys_id != -1;
+                $scope.$emit('$sp.openReference', data);
+            };
+            $scope.$on("$destroy", function() {
+                if (unregister)
+                    unregister();
+            });
+			function getRefAttributes() {
+				var attrs = [];
+				if (typeof $scope.field.attributes == "string") {
+					var kv_pairs = $scope.field.attributes.split(',') ;
+					var kv_entries = kv_pairs.map(function(kv) { return kv.split('='); });
+					attrs = Object.fromEntries(kv_entries);
+				}
+				else
+					attrs = $scope.field.attributes;
+				return attrs;
+			}
+        },
+        link: function(scope, element, attrs) {
+            $timeout(function() {
+                var addBtn = '<div class="add-on" style="display: inline;" ng-if="field.value == \'\' && (field.canWrite || false)">';
+                addBtn += '<button type="button" class="btn btn-default bg-white lookup" ng-click="createReference(field, formModel.view)"'; 
+                addBtn += ' ng-disabled="(field.isReadonly() && !field.readonlyClickthrough) || field.name == \'internal_type\'"'; 
+                addBtn += ' data-original-title="Create new record {{field.label}}" data-toggle="tooltip"';
+                addBtn += ' data-placement="top" data-container="body" aria-label="Create new record {{field.label}}">';
+                addBtn += '<span class="fa fa-plus" style="color: black"></span>';
+                addBtn += '</button>';
+                addBtn += '</div>';
+                scope.$apply(function() {
+                   var content = $compile(addBtn)(scope);
+                   element.parent().find(".select2-container").css("display", "flex").append(content);
+                });
+            });
+        }
+    };
+}).decorator("spReferenceFieldDirective", function($delegate, tabbedConfig) {
+	var idx = tabbedConfig.enableForm == true ? 1 : 0;
+	return ([$delegate[idx]]);
+});
+]]></script>
+        <script_name/>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-03-05 19:14:07</sys_created_on>
+        <sys_id>68f7a0f12f46c1101b6051072799b632</sys_id>
+        <sys_mod_count>51</sys_mod_count>
+        <sys_name>spReferenceFieldTabbedV2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sys_ui_script_68f7a0f12f46c1101b6051072799b632</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-06-25 12:14:39</sys_updated_on>
+        <ui_type>10</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

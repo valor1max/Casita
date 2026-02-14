@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_css">
+    <sp_css action="INSERT_OR_UPDATE">
+        <css>:root {&#13;
+  //--now-checkbox--background-color--checked: $brand-primary;&#13;
+  //--now-checkbox_icon--color: $text-white;&#13;
+  //--mv9-J8tJUkvu-AJvm--JvjvZ: $text-white;&#13;
+  --now-checkbox--border-color:$border-primary;&#13;
+  --mv9-j8tjukvu--kvzptz-jvjvz: $border-primary;&#13;
+  --now-checkbox--border-radius: $border-radius-small;&#13;
+  --mv9-J8tJUkvu--kvZptZ-ZrpAW1: $border-radius-small;&#13;
+  --now-checkbox--background-color--hover: $brand-primary-lightest;&#13;
+  --mv9-J8tJUkvu--krJUfZvWmp-JvjvZ--8vstZ: $brand-primary-lightest;&#13;
+  --now-checkbox_icon--color--hover: $text-color;&#13;
+  --mv9-J8tJUkvu-AJvm--JvjvZ--8vstZ: $text-color;&#13;
+}&#13;
+&#13;
+/* For suggestions in typeahead search when ais is disabled */&#13;
+.typeahead-popup &gt; .active &gt; a, .typeahead-popup &gt; .active &gt; a:hover, .typeahead-popup &gt; .active &gt; a:focus {&#13;
+	background-color: $brand-primary-opacity;&#13;
+	color: #000;&#13;
+}&#13;
+&#13;
+.typeahead-popup &gt; li &gt; a {&#13;
+  color: #181A1F !important;&#13;
+}&#13;
+&#13;
+.navbar-inverse .typeahead-popup {&#13;
+  background-color: #ffffff !important; &#13;
+}&#13;
+&#13;
+.ai-search {&#13;
+    .ais-breadcrumbs {&#13;
+      padding-left: 0;&#13;
+    }&#13;
+    .container {&#13;
+      box-shadow: $sp-panel-box-shadow;&#13;
+      background-color: $background-primary;&#13;
+      border-radius: $border-radius-large;&#13;
+      padding: 0 $sp-space--xl $sp-space--xl;&#13;
+      margin-bottom: $sp-space--xl;&#13;
+    }&#13;
+  }&#13;
+.mark.highlight {&#13;
+    background-color: rgba($brand-primary-lightest, .5);&#13;
+    color: $text-color;&#13;
+    padding: 1px;&#13;
+  }&#13;
+}</css>
+        <name>casita-theme-faceted-search</name>
+        <sys_class_name>sp_css</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-12 15:17:33</sys_created_on>
+        <sys_id>e683e349c383b610357c7205e4013167</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>casita-theme-faceted-search</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_css_e683e349c383b610357c7205e4013167</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-12 15:17:40</sys_updated_on>
+        <turn_off_scss_compilation>false</turn_off_scss_compilation>
+    </sp_css>
+</record_update>

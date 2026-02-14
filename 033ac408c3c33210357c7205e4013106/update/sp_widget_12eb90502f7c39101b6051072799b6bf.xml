@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($scope, $timeout, spUtil) {
+	var c = this;
+	$scope.trySelect = function(evt, disabled) {
+		if ((disabled || false) == false) return;
+		evt.preventDefault();
+		evt.stopPropagation();
+	};
+	$scope.select = function(evt, layout, parentIdx, childIdx) {
+		if (evt) {
+			$(evt.currentTarget).closest('scrollable-tabset-v2').find('.ui-tabs-scrollable').each(function() {
+				$(this).scope().api.doRecalculate(); 
+			});
+		}
+		$scope.$emit("tab.select", { "element": evt ? evt.currentTarget : null, "layout": layout, "parentIndex": parentIdx, "childIndex": childIdx });
+	};
+	$scope.deselect = function(evt, layout, parentIdx, childIdx) {
+		$scope.$emit("tab.deselect", {"element": evt ? evt.currentTarget : null,  "layout": layout, "parentIndex": parentIdx, "childIndex": childIdx });
+	};
+	$scope.setActiveTab = function(element, tabset, idx) {
+		if ((!element || element.length == 0 || !tabset || !(idx >= 0))) return;
+		$timeout(function() { 
+			$(element).scope().$parent.api.doRecalculate();
+			tabset.active = idx; 
+			$(element).scope().$parent.api.scrollTabIntoView(idx);
+			$scope.scrollIntoView(element, idx);
+
+		});
+	};
+	$scope.scrollIntoView = function(tabContainer, idx, item) {
+		if (idx >= 0) 
+			$(tabContainer).scrollTop(function() { return $(tabContainer).find('ul:first > li:eq(' + idx + ')').offset().top - $(tabContainer).find('ul:first').offset().top; });
+		else if (item.length > 0)
+			$(tabContainer).scrollTop(function() { return $(item).offset().top - $(item).parent().offset().top; });
+	};
+	$scope.addTab = function(element, tabset, newTab, setActive, position) {
+		var injectTab = function(tabset, newTab, setActive, position) {
+			newTab.visible = newTab.visible == false ? false : true;
+			position = position != undefined ? position : tabset.tabs.length;
+			tabset.tabs.splice(position, 0, newTab);
+			if (setActive == true) {
+				$scope.setActiveTab(element, tabset, position);
+			}
+			return tabset.tabs[position];
+		};
+		if (newTab.widget) {
+			spUtil.get(newTab.widget, newTab.widget_options || {} ).then(function(response) {
+				newTab.widgetInfo = response;
+				newTab.widgetInfo.options = newTab.widget_options;
+				injectTab(tabset, newTab, setActive, position);
+			});
+		}
+		else {
+			var tabClone = Object.assign({}, newTab);
+			delete tabClone.tabset;
+			var parentTab = injectTab(tabset, tabClone, setActive, position);
+			if (newTab.hasOwnProperty("tabset")) {
+				parentTab.tabset = { tabs: [] };
+				Object.keys(newTab.tabset).forEach(function(key) {
+					if (key != "tabs") parentTab.tabset[key] = newTab.tabset[key];
+				});
+				newTab.tabset.tabs.forEach(function(tab, idx) { 
+					$scope.addTab(element, parentTab.tabset, tab, false, idx); 
+				});
+			}
+		}
+	};
+	
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.tab-content {&#13;
+    height: auto !important;&#13;
+} &#13;
+.tab-pane {&#13;
+  	padding: 10px;&#13;
+	border: 1px solid lightgrey;&#13;
+}&#13;
+.tab-hidden {&#13;
+    visibility: hidden !important;&#13;
+    max-width: 0px;&#13;
+    height: 0px;&#13;
+}&#13;
+.tabs-label {&#13;
+    font-size: 120%;&#13;
+    width: 100%;&#13;
+    display: block;&#13;
+    text-align: left;&#13;
+}&#13;
+&#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; div &gt; .nav-pills, &#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; div &gt; .nav-tabs {&#13;
+    white-space: nowrap;&#13;
+    overflow: hidden;      &#13;
+    border-bottom: 0; &#13;
+}&#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; div &gt; ul.nav-pills &gt; li, &#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; div &gt; ul.nav-tabs &gt; li {&#13;
+    display: table-cell !important;    &#13;
+}&#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; div &gt; ul.nav-pills.nav-top &gt; li, &#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; div &gt; ul.nav-tabs.nav-top &gt; li {&#13;
+    float: none !important;   &#13;
+}&#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; div &gt; ul.nav-pills.nav-left &gt; li,&#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; div &gt; ul.nav-tabs.nav-left &gt; li,&#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; div &gt; ul.nav-pills.nav-right &gt; li,&#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; div &gt; ul.nav-tabs.nav-right &gt; li {&#13;
+    float: left !important;&#13;
+}&#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; div &gt; ul.nav-pills &gt; li &gt; a,&#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; div &gt; ul.nav-tabs &gt; li &gt; a {&#13;
+    text-align: left;&#13;
+}&#13;
+.nav-tabs &gt; li.disabled:hover {&#13;
+    border-color: #cbcbcb !important; &#13;
+}&#13;
+.nav-pills.nav-top &gt; li {&#13;
+	padding-top: 3px;&#13;
+}&#13;
+.nav-pills.nav-left &gt; li,&#13;
+.nav-pills.nav-right &gt; li,&#13;
+.nav-tabs.nav-left &gt; li,&#13;
+.nav-tabs.nav-right &gt; li {&#13;
+	width: 100% !important;&#13;
+    margin-left: 0px !important;&#13;
+}&#13;
+.nav-pills.nav-top  &gt; li  &gt; a, &#13;
+.nav-pills.nav-left  &gt; li  &gt; a, &#13;
+.nav-pills.nav-right  &gt; li  &gt; a, &#13;
+.nav-tabs.nav-top  &gt; li  &gt; a, &#13;
+.nav-tabs.nav-left  &gt; li  &gt; a, &#13;
+.nav-tabs.nav-right  &gt; li  &gt; a {&#13;
+	padding: 4px 6px;&#13;
+}&#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; .nav-button.left-nav-button, &#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; .nav-button.right-nav-button,&#13;
+div[template-url="tabset-template-v2"] &gt; div[style*="display: grid"] &gt; .dropdown &gt; .dropdown-toggle {&#13;
+    height: 32px !important;&#13;
+    line-height: 32px !important;&#13;
+}&#13;
+.nav-pills.nav-top &gt; li.active,&#13;
+.nav-pills.nav-top &gt; li.active &gt; a {&#13;
+	border-bottom: 2px solid #1f8476 !important;&#13;
+}&#13;
+.nav-pills.nav-left &gt; li.active, &#13;
+.nav-pills.nav-left &gt; li.active &gt; a {&#13;
+	border-left: 2px solid #1f8476 !important;&#13;
+}&#13;
+.nav-pills.nav-right &gt; li.active, &#13;
+.nav-pills.nav-right &gt; li.active &gt; a {&#13;
+	border-right: 2px solid #1f8476 !important;&#13;
+}&#13;
+.nav-pills &gt; li.tab_header.ng-isolate-scope.ng-isolate-scope.active &gt; a {&#13;
+	border: none !important;&#13;
+  	background-color: #EEF8F8;&#13;
+}&#13;
+.nav-pills &gt; li &gt; a:focus {&#13;
+	border: none !important;&#13;
+  	box-shadow: none !important;		&#13;
+}&#13;
+.nav-pills &gt; li:not(.active) &gt; a:focus &gt; span {&#13;
+  	box-shadow: none !important;		&#13;
+  	background-color: transparent !important;&#13;
+}&#13;
+.nav-pills &gt; li.active &gt; a, &#13;
+.nav-pills &gt; li.active &gt; a:hover, &#13;
+.nav-pills &gt; li.active &gt; a:focus {&#13;
+	font-weight: bold;&#13;
+  	color: #1F8476;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>tabbed-layout-v2</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+	if  (scope.data.layout.height == "viewport") {
+		$('.sp-page-root').css("height", "inherit");
+		$('section.page').removeClass('sp-scroll').addClass('overflow-hidden');
+	}
+	else {
+		if (scope.data.layout.height != undefined)
+			$('.v12eb90502f7c39101b6051072799b6bf').css({ 'height': scope.data.layout.height, 'overflow-y': 'auto' });
+		if (scope.data.layout.width != undefined)
+			$('.v12eb90502f7c39101b6051072799b6bf').css({ 'width': scope.data.layout.width, 'overflow-x': 'auto' });
+	}
+	scope.$on('tabs:resized', function(evt, tabs) {
+		var tabset =  $(tabs).closest('.grid-layout');
+		var gridParent =  $(tabset).children('div.spacer:first');
+		var grid = $(gridParent).find('div[template-url="tabset-template-v2"]:first div:first');
+		var labelHeight = $(grid).find('div:first ul:first').position().top;
+		if ($(grid).find('div > ul.nav-tabs').length > 0) labelHeight += 2;
+		$(tabset).children('button, .btn-group').css("margin-top", function() { 
+			if ($(this).hasClass('btn-group')) return labelHeight - 5 + "px"; else return labelHeight + "px"; });
+		var gridContent = $(grid).children("div.tab-content");
+		var top = $(gridContent).offset().top;
+		var remain = $(window).height() - top - ($(grid).has('div:first > ul.nav-top:first').length > 0 ? 10 : 2);   
+		if  (scope.data.layout.height == "viewport") {
+			$(grid).children('div:first').css("max-height", remain + "px");
+			scope.scrollIntoView($(grid).children('div:first'), -1, $(grid).children('div:first').find('ul li.active'));
+			$(grid).children('div:eq(1)').css("overflow", function() {
+				if ($(this).find('.ui-tabs-scrollable.grid-layout').length == 0) return "auto"; else return "hidden"; });
+			$(grid).children('div.tab-content').children('div.tab-pane').css({"height": remain + "px", "overflow": function() {
+				if ($(this).find('.ui-tabs-scrollable.grid-layout').length == 0) return "auto"; else return "hidden"; }});
+		}
+	});
+}]]></link>
+        <name>Tabbed Layout v2</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	
+	data.layout = input ? input.layout : options.layout || {};
+
+	for (var i in data.layout.tabset.tabs) {
+		var tab = data.layout.tabset.tabs[i]; 
+		tab.tabIndex = i;
+		tab.visible = tab.visible == false ? false : true; 
+		tab.widgetInfo = $sp.getWidget(tab.widget, tab.widget_options || null);
+		for (var j in tab.tabset.tabs) {
+			var subTab = tab.tabset.tabs[j];
+			subTab.tabIndex = j;
+			subTab.visible = subTab.visible == false ? false : true;
+			subTab.widgetInfo = $sp.getWidget(subTab.widget, subTab.widget_options || null);
+		}
+	}
+	data.layout.tabset.active = data.layout.tabset.active || 1;
+	
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-08-17 11:47:29</sys_created_on>
+        <sys_id>12eb90502f7c39101b6051072799b6bf</sys_id>
+        <sys_mod_count>382</sys_mod_count>
+        <sys_name>Tabbed Layout v2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_widget_12eb90502f7c39101b6051072799b6bf</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-09-08 11:59:53</sys_updated_on>
+        <template><![CDATA[<div>
+  <div ng-repeat="titleContainer in data.layout.tabset.tabs | limitTo: 1" ng-if="titleContainer.visible" ng-attr-role="{{(titleContainer.caption || titleContainer.captionDisplay) ? 'group' : undefined}}" ng-attr-aria-labelledby="{{(titleContainer.caption || titleContainer.captionDisplay) ? 'container_' + titleContainer.id : undefined}}">
+    <span ng-if="titleContainer.visible" class="container-caption">
+      <span class="h4" role="heading" aria-level="3" id="container_{{::titleContainer.id}}">{{titleContainer.captionDisplay || titleContainer.caption}}</span>
+    </span>
+    <sp-widget widget="titleContainer.widgetInfo"></sp-widget>
+  </div>
+  <div>
+    <scrollable-tabset-v2 auto-recalculate="true" tabset-class="grid-layout">
+      <uib-tabset-v2 active="data.layout.tabset.active" template-url="tabset-template-v2" justified="data.layout.tabset.justified" vertical="data.layout.tabset.vertical" type="{{data.layout.tabset.type || 'tabs'}}" align="{{data.layout.tabset.align || 'top'}}" label="{{data.layout.tabset.label}}" element-resized-v2="tabs">
+        <uib-tab-v2 template-url="tab-template-v2" ng-repeat="tabContainer in data.layout.tabset.tabs track by ($index + (tabContainer.caption || tabContainer.hint))" ng-if="tabContainer.visible ? tabContainer.visible : true"  title="{{tabContainer.hint}}" disable="tabContainer.disable" class="tab_header" classes="{{$index == 0 || tabContainer.visible == false ? 'tab-hidden' : ''}}" ng-init="tabIndex = $index;" ng-mousedown="trySelect($event, tabContainer.disable)" select="select($event, data.layout, tabIndex, -1)" deselect="deselect($event, data.layout, tabIndex, -1)">
+          <uib-tab-heading-v2 style="display: inline-flex; width: 100%;" ng-style="{'background-color': tabContainer.color}">
+            <i ng-if="tabContainer.glyph" class="fa fa-{{tabContainer.glyph}} m-r-xs m-l-xs" style="line-height: inherit;"></i>
+            <span class="tab_caption_text" id="container_{{::tabContainer.id}}">{{tabContainer.captionDisplay || tabContainer.caption}}</span>
+            &nbsp;
+            <span ng-if="tabContainer.badge" class="label label-as-badge label-primary">{{tabContainer.badge}}</span>
+          </uib-tab-heading-v2>
+          <div ng-if="$index > 0 && tabContainer.visible == true">
+            <div ng-if="tabContainer.message" class="alert alert-info">{{tabContainer.message}}</div>
+		    <sp-widget widget="tabContainer.widgetInfo"></sp-widget>
+            <scrollable-tabset-v2 auto-recalculate="true" tabset-class="grid-layout" ng-if="tabContainer.tabset.tabs">
+              <uib-tabset-v2 active="tabContainer.tabset.active" template-url="tabset-template-v2" justified="tabContainer.tabset.justified" vertical="tabContainer.tabset.vertical" type="{{tabContainer.tabset.type || 'tabs'}}" align="{{tabContainer.tabset.align || 'top'}}" label="{{tabContainer.tabset.label}}" element-resized-v2="tabs">
+                <uib-tab-v2 template-url="tab-template-v2" ng-repeat="child in tabContainer.tabset.tabs track by ($index + (child.caption || child.hint))" ng-if="child.visible ? child.visible : true" title="{{child.hint}}" disable="child.disable" class="tab_header" classes="{{child.visible == false ? 'tab-hidden' : ''}}" ng-init="childIndex = $index;" ng-mousedown="trySelect($event, child.disable)" select="select($event, data.layout, tabIndex, childIndex)" deselect="deselect($event, data.layout, tabIndex, childIndex)">
+                  <uib-tab-heading-v2 style="display: inline-flex; width: 100%;" ng-style="{'background-color': tabContainer.color}">
+                    <i ng-if="child.glyph" class="fa fa-{{child.glyph}} m-r-xs m-l-xs" style="line-height: inherit;"></i>
+                    <span class="tab_caption_text" id="container_{{::child.id}}">{{child.captionDisplay || child.caption}}</span>
+                    &nbsp;
+                    <span ng-if="child.badge" class="label label-as-badge label-primary">{{child.badge}}</span>
+                  </uib-tab-heading-v2>
+                  <div ng-if="child.visible == true">
+                    <div ng-if="child.message" class="alert alert-info">{{child.message}}</div>
+                    <sp-widget widget="child.widgetInfo"></sp-widget>
+                  </div>
+                </uib-tab-v2>
+              </uib-tabset-v2>
+            </scrollable-tabset-v2>
+          </div>
+        </uib-tab-v2>
+      </uib-tabset-v2>
+    </scrollable-tabset-v2>
+  </div>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="79cb2040c34b3210357c7205e40131cc" label="Casita Task" max_length="40" name="u_casita_task" type="collection">
+        <element label="Task Description" mandatory="true" max_length="10000" name="u_description" type="string"/>
+        <element label="Parent Project" max_length="32" name="u_project" read_only="true" reference="u_casita_monthly_project" type="reference"/>
+        <element label="Date Needed By" mandatory="true" max_length="40" name="u_date_needed_by" type="glide_date"/>
+        <element label="Date Completed" max_length="40" name="u_date_completed" type="glide_date"/>
+        <element choice="1" label="Task Type" mandatory="true" max_length="40" name="u_task_type" type="string">
+            <choice>
+                <element inactive_on_update="false" label="Other" sequence="0" value="Other"/>
+            </choice>
+        </element>
+        <element label="Assigned To" mandatory="true" max_length="32" name="u_assigned_to" reference="sys_user" reference_qual="user_nameSTARTSWITHkkinsolv^ORuser_nameSTARTSWITHmmorganti^EQ" reference_qual_condition="user_nameSTARTSWITHkkinsolv^ORuser_nameSTARTSWITHmmorganti^EQ" type="reference"/>
+        <element label="Parent Sub-Project" max_length="32" name="u_parent_sub_project" read_only="true" reference="u_sub_casita_monthly_project" type="reference"/>
+        <element choice="1" label="Urgency" mandatory="true" max_length="40" name="u_urgency" type="string">
+            <choice>
+                <element inactive_on_update="false" label="Low" value="low"/>
+                <element inactive_on_update="false" label="High" value="high"/>
+                <element inactive_on_update="false" label="Moderate" value="moderate"/>
+                <element inactive_on_update="false" label="Severe" value="severe"/>
+            </choice>
+        </element>
+        <index name="index">
+            <element name="u_assigned_to"/>
+        </index>
+        <index name="index2">
+            <element name="u_parent_sub_project"/>
+        </index>
+        <index name="index3">
+            <element name="u_project"/>
+        </index>
+    </element>
+</database>

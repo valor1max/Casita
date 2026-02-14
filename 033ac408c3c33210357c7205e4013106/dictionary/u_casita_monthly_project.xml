@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="09abbb48c3033210357c7205e4013174" label="Casita Monthly Project" max_length="40" name="u_casita_monthly_project" type="collection">
+        <element display="true" label="Project Title" max_length="40" name="u_project" type="string"/>
+        <element label="Date Started" max_length="40" name="u_date_started" read_only="true" type="glide_date"/>
+        <element label="Total Debt" max_length="20" name="u_total_debt" read_only="true" type="currency"/>
+        <element choice="3" default="draft" label="State of Project" max_length="40" name="u_state" read_only="true" type="string">
+            <choice>
+                <element inactive_on_update="false" label="Cancelled" value="cancelled"/>
+                <element inactive_on_update="false" label="Completed" value="completed"/>
+                <element inactive_on_update="false" label="Draft" value="draft"/>
+                <element inactive_on_update="false" label="In Progress" value="in_progress"/>
+            </choice>
+        </element>
+        <element label="Remaining Monthly Income" max_length="20" name="u_remaining_monthly_income" read_only="true" type="currency"/>
+        <element label="Project Summary" mandatory="true" max_length="40" name="u_project_summary" type="string"/>
+        <element label="Date Ended" max_length="40" name="u_date_ended" read_only="true" type="glide_date"/>
+        <element label="Project Description" mandatory="true" max_length="100000" name="u_project_description" type="string"/>
+        <element label="Active Project" max_length="40" name="u_active_project" read_only="true" type="boolean"/>
+        <element label="Project Notes List" max_length="255" name="u_projec_notes_list" type="journal_list"/>
+        <element label="Project Notes" max_length="255" name="u_project_notes" type="journal_input"/>
+        <element label="Total Bills Amount Due" max_length="20" name="u_total_bills_amount_due" read_only="true" type="currency"/>
+        <element label="Remaining Bills Due Amount" max_length="20" name="u_remaining_monthly_bill_amount" read_only="true" type="currency"/>
+        <element label="Available Funds" max_length="20" name="u_available_funds" type="currency"/>
+        <element label="Monthly Income" max_length="20" name="u_monthly_income" read_only="true" type="currency"/>
+    </element>
+</database>

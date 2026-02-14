@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>u_casita_monthly_project</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition table="u_casita_monthly_project">u_stateCHANGESTOin_progress^EQ<item display_value="In Progress" endquery="false" field="u_state" goto="false" newquery="false" operator="CHANGESTO" or="false" value="in_progress"/>
+            <item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
+        </filter_condition>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Undo Active Project</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/ ) {
+
+    var gt = new GlideRecord('u_casita_monthly_project');
+    gt.addEncodedQuery('active=true^sys_id!=' + current.sys_id);
+    gt.query();
+    if (gt.next()) {
+        gt.u_state = 'completed';
+        gt.u_active_project = false;
+        gt.update();
+    }
+
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-10 00:32:16</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>f2b5c2d4c3077210357c7205e4013141</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>Undo Active Project</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sys_script_f2b5c2d4c3077210357c7205e4013141</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-10 02:11:09</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=f2b5c2d4c3077210357c7205e4013141"/>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>f2b5c2d4c3077210357c7205e4013141</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-02-10 00:32:16</sys_created_on>
+        <sys_id>3eb5ced4c3077210357c7205e40131e9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-02-10 00:32:16</sys_updated_on>
+        <table>sys_script</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

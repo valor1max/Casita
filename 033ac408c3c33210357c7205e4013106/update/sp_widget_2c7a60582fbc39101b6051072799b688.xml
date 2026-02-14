@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($scope, $sce, $location, $timeout, spAriaFocusManager) {
+	var c = this;
+	$scope.showCatalog = function(evt) {
+		var tabsetElements = $('div[template-url=tabset-template-v2]');
+		var parentTab = { caption: "Catalog Items", 
+							glyph: "table",
+							widget: "widget-data-table-tabbed-v2",
+							widget_options: { table: "sc_cat_item", show_new: false, window_size: 10 } };
+		$(tabsetElements).scope().addTab(tabsetElements.eq(0), $scope.data.tabLayoutWidget.data.layout.tabset, parentTab, true);
+		$(evt.currentTarget).addClass("hidden");
+	};
+	$scope.showCategories = function(evt) {
+		var tabsetElements = $('div[template-url=tabset-template-v2]');
+		var parentTab = { caption: "Catalog Categories", 
+							tabset: { type: "pills", active: 1, tabs: [{
+								caption: "Software",
+								glyph: "table",
+								widget: "widget-data-table-tabbed-v2",
+								widget_options: { table: "sc_cat_item", show_new: false, window_size: 10, filter: "category.title=Software" } },
+							{
+								caption: "Hardware",
+								glyph: "table",
+								widget: "widget-data-table-tabbed-v2",
+								widget_options: { table: "sc_cat_item", show_new: false, window_size: 10, filter: "category.title=Hardware" } },
+							{
+								caption: "Services",
+								glyph: "table",
+								widget: "widget-data-table-tabbed-v2",
+								widget_options: { table: "sc_cat_item", show_new: false, window_size: 10, filter: "category.title=Services" } },
+							]}};
+		$(tabsetElements).scope().addTab(tabsetElements.eq(0), $scope.data.tabLayoutWidget.data.layout.tabset, parentTab, true);
+		$(evt.currentTarget).addClass("hidden");
+	};
+	$scope.$on("tab.select", function(evt, data) {
+		var parentTab = data.layout.tabset.tabs[data.parentIndex];
+		var childTab = data.childIndex >= 0 ? parentTab.tabset.tabs[data.childIndex] : null;
+		var tabsetElements = $(data.element).parents('div[template-url=tabset-template-v2]');
+		if (data.childIndex >= 0)
+			console.log('Selected tab ' + data.childIndex + ' : ' + (childTab.caption || childTab.hint || "[empty]"));
+		else
+			console.log('Selected tab ' + data.parentIndex + ' : ' + (parentTab.caption || parentTab.hint || "[empty]"));
+		if (!data.element) {
+			// This is the initialization phase / default tab and not a user click
+			return;
+		}
+		if (data.childIndex >= 0 && childTab.caption == "London") {  
+			if (parentTab.tabset.tabs.some(function(itm) { return itm.caption == "New Tab"; })) return;
+			parentTab.tabset.tabs[data.childIndex - 1].disable = true;
+			var newTab = { caption: "New Tab", 
+							widget: "8679ef89cb21120000f8d856634c9c4f",
+							widget_options: { html: "<h4>This is dynamically added content.</h4>" } };
+			evt.targetScope.addTab(tabsetElements.eq(0), parentTab.tabset, newTab, true, 0);
+		}																									  
+	});
+	$scope.$on("tab.deselect", function(evt, data) {
+		var parentTab = data.layout.tabset.tabs[data.parentIndex];
+		var childTab = data.childIndex >= 0 ? parentTab.tabset.tabs[data.childIndex] : null;
+		if (data.childIndex >= 0)
+			console.log('Deselected tab ' + data.childIndex + ' : ' + (childTab.caption || childTab.hint || "[empty]"));
+		else
+			console.log('Deselected tab ' + data.parentIndex + ' : ' + (parentTab.caption || parentTab.hint || "[empty]"));
+	});
+	
+	$scope.$on("data_table.loaded", function(evt, data) {
+		if (evt.targetScope.$parent.$parent.tabContainer && !evt.targetScope.$parent.$parent.tabContainer.tabset) {
+			evt.targetScope.$parent.$parent.tabContainer.badge = data.rows;
+		}
+		if (evt.targetScope.$parent.$parent.child) {
+			evt.targetScope.$parent.$parent.child.badge = data.rows;
+		}
+	});
+
+	$scope.$on("sp.form.submitted", function(evt, data) {
+		console.log("sys_id: " + data.sys_id + "created");
+	});
+
+	$scope.$on("sp.form.record.updated", function(evt, data) {
+		$scope.data.tabLayoutWidget.data.layout.tabs[$scope.activeParentTab].message = "User " + data.user_name.displayValue + " successfully updated.";
+	});
+	
+	$scope.$on('data_table.click', callDataClick);
+
+	function callDataClick(e, parms) {											
+		var oid = $location.search().id;
+		var p = parms.id || $scope.data.page_id || 'form_tabbed_v2';
+		var s = {id: p, table: parms.table, sys_id: parms.sys_id, view: $scope.data.view};
+		if (oid == p) {
+			s.spa = 1;
+			var t = $location.search();
+			s = angular.extend(t, s);
+			$rootScope.$broadcast('$sp.list.click', s);
+			return;
+		}
+
+		var newURL = $location.search(s);
+		spAriaFocusManager.navigateToLink(newURL.url());										
+	}
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css/>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>tabbed-controller-sample-v2</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Tabbed Controller Sample v2</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+    var layout = {
+		height: "viewport",
+		width: "viewport",
+		tabset: { 
+			type: "pills",
+			align: "left",
+			vertical: true,
+			label: "Navigation",
+			active: 8,
+			tabs: [
+			{   // This is the first untabbed item, but included in ng-repeat for consistent indexing
+				caption: "My Tabbed Layout",      
+				widget: "8679ef89cb21120000f8d856634c9c4f",
+				widget_options: { html: "<h4>This is a sample tabbed layout!</h4>"  }
+			}, 
+			{
+				caption: "System Status",
+				hint: "Display the state of computer systems",
+				glyph: "home",
+				disable: true,
+				widget: "current-status",
+				widget_options: { show_outage_details: true, standalone: true }
+			}, 
+			{
+				caption: "Announcements",
+				hint: "Display important notices and information",
+				glyph: "heart",
+				widget: "announcements"
+			}, 
+			{
+				caption: "Cool Clock",
+				glyph: "clock-o",
+				tabset: {
+					label: "World Cities",
+					type: "pills",
+					align: "top",
+					justified: false,
+					active: 2,
+					tabs: [
+					{
+						caption: "New York",
+						widget: "widget-cool-clock",
+						widget_options: { title: null, zone: "US/Eastern" }
+					}, 
+					{
+						caption: "London",
+						widget: "widget-cool-clock",
+						widget_options: { title: null, zone: "Europe/London" }
+					}, 
+					{
+						caption: "Rome",
+						widget: "widget-cool-clock",
+						widget_options: { title: null, zone: "Europe/Rome" }
+					}, 
+					{
+						caption: "Hong Kong",
+						widget: "widget-cool-clock",
+						widget_options: { title: null, zone: "Asia/Hong_Kong" }
+					}, 
+					{
+						caption: "Honolulu",
+						widget: "widget-cool-clock",
+						widget_options: { title: null, zone: "Pacific/Honolulu" }
+					}],
+				}
+			}, 
+			{
+				caption: "Change Requests",
+				glyph: "table",
+				color: "lightyellow",
+				widget: "widget-data-table-tabbed-v2",
+				widget_options: { table: "task", filter: 'sys_class_name=change_request', o: 'priority', 
+									show_new: true, window_size: 10 }
+			}, 
+			{
+				caption: "Help Requests",
+				glyph: "table",
+				color: "lightyellow",
+				widget: "widget-data-table-tabbed-v2",
+				widget_options: { table: "incident", filter: 'category=inquiry', o: 'priority', 
+									fields: "number,category,description,assigned_to,caller_id",
+									show_new: true, window_size: 10 }
+			},
+			{
+				caption: "Add User",
+				glyph: "user",
+				message: "Add a user record to continue",
+				isComplete: false,
+				widget: "widget-form-tabbed-v2",
+				widget_options: { table: "sys_user", sys_id: "-1" }
+			}, 
+			{
+				caption: "Create an Incident",
+				glyph: "pencil",
+				widget: "widget-sc-cat-item-v2",
+				widget_options: { sys_id: "3f1dd0320a0a0b99000a53f7604a2ef9" }
+			}, 
+			{
+				caption: "Toolbar",
+				glyph: "wrench",
+				tabset: {
+					type: "pills",
+					align: "top",
+					justified: false,
+					tabs: [
+					{
+						glyph: "unlock",
+						hint: "Invoke Unlock",
+						message: "My Unlock Functionality",
+					}, 
+					{
+						glyph: "wifi",
+						hint: "Invoke WiFi",
+						message: "My WiFi Functionality",
+					}, 
+					{
+						glyph: "volume-up",
+						hint: "Invoke Volume",
+						message: "My Volueme Functionality",
+					}, 
+					{
+						glyph: "tag",
+						hint: "Invoke Tag",
+						message: "My Tag Functionality",
+					}, 
+					{
+						glyph: "question",
+						hint: "Invoke Question",
+						message: "My Question Functionality",
+					}, 
+					{
+						glyph: "signal",
+						hint: "Invoke Signal",
+						message: "My Signal Functionality",
+					}, 
+					{
+						glyph: "heart",
+						hint: "Invoke Heart",
+						message: "My Heart Functionality",
+					}, 
+					{
+						glyph: "tv",
+						hint: "Invoke TV",
+						message: "My TV Functionality",
+					}],
+				}, 
+			}]
+		}
+	};
+	
+	layout.tabset.tabs[0].visible = false;
+	if (!gs.getUser().hasRole("admin")) {
+		layout.tabset.tabs[6].visible = false;
+	}
+	data.tabLayoutWidget = $sp.getWidget("tabbed-layout-v2", { "layout": layout });
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2023-08-17 12:50:47</sys_created_on>
+        <sys_id>2c7a60582fbc39101b6051072799b688</sys_id>
+        <sys_mod_count>133</sys_mod_count>
+        <sys_name>Tabbed Controller Sample v2</sys_name>
+        <sys_package display_value="Casita" source="033ac408c3c33210357c7205e4013106">033ac408c3c33210357c7205e4013106</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Casita">033ac408c3c33210357c7205e4013106</sys_scope>
+        <sys_update_name>sp_widget_2c7a60582fbc39101b6051072799b688</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2023-09-08 12:18:19</sys_updated_on>
+        <template><![CDATA[<div>
+  <h2 style="margin-top: 0;">My Tabbed Layout Controller</h2>
+  <div>This is a sample tabbed layout!
+     &nbsp;&nbsp;
+     <button type="button" ng-click="showCatalog($event)" class="btn nav-button">Show Catalog</button>
+     &nbsp;&nbsp;
+     <button type="button" ng-click="showCategories($event)" class="btn nav-button">Catalog Categories</button>
+  </div>
+  <sp-widget widget="data.tabLayoutWidget"></sp-widget>
+</div>]]></template>
+    </sp_widget>
+</record_update>
